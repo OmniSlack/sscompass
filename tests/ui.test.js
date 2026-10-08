@@ -21,7 +21,7 @@ test('the footer shows the current year', () => {
 test('four AI buttons are rendered, Claude selected first', () => {
   const p = page(); const b = [...p.doc.querySelectorAll('#ai-switch button')];
   assert.deepEqual(b.map((x) => x.textContent), ['CLAUDE', 'GPT', 'CODEX', 'GEMINI']);
-  assert.equal(b[0].getAttribute('aria-selected'), 'true');
+  assert.equal(b[0].getAttribute('aria-pressed'), 'true');
 });
 for (const ai of D.ais) {
   test(`choosing ${ai.name} updates title, subtitle, selection and accent colours`, () => {
@@ -29,8 +29,8 @@ for (const ai of D.ais) {
     p.click(p.doc.querySelector(`[data-ai=${ai.id}]`));
     assert.equal(p.doc.getElementById('ai-name').textContent, ai.name);
     assert.equal(p.doc.getElementById('ai-sub').textContent, ai.sub);
-    assert.equal(p.doc.querySelector(`[data-ai=${ai.id}]`).getAttribute('aria-selected'), 'true');
-    assert.equal(p.doc.querySelectorAll('#ai-switch [aria-selected=true]').length, 1);
+    assert.equal(p.doc.querySelector(`[data-ai=${ai.id}]`).getAttribute('aria-pressed'), 'true');
+    assert.equal(p.doc.querySelectorAll('#ai-switch [aria-pressed=true]').length, 1);
     assert.equal(p.doc.documentElement.style.getPropertyValue('--accent-rgb'), ai.accent);
     assert.equal(p.doc.documentElement.style.getPropertyValue('--accent2-rgb'), ai.accent2);
     assert.equal(p.w.SSCCore.current().ai, ai.id);
@@ -128,10 +128,9 @@ test('only one skill card is highlighted at a time', () => {
   p.click(cs[0]); p.click(cs[1]);
   assert.equal(p.doc.querySelectorAll('#domains .dom.on').length, 1);
 });
-test('skill cards can be opened from the keyboard', () => {
-  const p = page(); const c = p.doc.querySelector('#domains .dom');
-  c.dispatchEvent(new p.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-  assert.ok(c.classList.contains('on'));
+test('skill cards are not tab stops (they are not controls)', () => {
+  const p = page();
+  for (const c of p.doc.querySelectorAll('#domains .dom')) assert.equal(c.getAttribute('tabindex'), null);
 });
 test('the highlighted skill card survives a language change', () => {
   const p = page(); p.click(p.doc.querySelectorAll('#domains .dom')[3]); p.w.SSCApp.setLang('bg');

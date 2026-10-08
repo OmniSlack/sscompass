@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SSC Compass · Мартин Урумов</title>
 <meta name="description" content="SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI. Мартин Урумов / Martin Urumov.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+<a class="skip" href="#architecture" data-en="Skip to content">Към съдържанието</a>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 
 <header class="top">
   <div class="wrap">
@@ -38,11 +40,11 @@
         <span>Build · v0.3</span>
       </div>
 
-      <div class="ai-switch" role="tablist" aria-label="Избор на AI" data-en-aria="Choose an AI" id="ai-switch"></div>
+      <div class="ai-switch" role="group" aria-label="Избор на AI" data-en-aria="Choose an AI" id="ai-switch"></div>
 
       <div class="stage">
         <aside class="side l">
-          <h3 class="mono" data-en="Layers">Слоеве</h3>
+          <div class="mono h" data-en="Layers">Слоеве</div>
           <div class="layer"><b>01</b><div><span data-en="Interface">Интерфейс</span><small data-en="The public showcase. What you are looking at.">Публичната витрина. Това, което виждаш.</small></div></div>
           <div class="layer"><b>02</b><div><span data-en="Control">Контрол</span><small data-en="A personal view. It only shows. It is not public.">Личен изглед. Само показва. Не е публичен.</small></div></div>
           <div class="layer"><b>03</b><div><span data-en="Functional">Функционален</span><small data-en="The engine that feeds the other two layers.">Моторът, който захранва другите два слоя.</small></div></div>
@@ -51,7 +53,7 @@
         <div class="orb"><canvas id="core" aria-label="Анимирано ядро на избрания AI" data-en-aria="Animated core of the chosen AI" role="img"></canvas></div>
 
         <aside class="side r">
-          <h3 class="mono" data-en="Quick access">Бърз достъп</h3>
+          <div class="mono h" data-en="Quick access">Бърз достъп</div>
           <div class="quick">
             <a href="#architecture"><span data-en="Architecture">Архитектура</span> <span>→</span></a>
             <a href="#skills"><span data-en="Skills">Умения</span> <span>→</span></a>
@@ -62,13 +64,14 @@
       </div>
 
       <div class="ident">
-        <h1 id="ai-name">CLAUDE</h1>
+        <h1 class="sr" data-en="SSC Compass · Martin Urumov">SSC Compass · Мартин Урумов</h1>
+        <div class="ai-title" id="ai-name">CLAUDE</div>
         <p id="ai-sub">Claude Code · Anthropic</p>
         <p class="owner">Мартин Урумов · Martin Urumov</p>
       </div>
 
       <div class="states" role="group" aria-label="Състояние на ядрото" data-en-aria="State of the core" id="states"></div>
-      <div class="readout mono" id="readout" aria-live="polite"></div>
+      <div class="readout mono" id="readout" aria-live="off"></div>
       <p class="tagline" data-en="A personal command centre that brings together the best of every AI tool and builds it around me and my work.">Личен команден център, който събира най-доброто от всички AI инструменти и го изгражда около мен и моята работа.</p>
     </div>
   </section>
@@ -102,7 +105,7 @@
 
           <rect class="node hub" x="700" y="150" width="150" height="120" rx="14"/>
           <text class="h" x="775" y="186" text-anchor="middle" data-en="ROUTER">РУТЕР</text><text class="d" x="775" y="208" text-anchor="middle">OmniMax</text>
-          <text class="d" x="775" y="232" text-anchor="middle" data-en="sorts the request">подрежда заявката</text><text class="d" x="775" y="250" text-anchor="middle" data-en="into a tier">по ниво</text>
+          <text class="d" x="775" y="232" text-anchor="middle" data-en="sends the request">насочва заявката</text><text class="d" x="775" y="250" text-anchor="middle" data-en="to a tier">към ниво</text>
 
           <rect class="node t1" x="910" y="40" width="170" height="84" rx="12"/>
           <text class="h" x="995" y="68" text-anchor="middle" data-en="TIER 1">НИВО 1</text><text class="d" x="995" y="90" text-anchor="middle" data-en="rules + saved data">правила + запазени данни</text><text class="d" x="995" y="108" text-anchor="middle" data-en="no AI · instant">без AI · мигновено</text>
@@ -117,7 +120,7 @@
           <rect class="node vault" x="190" y="470" width="890" height="96" rx="14"/>
           <text class="h" x="635" y="504" text-anchor="middle" data-en="VAULT · SHARED MEMORY">VAULT · ОБЩА ПАМЕТ</text>
           <text class="d" x="635" y="528" text-anchor="middle" data-en="Obsidian (plain markdown files) + NotebookLM (questions over sources)">Obsidian (прости markdown файлове) + NotebookLM (въпроси към източници)</text>
-          <text class="d" x="635" y="548" text-anchor="middle" data-en="daily notes · reports · research · conversations · a receipt for every request">дневни бележки · отчети · проучвания · разговори · следа от всяка заявка</text>
+          <text class="d" x="635" y="548" text-anchor="middle" data-en="daily notes · reports · research · conversations · a record of every request">дневни бележки · отчети · проучвания · разговори · запис на всяка заявка</text>
 
           <path class="ln" d="M142 215 L188 168"/><path class="ln" d="M142 252 L188 292"/>
           <path class="ln" d="M390 156 L448 190"/><path class="ln" d="M390 306 L448 232"/>
@@ -134,7 +137,7 @@
           <li><b data-en="2 · TWO DOORS">2 · ДВЕ ВРАТИ</b><span data-en="The Compass site in the browser and an Obsidian plugin inside the vault, with the same buttons.">Compass сайт в браузъра и Obsidian плъгин във vault-а, със същите бутони.</span></li>
           <li><b data-en="3 · SPEECH (local)">3 · РЕЧ (локално)</b><span data-en="Whisper listens, Kokoro speaks.">Whisper слуша, Kokoro говори.</span></li>
           <li><b data-en="4 · BRIDGE">4 · МОСТ</b><span data-en="One brain for both doors: it takes every request.">Един мозък за двете врати: приема всяка заявка.</span></li>
-          <li><b data-en="5 · ROUTER (OmniMax)">5 · РУТЕР (OmniMax)</b><span data-en="Sorts the request into a tier.">Подрежда заявката по ниво.</span></li>
+          <li><b data-en="5 · ROUTER (OmniMax)">5 · РУТЕР (OmniMax)</b><span data-en="Sends the request to a tier.">Насочва заявката към ниво.</span></li>
           <li><b data-en="6 · TIER 1">6 · НИВО 1</b><span data-en="Rules and saved data, no AI, instant.">Правила и запазени данни, без AI, мигновено.</span></li>
           <li><b data-en="7 · TIER 2">7 · НИВО 2</b><span data-en="A quick small model for a short answer.">Бърз малък модел за кратък отговор.</span></li>
           <li><b data-en="8 · TIER 3">8 · НИВО 3</b><span data-en="Real work: Claude, Codex or Gemini in a terminal, or a skill in the background. Reaches Gmail, Calendar, Drive and YouTube.">Истинска работа: Claude, Codex или Gemini в терминал, или умение на заден план. Достъп до Gmail, Календар, Drive, YouTube.</span></li>
@@ -166,7 +169,7 @@
 
       <div class="domains" id="domains"></div>
       <div class="legend"><span style="color:var(--warn)" data-en="● on a schedule">● по график</span><span style="color:var(--blue)" data-en="● when something happens">● при събитие</span><span data-en="● manual, on purpose">● остава ръчно, нарочно</span></div>
-      <p class="note" data-en="Skills and automations are samples and will be replaced with my own.">Умения и автоматизации са примерни и ще бъдат заменени с моите собствени.</p>
+      <p class="note" data-en="Skills and automations are samples and will be replaced with my own.">Уменията и автоматизациите са примерни и ще бъдат заменени с моите собствени.</p>
 
       <div class="thumbs">
         <div data-en="Done by hand twice → make it a skill">Направено на ръка два пъти → става умение</div>
@@ -192,7 +195,7 @@
         <div class="card">
           <h3>Obsidian</h3>
           <p data-en="The main memory: plain markdown files in one vault. It does not give the AI a magic memory; it makes the files easy to browse.">Основната памет: прости markdown файлове в един vault. Не дава магическа памет на AI, а прави файловете лесни за разглеждане.</p>
-          <ul><li data-en="One file at the root describes the structure so it does not drift over time.">Един файл в корена описва структурата, за да не се разместя с времето.</li><li data-en="Works with Claude, Codex and Gemini because they are ordinary files.">Работи с Claude, Codex и Gemini, защото са обикновени файлове.</li></ul>
+          <ul><li data-en="One file at the root describes the structure so it does not drift over time.">Един файл в корена описва структурата, за да не се размества с времето.</li><li data-en="Works with Claude, Codex and Gemini because they are ordinary files.">Работи с Claude, Codex и Gemini, защото са обикновени файлове.</li></ul>
         </div>
         <div class="card">
           <h3>NotebookLM</h3>
@@ -205,10 +208,10 @@
         <h3 data-en="Open: how the two connect">Отворено: как се свързват двете</h3>
         <ul>
           <li data-en="NotebookLM Enterprise has an official API. A regular account has no official one.">За NotebookLM Enterprise има официален API. За обикновен акаунт няма официален.</li>
-          <li data-en="There is an unofficial Python library (notebooklm-py). It uses undocumented Google endpoints and may break.">Има неофициална библиотека за Python (notebooklm-py). Работи чрез недокументирани точки на Google и може да се счупи.</li>
+          <li data-en="There is an unofficial Python library (notebooklm-py). It uses undocumented Google endpoints and may break.">Има неофициална библиотека за Python (notebooklm-py). Работи чрез недокументирани крайни точки на Google и може да се счупи.</li>
           <li data-en="Whether Colab can pull from NotebookLM is not tested yet. Signing in through a browser may be the obstacle.">Дали Colab може да изтегля от NotebookLM, още не е проверено. Влизането с акаунт през браузър може да е пречката.</li>
         </ul>
-        <p data-en="The decision will come after a trial. For now the link is manual: I copy sources from the vault into NotebookLM.">Решението ще се вземе след изпитание. Засега връзката е ръчна: копирам източници от vault-а в NotebookLM.</p>
+        <p data-en="The decision will come after a trial. For now the link is manual: I copy sources from the vault into NotebookLM.">Решението ще се вземе след проба. Засега връзката е ръчна: копирам източници от vault-а в NotebookLM.</p>
       </div>
     </section>
 
@@ -223,7 +226,7 @@
     <section class="s reveal" id="contact">
       <div class="mono">// <span data-en="contact">контакти</span></div>
       <h2><span data-en="Martin Urumov">Мартин Урумов</span></h2>
-      <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен към отдалечена международна работа.</p>
+      <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен за отдалечена международна работа.</p>
       <div class="cvrow">
         <a class="btn" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="Download CV">Изтегли CV</span> <small id="cv-note">PDF · EN</small></a>
         <span class="owner-both">Мартин Урумов · Martin Urumov</span>

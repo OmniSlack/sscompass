@@ -4,8 +4,9 @@
   'use strict';
   var D = window.SSC, core = window.SSCCore || null;
   var $ = function (id) { return document.getElementById(id); };
-  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+  function safeFile(u) { return /^(https?:\/\/|[\w\-\/.]+\.pdf$)/i.test(u || '') ? u : ''; }
 
   /* ---------- език / language ---------- */
   var lang = 'bg';
@@ -22,7 +23,7 @@
     filters: [['all', { bg: 'Всички', en: 'All' }], ['ai', { bg: 'AI и документи', en: 'AI and documents' }], ['java', { bg: 'Java', en: 'Java' }], ['unity', { bg: 'Unity', en: 'Unity' }], ['learn', { bg: 'Учене', en: 'Learning' }]],
     kind: { time: { bg: 'по график', en: 'on a schedule' }, event: { bg: 'при събитие', en: 'when something happens' }, manual: { bg: 'ръчно', en: 'manual' } },
     task: { bg: 'задача', en: 'task' }, skill: { bg: 'умение', en: 'skill' }, auto2: { bg: 'автоматизация', en: 'automation' },
-    more: { bg: 'Подробности →', en: 'Details →' }, open: { bg: 'Отвори →', en: 'Open →' }, profile: { bg: 'профил', en: 'profile' }, soon: { bg: 'линк скоро', en: 'link soon' },
+    more: { bg: 'Подробности →', en: 'Details →' }, newTab: { bg: '(отваря се в нов таб)', en: '(opens in a new tab)' }, open: { bg: 'Отвори →', en: 'Open →' }, profile: { bg: 'профил', en: 'profile' }, soon: { bg: 'линк скоро', en: 'link soon' },
     title: { bg: 'SSC Compass · Мартин Урумов', en: 'SSC Compass · Martin Urumov' },
     desc: { bg: 'SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI. Мартин Урумов / Martin Urumov.', en: 'SSC Compass (Shadow Somiyo Compass): a personal command centre built around my work with AI. Martin Urumov / Мартин Урумов.' },
     routes: [
@@ -36,16 +37,16 @@
   /* ---------- избор на AI ---------- */
   var current = D.ais[0];
   $('ai-switch').innerHTML = D.ais.map(function (a, i) {
-    return '<button role="tab" data-ai="' + a.id + '" aria-selected="' + (i === 0) + '">' + esc(a.name) + '</button>';
+    return '<button data-ai="' + a.id + '" aria-pressed="' + (i === 0) + '">' + esc(a.name) + '</button>';
   }).join('');
-  function setAI(id) {
+  function setAI(id, instant) {
     var a = D.ais.filter(function (x) { return x.id === id; })[0]; if (!a) return;
     current = a;
     var root = document.documentElement.style;
     root.setProperty('--accent-rgb', a.accent); root.setProperty('--accent2-rgb', a.accent2);
     $('ai-name').textContent = a.name; $('ai-sub').textContent = a.sub;
-    Array.prototype.forEach.call($('ai-switch').children, function (b) { b.setAttribute('aria-selected', b.dataset.ai === id); });
-    if (core) core.setAI(id);
+    Array.prototype.forEach.call($('ai-switch').children, function (b) { b.setAttribute('aria-pressed', b.dataset.ai === id); });
+    if (core) core.setAI(id, instant);
     readout();
     try { localStorage.setItem('ssc-ai', id); } catch (e) {}
   }
@@ -63,6 +64,7 @@
   }
   function setState(s) {
     state = s; if (core) core.setState(s);
+    var ix = ['idle', 'listening', 'working', 'speaking'].indexOf(s); if (ix > -1) autoIdx = ix;
     Array.prototype.forEach.call($('states').querySelectorAll('[data-s]'), function (b) { b.setAttribute('aria-pressed', b.dataset.s === s); });
     readout();
   }
@@ -84,11 +86,12 @@
   /* ---------- рутиране: илюстративен пример ---------- */
   var routeIdx = 0;
   function renderPicks() {
-    $('picks').innerHTML = UI.routes.map(function (r, i) { return '<button data-r="' + i + '" aria-pressed="' + (i === routeIdx) + '">„' + esc(tx(r.q)) + '“</button>'; }).join('');
+    $('picks').innerHTML = UI.routes.map(function (r, i) { return '<button data-r="' + i + '" aria-pressed="' + (i === routeIdx) + '">' + (lang === 'bg' ? '„' : '“') + esc(tx(r.q)) + (lang === 'bg' ? '“' : '”') + '</button>'; }).join('');
   }
-  function showRoute(i) {
+  function showRoute(i, rebuild) {
     routeIdx = i; var r = UI.routes[i], win = r.p.indexOf(Math.max.apply(null, r.p));
-    renderPicks();
+    if (rebuild || !$('picks').children.length) renderPicks();
+    else Array.prototype.forEach.call($('picks').children, function (b, k) { b.setAttribute('aria-pressed', k === i); });
     $('bars').innerHTML = UI.tiers.map(function (n, k) {
       return '<div class="bar' + (k === win ? ' win' : '') + '"><span>' + esc(tx(n)) + '</span><span class="tr"><i data-w="' + r.p[k] + '"></i></span><span>' + r.p[k] + '%</span></div>';
     }).join('');
@@ -103,7 +106,7 @@
   function renderDomains() {
     var on = Array.prototype.map.call($('domains').children, function (c) { return c.classList.contains('on'); });
     $('domains').innerHTML = D.domains.map(function (d) {
-      return '<div class="card dom" tabindex="0">' +
+      return '<div class="card dom">' +
         '<div class="row">' + esc(tx(d.name)) + '</div>' +
         '<div class="row"><small>' + tx(UI.task) + '</small>' + esc(tx(d.task)) + '</div>' +
         '<div class="row"><small>' + tx(UI.skill) + '</small><span class="sk">' + esc(d.skill) + '<em>' + esc(tx(d.note)) + '</em></span></div>' +
@@ -115,9 +118,6 @@
     var c = e.target.closest('.dom'); if (!c) return;
     Array.prototype.forEach.call($('domains').children, function (x) { x.classList.toggle('on', x === c && !x.classList.contains('on')); });
   });
-  $('domains').addEventListener('keydown', function (e) {
-    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('dom')) { e.preventDefault(); e.target.click(); }
-  });
 
   /* ---------- проекти ---------- */
   var filter = 'all';
@@ -126,41 +126,52 @@
   }
   function renderProjects() {
     $('projects-grid').innerHTML = D.projects.filter(function (p) { return filter === 'all' || p.tags.indexOf(filter) > -1; }).map(function (p) {
-      return '<button class="card proj" data-p="' + esc(p.id) + '"><div class="chips"><span class="chip st">' + esc(tx(p.status)) + '</span></div>' +
+      return '<article class="card proj" data-p="' + esc(p.id) + '"><div class="chips"><span class="chip st">' + esc(tx(p.status)) + '</span></div>' +
         '<h3>' + esc(p.name) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
-        '<div class="chips">' + p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div><span class="more">' + esc(tx(UI.more)) + '</span></button>';
+        '<div class="chips">' + p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div>' +
+        '<button class="more" data-p="' + esc(p.id) + '" aria-haspopup="dialog" aria-label="' + esc(tx(UI.more).replace(' →', '') + ': ' + p.name) + '">' + esc(tx(UI.more)) + '</button></article>';
     }).join('');
   }
   $('filters').addEventListener('click', function (e) {
-    if (!e.target.dataset.f) return; filter = e.target.dataset.f; renderFilters(); renderProjects();
+    if (!e.target.dataset.f) return; filter = e.target.dataset.f;
+    Array.prototype.forEach.call($('filters').children, function (b) { b.setAttribute('aria-pressed', b.dataset.f === filter); });
+    renderProjects();
   });
-  var dlg = $('dlg'), lastFocus = null, openProject = null;
+  var dlg = $('dlg'), openProject = null;
   function renderDialog() {
     var p = D.projects.filter(function (x) { return x.id === openProject; })[0]; if (!p) return;
     $('dlg-body').innerHTML = '<div class="chips" style="margin-bottom:10px"><span class="chip st">' + esc(tx(p.status)) + '</span>' +
       p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div>' +
       '<h3 id="dlg-title">' + esc(p.name) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
       (p.details.length ? '<ul>' + p.details.map(function (d) { return '<li>' + esc(tx(d)) + '</li>'; }).join('') + '</ul>' : '') +
-      (p.links ? '<p>' + p.links.filter(function (l) { return safeUrl(l.url); }).map(function (l) { return '<a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(l.url) + '">' + esc(tx(l.label)) + '</a>'; }).join(' ') + '</p>' : '');
+      (p.links ? '<p>' + p.links.filter(function (l) { return safeUrl(l.url); }).map(function (l) { return '<a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(l.url) + '">' + esc(tx(l.label)) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></a>'; }).join(' ') + '</p>' : '');
   }
   $('projects-grid').addEventListener('click', function (e) {
     var b = e.target.closest('[data-p]'); if (!b) return;
-    lastFocus = b; openProject = b.dataset.p; renderDialog();
+    openProject = b.dataset.p; renderDialog();
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
   });
-  function closeDlg() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); if (lastFocus) lastFocus.focus(); }
+  function closeDlg() {
+    if (dlg.close) dlg.close(); else dlg.removeAttribute('open');
+    var b = openProject && document.querySelector('.more[data-p="' + openProject + '"]'); if (b) b.focus();
+  }
   $('dlg-close').addEventListener('click', closeDlg);
-  dlg.addEventListener('click', function (e) { if (e.target === dlg) closeDlg(); });
+  dlg.addEventListener('click', function (e) {
+    if (e.target !== dlg) return;
+    var r = dlg.getBoundingClientRect();     // клик в падинга на прозореца не затваря; само върху фона
+    var inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside || (r.width === 0 && r.height === 0)) closeDlg();
+  });
 
   /* ---------- контакти ---------- */
   function renderSocials() {
     $('socials').innerHTML = D.socials.map(function (s) {
       var u = safeUrl(s.url);
-      if (u) return '<a class="card soc" target="_blank" rel="noopener noreferrer" href="' + esc(u) + '"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(s.handle || tx(UI.profile)) + '</span><span class="go">' + esc(tx(UI.open)) + '</span></a>';
+      if (u) return '<a class="card soc" target="_blank" rel="noopener noreferrer" href="' + esc(u) + '"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(s.handle || tx(UI.profile)) + '</span><span class="go">' + esc(tx(UI.open)) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></span></a>';
       return '<div class="card soc off"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(tx(UI.soon)) + '</span></div>';
     }).join('');
   }
-  $('cv-link').setAttribute('href', D.cv.url); $('cv-note').textContent = '';
+  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#'); $('cv-note').textContent = '';
 
   /* ---------- езикът се прилага навсякъде / apply language everywhere ---------- */
   function applyLang(l) {
@@ -177,8 +188,8 @@
     var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', tx(UI.desc));
     Array.prototype.forEach.call($('lang').children, function (b) { b.setAttribute('aria-pressed', b.dataset.lang === l); });
     $('cv-note').textContent = tx(D.cv.note);
-    renderStates(); readout(); renderFilters(); renderProjects(); renderDomains(); renderSocials(); showRoute(routeIdx);
-    if (dlg.open) renderDialog();
+    renderStates(); readout(); renderFilters(); renderProjects(); renderDomains(); renderSocials(); showRoute(routeIdx, true);
+    if (dlg.hasAttribute('open')) renderDialog();
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
@@ -195,7 +206,7 @@
   applyLang(detectLang());
   if (reduce && core) core.setPaused(true);
   renderStates();
-  setAI(saved && D.ais.some(function (a) { return a.id === saved; }) ? saved : D.ais[0].id);
+  setAI(saved && D.ais.some(function (a) { return a.id === saved; }) ? saved : D.ais[0].id, true);
   setState('idle'); setAuto(!reduce);
 
   /* ---------- плавно появяване ---------- */

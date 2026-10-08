@@ -111,7 +111,7 @@
   }
 
   var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N), ps = new Float32Array(N);
-  var from = 'claude', to = 'claude', m = 1;      // m: 0..1 прелив from -> to
+  var from = 'claude', to = 'claude', m = 1, pending = null;      // m: 0..1 прелив from -> to
   var phase = { claude: 0, gpt: 0, codex: 0, gemini: 0 };
   var state = 'idle', t = 0, last = 0;
   var cur = { spd: 1, rad: 1, jit: 0, br: 1, err: 0, ring: 0 };
@@ -129,7 +129,7 @@
 
   var mx = 0, my = 0;
   window.addEventListener('pointermove', function (e) { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
-  if (window.IntersectionObserver) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(box);
+  if (window.IntersectionObserver) new IntersectionObserver(function (es) { visible = es[es.length - 1].isIntersecting; }).observe(box);
 
   function ease(v) { return v < .5 ? 2 * v * v : 1 - Math.pow(-2 * v + 2, 2) / 2; }
   function lerp(a, b, v) { return a + (b - a) * v; }
@@ -146,7 +146,8 @@
   function step(dt) {
     var morphing = m < 1;
     if (!visible || (paused && !morphing && !dirty)) return;
-    if (paused && !morphing) dt = 0;
+    var mdt = dt;                                    // времето за прелива върви и на пауза
+    if (paused) dt = 0;                              // а движението замръзва
     t += dt;
 
     // целеви стойности за текущото състояние / targets for the current state
@@ -159,7 +160,8 @@
     cur.spd = lerp(cur.spd, tg.spd, kf); cur.rad = lerp(cur.rad, tg.rad, state === 'speaking' || state === 'listening' ? 1 : kf);
     cur.jit = lerp(cur.jit, tg.jit, kf); cur.br = lerp(cur.br, tg.br, kf); cur.err = lerp(cur.err, tg.err, kf); cur.ring = lerp(cur.ring, tg.ring, kf);
 
-    if (morphing) m = Math.min(1, m + dt / 1.1);
+    if (morphing) m = Math.min(1, m + mdt / 1.1);
+    if (m >= 1 && pending && pending !== to) { from = to; to = pending; m = 0; pending = null; }
     var me = ease(m), A = ACCENT[to], B = ACCENT[from];
     accent = [lerp(B[0], A[0], me), lerp(B[1], A[1], me), lerp(B[2], A[2], me)];
     Object.keys(phase).forEach(function (id) { phase[id] += dt * PARAM[id].speed * cur.spd; });
@@ -214,14 +216,17 @@
   requestAnimationFrame(frame);
 
   window.SSCCore = {
-    setAI: function (id) {
-      if (!shapes[id] || id === to) return;
+    setAI: function (id, instant) {
+      if (!shapes[id]) return;
+      if (instant) { from = to = id; m = 1; pending = null; dirty = true; return; }
+      if (m < 1) { pending = id === to ? null : id; return; }   // още върви прелив: чакаме го, без да скача картината
+      if (id === to) return;
       from = to; to = id; m = 0; dirty = true;
     },
     setState: function (s) { state = s; dirty = true; },
     setPaused: function (b) { paused = !!b; dirty = true; },
     isPaused: function () { return paused; },
-    current: function () { return { ai: to, state: state, morph: m }; },
+    current: function () { return { ai: pending || to, state: state, morph: m }; },
     advance: function (sec) { var n = Math.ceil(sec / .033), j; for (j = 0; j < n; j++) step(.033); }   // lets a test advance frames without rAF
   };
 })();

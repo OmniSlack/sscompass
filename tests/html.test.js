@@ -105,11 +105,16 @@ test('there are no inline scripts and no inline event handlers', () => {
   assert.equal([...doc.querySelectorAll('script:not([src])')].length, 0);
   assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
-test('the only external hosts are Google Fonts', () => {
+test('the page makes no third-party requests (fonts are self-hosted)', () => {
   const urls = read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [];
-  for (const u of urls) assert.ok(/^https:\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com|www\.w3\.org)/.test(u), u);
+  assert.deepEqual(urls, []);
 });
-test('the stylesheet exists', () => assert.ok(exists('assets/style.css')));
+test('both stylesheets exist and every font file they name exists', () => {
+  assert.ok(exists('assets/style.css')); assert.ok(exists('assets/fonts.css'));
+  const files = read('assets/fonts.css').match(/url\(fonts\/[^)]+\)/g) || [];
+  assert.ok(files.length >= 12);
+  for (const f of files) assert.ok(exists('assets/' + f.slice(4, -1)), f);
+});
 
 test('contact section links the CV as a PDF opening safely', () => {
   const a = doc.getElementById('cv-link');
