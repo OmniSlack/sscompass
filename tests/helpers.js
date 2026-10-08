@@ -65,6 +65,33 @@ function load(opts = {}) {
 
 const opened = [];
 const closeAll = () => { while (opened.length) { try { opened.pop().close(); } catch (e) {} } };
+
+/** The deck viewer page (decks/index.html) with its scripts, at a given hash. */
+function loadDeck(hash = '', opts = {}) {
+  const { lang = 'en-US', storage = {} } = opts;
+  const html = read('decks/index.html').replace(/<script src="[^"]*"><\/script>/g, '');
+  const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'http://localhost/decks/index.html' + hash });
+  const w = dom.window;
+  Object.defineProperty(w.navigator, 'language', { value: lang, configurable: true });
+  Object.entries(storage).forEach(([k, v]) => w.localStorage.setItem(k, v));
+  const errors = [];
+  w.addEventListener('error', (e) => errors.push(e.message));
+  for (const f of ['decks/data/omniecho.js', 'decks/data/coherence.js', 'decks/data/dream.js', 'decks/deck.js']) {
+    try { w.eval(read(f)); } catch (e) { errors.push(f + ': ' + e.message); }
+  }
+  opened.push(w);
+  const click = (el) => el.dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+  const key = (k) => w.document.dispatchEvent(new w.KeyboardEvent('keydown', { key: k, bubbles: true }));
+  return { dom, w, doc: w.document, errors, click, key };
+}
+
+/** deck data evaluated on its own */
+function loadDecks() {
+  const sandbox = {}; sandbox.window = sandbox; vm.createContext(sandbox);
+  for (const f of ['omniecho', 'coherence', 'dream']) vm.runInContext(read(`decks/data/${f}.js`), sandbox);
+  return sandbox.DECKS;
+}
+
 const CYRILLIC = /[Ѐ-ӿ]/;
 
-module.exports = { closeAll, ROOT, read, exists, loadData, loadStatic, load, CYRILLIC };
+module.exports = { loadDeck, loadDecks, closeAll, ROOT, read, exists, loadData, loadStatic, load, CYRILLIC };

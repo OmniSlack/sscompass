@@ -48,8 +48,8 @@ test('project ids are unique', () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
-test('there are ten projects and none is the employer project', () => {
-  assert.equal(D.projects.length, 10);
+test('there are thirteen projects (ten work items and three decks) and none is the employer project', () => {
+  assert.equal(D.projects.length, 13);
   assert.ok(!D.projects.some((p) => /dzjin|dzhin|broadcapp/i.test(p.id + p.name)));
 });
 
@@ -74,10 +74,13 @@ for (const p of D.projects) {
   });
 }
 
-test('only sk15_automation has an outgoing project link, and it is on the owner GitHub', () => {
+test('the only outgoing project link is sk15_automation on the owner GitHub; the others are the three decks', () => {
   const withLinks = D.projects.filter((p) => p.links);
-  assert.deepEqual(Array.from(withLinks, (p) => p.id), ['sk15']);
-  assert.ok(withLinks[0].links.every((l) => l.url.startsWith('https://github.com/OmniSlack/') && bilingual(l.label)));
+  assert.deepEqual(Array.from(withLinks, (p) => p.id), ['deck-omniecho', 'deck-coherence', 'deck-dream', 'sk15']);
+  for (const p of withLinks) for (const l of p.links) {
+    assert.ok(bilingual(l.label));
+    assert.ok(l.url.startsWith('https://github.com/OmniSlack/') || /^decks\/index\.html#(omniecho|coherence|dream)\/1$/.test(l.url), l.url);
+  }
 });
 
 test('GapInTheGap states its content is not published', () => {

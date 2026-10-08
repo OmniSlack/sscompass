@@ -6,6 +6,7 @@
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+  function safeLink(u) { return /^(https?:\/\/.+|decks\/[\w\-.\/]+(#[\w\/-]+)?)$/i.test(u || '') ? u : ''; }
   function safeFile(u) { return /^(https?:\/\/|[\w\-\/.]+\.pdf$)/i.test(u || '') ? u : ''; }
 
   /* ---------- език / language ---------- */
@@ -144,7 +145,10 @@
       p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div>' +
       '<h3 id="dlg-title">' + esc(p.name) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
       (p.details.length ? '<ul>' + p.details.map(function (d) { return '<li>' + esc(tx(d)) + '</li>'; }).join('') + '</ul>' : '') +
-      (p.links ? '<p>' + p.links.filter(function (l) { return safeUrl(l.url); }).map(function (l) { return '<a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(l.url) + '">' + esc(tx(l.label)) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></a>'; }).join(' ') + '</p>' : '');
+      (p.links ? '<p>' + p.links.filter(function (l) { return safeLink(l.url); }).map(function (l) {
+        var ext = /^https?:/i.test(l.url);
+        return '<a class="btn"' + (ext ? ' target="_blank" rel="noopener noreferrer"' : '') + ' href="' + esc(l.url) + '">' + esc(tx(l.label)) + (ext ? '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span>' : '') + '</a>';
+      }).join(' ') + '</p>' : '');
   }
   $('projects-grid').addEventListener('click', function (e) {
     var b = e.target.closest('[data-p]'); if (!b) return;
