@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SSC Compass</title>
-<meta name="description" content="SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI.">
+<title>SSC Compass · Мартин Урумов</title>
+<meta name="description" content="SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI. Мартин Урумов / Martin Urumov.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -15,13 +15,16 @@
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#top">SSC<b>/</b>COMPASS</a>
-    <nav aria-label="Секции">
-      <a href="#architecture">Архитектура</a>
-      <a href="#skills">Умения</a>
-      <a href="#memory">Памет</a>
-      <a href="#projects">Проекти</a>
-      <a href="#platforms">Платформи</a>
+    <nav aria-label="Секции" data-en-aria="Sections">
+      <a href="#architecture" data-en="Architecture">Архитектура</a>
+      <a href="#skills" data-en="Skills">Умения</a>
+      <a href="#memory" data-en="Memory">Памет</a>
+      <a href="#projects" data-en="Projects">Проекти</a>
+      <a href="#contact" data-en="Contact">Контакти</a>
     </nav>
+    <div class="lang" role="group" aria-label="Език / Language" id="lang">
+      <button data-lang="bg" aria-pressed="true">BG</button><button data-lang="en" aria-pressed="false">EN</button>
+    </div>
     <div id="clock" aria-hidden="true">--:--:--</div>
   </div>
 </header>
@@ -30,30 +33,30 @@
   <section class="hero">
     <div class="wrap">
       <div class="hud mono">
-        <span><i></i>Core · online</span>
-        <span>Интерфейс · публичен</span>
-        <span>Build · v0.2</span>
+        <span><i></i><span data-en="Core · online">Core · online</span></span>
+        <span data-en="Interface · public">Интерфейс · публичен</span>
+        <span>Build · v0.3</span>
       </div>
 
-      <div class="ai-switch" role="tablist" aria-label="Избор на AI" id="ai-switch"></div>
+      <div class="ai-switch" role="tablist" aria-label="Избор на AI" data-en-aria="Choose an AI" id="ai-switch"></div>
 
       <div class="stage">
         <aside class="side l">
-          <h3 class="mono">Слоеве</h3>
-          <div class="layer"><b>01</b><div>Интерфейс<small>Публичната витрина. Това, което виждаш.</small></div></div>
-          <div class="layer"><b>02</b><div>Контрол<small>Личен изглед. Само показва. Не е публичен.</small></div></div>
-          <div class="layer"><b>03</b><div>Функционален<small>Моторът, който захранва другите два слоя.</small></div></div>
+          <h3 class="mono" data-en="Layers">Слоеве</h3>
+          <div class="layer"><b>01</b><div><span data-en="Interface">Интерфейс</span><small data-en="The public showcase. What you are looking at.">Публичната витрина. Това, което виждаш.</small></div></div>
+          <div class="layer"><b>02</b><div><span data-en="Control">Контрол</span><small data-en="A personal view. It only shows. It is not public.">Личен изглед. Само показва. Не е публичен.</small></div></div>
+          <div class="layer"><b>03</b><div><span data-en="Functional">Функционален</span><small data-en="The engine that feeds the other two layers.">Моторът, който захранва другите два слоя.</small></div></div>
         </aside>
 
-        <div class="orb"><canvas id="core" aria-label="Анимирано ядро на избрания AI" role="img"></canvas></div>
+        <div class="orb"><canvas id="core" aria-label="Анимирано ядро на избрания AI" data-en-aria="Animated core of the chosen AI" role="img"></canvas></div>
 
         <aside class="side r">
-          <h3 class="mono">Бърз достъп</h3>
+          <h3 class="mono" data-en="Quick access">Бърз достъп</h3>
           <div class="quick">
-            <a href="#architecture">Архитектура <span>→</span></a>
-            <a href="#skills">Умения <span>→</span></a>
-            <a href="#memory">Памет <span>→</span></a>
-            <a href="#projects">Проекти <span>→</span></a>
+            <a href="#architecture"><span data-en="Architecture">Архитектура</span> <span>→</span></a>
+            <a href="#skills"><span data-en="Skills">Умения</span> <span>→</span></a>
+            <a href="#memory"><span data-en="Memory">Памет</span> <span>→</span></a>
+            <a href="#projects"><span data-en="Projects">Проекти</span> <span>→</span></a>
           </div>
         </aside>
       </div>
@@ -61,59 +64,60 @@
       <div class="ident">
         <h1 id="ai-name">CLAUDE</h1>
         <p id="ai-sub">Claude Code · Anthropic</p>
+        <p class="owner">Мартин Урумов · Martin Urumov</p>
       </div>
 
-      <div class="states" role="group" aria-label="Състояние на ядрото" id="states"></div>
+      <div class="states" role="group" aria-label="Състояние на ядрото" data-en-aria="State of the core" id="states"></div>
       <div class="readout mono" id="readout" aria-live="polite"></div>
-      <p class="tagline">Личен команден център, който събира най-доброто от всички AI инструменти и го изгражда около мен и моята работа.</p>
+      <p class="tagline" data-en="A personal command centre that brings together the best of every AI tool and builds it around me and my work.">Личен команден център, който събира най-доброто от всички AI инструменти и го изгражда около мен и моята работа.</p>
     </div>
   </section>
 
   <div class="wrap">
 
     <section class="s reveal" id="architecture">
-      <div class="mono">// архитектура</div>
-      <h2>Как работи системата</h2>
-      <p class="lead">Две врати, един мозък, обща памет. <span class="badge">планирана архитектура</span></p>
+      <div class="mono">// <span data-en="architecture">архитектура</span></div>
+      <h2 data-en="How the system works">Как работи системата</h2>
+      <p class="lead"><span data-en="Two doors, one brain, shared memory.">Две врати, един мозък, обща памет.</span> <span class="badge" data-en="planned architecture">планирана архитектура</span></p>
 
       <div class="arch card">
-        <svg viewBox="0 0 1100 600" role="img" aria-label="Схема: ти, две врати, мост, рутер, три нива, конектори и обща памет">
+        <svg viewBox="0 0 1100 600" role="img" aria-label="Схема: ти, две врати, мост, рутер, три нива, конектори и обща памет" data-en-aria="Diagram: you, two doors, a bridge, a router, three tiers, connectors and shared memory">
           <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9a93a8"/></marker></defs>
 
           <ellipse class="node" cx="80" cy="232" rx="64" ry="42"/>
-          <text class="h" x="80" y="230" text-anchor="middle">ТИ</text><text class="d" x="80" y="248" text-anchor="middle">говориш или кликаш</text>
+          <text class="h" x="80" y="230" text-anchor="middle" data-en="YOU">ТИ</text><text class="d" x="80" y="248" text-anchor="middle" data-en="talk or click">говориш или кликаш</text>
 
           <rect class="node" x="190" y="118" width="200" height="76" rx="14"/>
-          <text class="h" x="290" y="150" text-anchor="middle">Compass сайт</text><text class="d" x="290" y="172" text-anchor="middle">браузър · същите бутони</text>
+          <text class="h" x="290" y="150" text-anchor="middle" data-en="Compass site">Compass сайт</text><text class="d" x="290" y="172" text-anchor="middle" data-en="browser · same buttons">браузър · същите бутони</text>
           <rect class="node" x="190" y="268" width="200" height="76" rx="14"/>
-          <text class="h" x="290" y="300" text-anchor="middle">Obsidian плъгин</text><text class="d" x="290" y="322" text-anchor="middle">живее във vault-а</text>
+          <text class="h" x="290" y="300" text-anchor="middle" data-en="Obsidian plugin">Obsidian плъгин</text><text class="d" x="290" y="322" text-anchor="middle" data-en="lives inside the vault">живее във vault-а</text>
 
           <rect class="node dash" x="450" y="24" width="190" height="60" rx="12"/>
-          <text class="h" x="545" y="50" text-anchor="middle">Реч · локално</text><text class="d" x="545" y="70" text-anchor="middle">Whisper = уши · Kokoro = глас</text>
+          <text class="h" x="545" y="50" text-anchor="middle" data-en="Speech · local">Реч · локално</text><text class="d" x="545" y="70" text-anchor="middle" data-en="Whisper = ears · Kokoro = voice">Whisper = уши · Kokoro = глас</text>
 
           <rect class="node hub" x="450" y="140" width="190" height="140" rx="14"/>
-          <text class="h" x="545" y="178" text-anchor="middle">МОСТ</text>
-          <text class="d" x="545" y="206" text-anchor="middle">един мозък за</text><text class="d" x="545" y="224" text-anchor="middle">двете врати</text>
-          <text class="d" x="545" y="256" text-anchor="middle">приема всяка заявка</text>
+          <text class="h" x="545" y="178" text-anchor="middle" data-en="BRIDGE">МОСТ</text>
+          <text class="d" x="545" y="206" text-anchor="middle" data-en="one brain for">един мозък за</text><text class="d" x="545" y="224" text-anchor="middle" data-en="both doors">двете врати</text>
+          <text class="d" x="545" y="256" text-anchor="middle" data-en="takes every request">приема всяка заявка</text>
 
           <rect class="node hub" x="700" y="150" width="150" height="120" rx="14"/>
-          <text class="h" x="775" y="186" text-anchor="middle">РУТЕР</text><text class="d" x="775" y="208" text-anchor="middle">OmniMax</text>
-          <text class="d" x="775" y="232" text-anchor="middle">подрежда заявката</text><text class="d" x="775" y="250" text-anchor="middle">по ниво</text>
+          <text class="h" x="775" y="186" text-anchor="middle" data-en="ROUTER">РУТЕР</text><text class="d" x="775" y="208" text-anchor="middle">OmniMax</text>
+          <text class="d" x="775" y="232" text-anchor="middle" data-en="sorts the request">подрежда заявката</text><text class="d" x="775" y="250" text-anchor="middle" data-en="into a tier">по ниво</text>
 
           <rect class="node t1" x="910" y="40" width="170" height="84" rx="12"/>
-          <text class="h" x="995" y="68" text-anchor="middle">НИВО 1</text><text class="d" x="995" y="90" text-anchor="middle">правила + запазени данни</text><text class="d" x="995" y="108" text-anchor="middle">без AI · мигновено</text>
+          <text class="h" x="995" y="68" text-anchor="middle" data-en="TIER 1">НИВО 1</text><text class="d" x="995" y="90" text-anchor="middle" data-en="rules + saved data">правила + запазени данни</text><text class="d" x="995" y="108" text-anchor="middle" data-en="no AI · instant">без AI · мигновено</text>
           <rect class="node t2" x="910" y="150" width="170" height="84" rx="12"/>
-          <text class="h" x="995" y="178" text-anchor="middle">НИВО 2</text><text class="d" x="995" y="200" text-anchor="middle">бърз малък модел</text><text class="d" x="995" y="218" text-anchor="middle">кратък отговор</text>
+          <text class="h" x="995" y="178" text-anchor="middle" data-en="TIER 2">НИВО 2</text><text class="d" x="995" y="200" text-anchor="middle" data-en="quick small model">бърз малък модел</text><text class="d" x="995" y="218" text-anchor="middle" data-en="short answer">кратък отговор</text>
           <rect class="node t3" x="910" y="262" width="170" height="110" rx="12"/>
-          <text class="h" x="995" y="290" text-anchor="middle">НИВО 3</text><text class="d" x="995" y="312" text-anchor="middle">истинска работа в терминал</text><text class="d" x="995" y="330" text-anchor="middle">или умение на заден план</text><text class="d" x="995" y="352" text-anchor="middle">Claude · Codex · Gemini</text>
+          <text class="h" x="995" y="290" text-anchor="middle" data-en="TIER 3">НИВО 3</text><text class="d" x="995" y="312" text-anchor="middle" data-en="real work in a terminal">истинска работа в терминал</text><text class="d" x="995" y="330" text-anchor="middle" data-en="or a background skill">или умение на заден план</text><text class="d" x="995" y="352" text-anchor="middle">Claude · Codex · Gemini</text>
 
           <rect class="node dash" x="690" y="300" width="170" height="72" rx="12"/>
-          <text class="h" x="775" y="326" text-anchor="middle">Конектори</text><text class="d" x="775" y="346" text-anchor="middle">Gmail · Календар · Drive</text><text class="d" x="775" y="361" text-anchor="middle">YouTube</text>
+          <text class="h" x="775" y="326" text-anchor="middle" data-en="Connectors">Конектори</text><text class="d" x="775" y="346" text-anchor="middle" data-en="Gmail · Calendar · Drive">Gmail · Календар · Drive</text><text class="d" x="775" y="361" text-anchor="middle">YouTube</text>
 
           <rect class="node vault" x="190" y="470" width="890" height="96" rx="14"/>
-          <text class="h" x="635" y="504" text-anchor="middle">VAULT · ОБЩА ПАМЕТ</text>
-          <text class="d" x="635" y="528" text-anchor="middle">Obsidian (прости markdown файлове) + NotebookLM (въпроси към източници)</text>
-          <text class="d" x="635" y="548" text-anchor="middle">дневни бележки · отчети · проучвания · разговори · следа от всяка заявка</text>
+          <text class="h" x="635" y="504" text-anchor="middle" data-en="VAULT · SHARED MEMORY">VAULT · ОБЩА ПАМЕТ</text>
+          <text class="d" x="635" y="528" text-anchor="middle" data-en="Obsidian (plain markdown files) + NotebookLM (questions over sources)">Obsidian (прости markdown файлове) + NotebookLM (въпроси към източници)</text>
+          <text class="d" x="635" y="548" text-anchor="middle" data-en="daily notes · reports · research · conversations · a receipt for every request">дневни бележки · отчети · проучвания · разговори · следа от всяка заявка</text>
 
           <path class="ln" d="M142 215 L188 168"/><path class="ln" d="M142 252 L188 292"/>
           <path class="ln" d="M390 156 L448 190"/><path class="ln" d="M390 306 L448 232"/>
@@ -121,27 +125,27 @@
           <path class="ln" d="M640 210 L698 210"/>
           <path class="ln" d="M850 180 L908 90"/><path class="ln" d="M850 210 L908 192"/><path class="ln" d="M850 240 L908 300"/>
           <path class="ln" d="M908 336 L862 336"/>
-          <path class="ln2" d="M545 280 L545 468"/><text class="d" x="556" y="380">чете + записва</text>
-          <path class="ln" d="M995 372 L995 468"/><text class="d" x="1005" y="425">запазва отчети</text>
+          <path class="ln2" d="M545 280 L545 468"/><text class="d" x="556" y="380" data-en="reads + records">чете + записва</text>
+          <path class="ln" d="M995 372 L995 468"/><text class="d" x="1005" y="425" data-en="saves reports">запазва отчети</text>
         </svg>
 
         <ol class="steps mobile">
-          <li><b>1 · ТИ</b><span>Говориш или кликаш.</span></li>
-          <li><b>2 · ДВЕ ВРАТИ</b><span>Compass сайт в браузъра и Obsidian плъгин във vault-а, със същите бутони.</span></li>
-          <li><b>3 · РЕЧ (локално)</b><span>Whisper слуша, Kokoro говори.</span></li>
-          <li><b>4 · МОСТ</b><span>Един мозък за двете врати: приема всяка заявка.</span></li>
-          <li><b>5 · РУТЕР (OmniMax)</b><span>Подрежда заявката по ниво.</span></li>
-          <li><b>6 · НИВО 1</b><span>Правила и запазени данни, без AI, мигновено.</span></li>
-          <li><b>7 · НИВО 2</b><span>Бърз малък модел за кратък отговор.</span></li>
-          <li><b>8 · НИВО 3</b><span>Истинска работа: Claude, Codex или Gemini в терминал, или умение на заден план. Достъп до Gmail, Календар, Drive, YouTube.</span></li>
-          <li><b>9 · VAULT</b><span>Общата памет. Мостът я чете и записва, а отчетите от ниво 3 се запазват в нея.</span></li>
+          <li><b data-en="1 · YOU">1 · ТИ</b><span data-en="You talk or click.">Говориш или кликаш.</span></li>
+          <li><b data-en="2 · TWO DOORS">2 · ДВЕ ВРАТИ</b><span data-en="The Compass site in the browser and an Obsidian plugin inside the vault, with the same buttons.">Compass сайт в браузъра и Obsidian плъгин във vault-а, със същите бутони.</span></li>
+          <li><b data-en="3 · SPEECH (local)">3 · РЕЧ (локално)</b><span data-en="Whisper listens, Kokoro speaks.">Whisper слуша, Kokoro говори.</span></li>
+          <li><b data-en="4 · BRIDGE">4 · МОСТ</b><span data-en="One brain for both doors: it takes every request.">Един мозък за двете врати: приема всяка заявка.</span></li>
+          <li><b data-en="5 · ROUTER (OmniMax)">5 · РУТЕР (OmniMax)</b><span data-en="Sorts the request into a tier.">Подрежда заявката по ниво.</span></li>
+          <li><b data-en="6 · TIER 1">6 · НИВО 1</b><span data-en="Rules and saved data, no AI, instant.">Правила и запазени данни, без AI, мигновено.</span></li>
+          <li><b data-en="7 · TIER 2">7 · НИВО 2</b><span data-en="A quick small model for a short answer.">Бърз малък модел за кратък отговор.</span></li>
+          <li><b data-en="8 · TIER 3">8 · НИВО 3</b><span data-en="Real work: Claude, Codex or Gemini in a terminal, or a skill in the background. Reaches Gmail, Calendar, Drive and YouTube.">Истинска работа: Claude, Codex или Gemini в терминал, или умение на заден план. Достъп до Gmail, Календар, Drive, YouTube.</span></li>
+          <li><b data-en="9 · VAULT">9 · VAULT</b><span data-en="The shared memory. The bridge reads and writes it, and tier 3 saves its reports there.">Общата памет. Мостът я чете и записва, а отчетите от ниво 3 се запазват в нея.</span></li>
         </ol>
       </div>
 
       <div class="card route">
-        <div class="mono">// пример</div>
-        <h3 style="margin:4px 0 0;font:500 1.2rem var(--display);letter-spacing:.05em">Едно съобщение. Три нива.</h3>
-        <p class="note" style="margin-top:6px">Избери заявка и виж на кое ниво би отишла. Стойностите са илюстративни, не са измерване.</p>
+        <div class="mono">// <span data-en="example">пример</span></div>
+        <h3 style="margin:4px 0 0;font:500 1.2rem var(--display);letter-spacing:.05em" data-en="One message. Three tiers.">Едно съобщение. Три нива.</h3>
+        <p class="note" style="margin-top:6px" data-en="Pick a request and see which tier it would go to. The values are illustrative, not measured.">Избери заявка и виж на кое ниво би отишла. Стойностите са илюстративни, не са измерване.</p>
         <div class="picks" id="picks"></div>
         <div class="bars" id="bars"></div>
         <div class="verdict" id="verdict"></div>
@@ -149,77 +153,81 @@
     </section>
 
     <section class="s reveal" id="skills">
-      <div class="mono">// гръбнак</div>
-      <h2>От задача до автоматизация</h2>
-      <p class="lead">Всяка област има задачи. Повтарящата се задача става умение, а надеждното умение става автоматизация. <span class="badge">примерен гръбнак</span></p>
+      <div class="mono">// <span data-en="backbone">гръбнак</span></div>
+      <h2 data-en="From task to automation">От задача до автоматизация</h2>
+      <p class="lead"><span data-en="Every area has tasks. A repeated task becomes a skill, and a reliable skill becomes an automation.">Всяка област има задачи. Повтарящата се задача става умение, а надеждното умение става автоматизация.</span> <span class="badge" data-en="sample backbone">примерен гръбнак</span></p>
 
       <div class="flow">
-        <div class="st"><b>ОБЛАСТ</b><small>част от живота или бизнеса</small></div><span class="ar">→</span>
-        <div class="st"><b>ЗАДАЧА</b><small>нещо, което правя отново и отново</small></div><span class="ar">→</span>
-        <div class="st"><b>УМЕНИЕ</b><small>задачата, записана веднъж: AI я изпълнява</small></div><span class="ar">→</span>
-        <div class="st"><b>АВТОМАТИЗАЦИЯ</b><small>умение, което върви само</small></div>
+        <div class="st"><b data-en="DOMAIN">ОБЛАСТ</b><small data-en="an area of life or business">част от живота или бизнеса</small></div><span class="ar">→</span>
+        <div class="st"><b data-en="TASK">ЗАДАЧА</b><small data-en="something I do again and again">нещо, което правя отново и отново</small></div><span class="ar">→</span>
+        <div class="st"><b data-en="SKILL">УМЕНИЕ</b><small data-en="the task written down once: AI runs it">задачата, записана веднъж: AI я изпълнява</small></div><span class="ar">→</span>
+        <div class="st"><b data-en="AUTOMATION">АВТОМАТИЗАЦИЯ</b><small data-en="a skill that runs by itself">умение, което върви само</small></div>
       </div>
 
       <div class="domains" id="domains"></div>
-      <div class="legend"><span style="color:var(--warn)">● по график</span><span style="color:var(--blue)">● при събитие</span><span>● остава ръчно, нарочно</span></div>
-      <p class="note">Умения и автоматизации са примерни и ще бъдат заменени с моите собствени.</p>
+      <div class="legend"><span style="color:var(--warn)" data-en="● on a schedule">● по график</span><span style="color:var(--blue)" data-en="● when something happens">● при събитие</span><span data-en="● manual, on purpose">● остава ръчно, нарочно</span></div>
+      <p class="note" data-en="Skills and automations are samples and will be replaced with my own.">Умения и автоматизации са примерни и ще бъдат заменени с моите собствени.</p>
 
       <div class="thumbs">
-        <div>Направено на ръка два пъти → става умение</div>
-        <div>Умението работи 5 пъти поред → автоматизирам го</div>
-        <div>Праща, харчи или публикува → остава ръчно, нарочно</div>
+        <div data-en="Done by hand twice → make it a skill">Направено на ръка два пъти → става умение</div>
+        <div data-en="The skill works 5 times in a row → automate it">Умението работи 5 пъти поред → автоматизирам го</div>
+        <div data-en="It sends, spends or publishes → keep it manual, on purpose">Праща, харчи или публикува → остава ръчно, нарочно</div>
       </div>
     </section>
 
     <section class="s reveal" id="memory">
-      <div class="mono">// памет</div>
-      <h2>Obsidian и NotebookLM</h2>
-      <p class="lead">Силата на паметта не е в приложението, а в подредбата. Файловете и папките трябва да имат смисъл и за мен, и за AI.</p>
+      <div class="mono">// <span data-en="memory">памет</span></div>
+      <h2 data-en="Obsidian and NotebookLM">Obsidian и NotebookLM</h2>
+      <p class="lead" data-en="The strength of memory is not in the app but in the arrangement. Files and folders must make sense to me and to the AI.">Силата на паметта не е в приложението, а в подредбата. Файловете и папките трябва да имат смисъл и за мен, и за AI.</p>
 
       <div class="vflow">
-        <div class="vbox raw"><div class="mono">ти пишеш тук</div><h3>raw/</h3><p>Хвърляш каквото и да е: статии, бележки, PDF-и.</p></div>
+        <div class="vbox raw"><div class="mono" data-en="you write here">ти пишеш тук</div><h3>raw/</h3><p data-en="Drop anything in: articles, notes, PDFs.">Хвърляш каквото и да е: статии, бележки, PDF-и.</p></div>
         <div class="varrow"><b>→</b>compile</div>
-        <div class="vbox wiki"><div class="mono">AI пише тук</div><h3>wiki/</h3><p>AI го подрежда в статии и индекси по теми.</p></div>
+        <div class="vbox wiki"><div class="mono" data-en="the AI writes here">AI пише тук</div><h3>wiki/</h3><p data-en="The AI arranges it into articles and indexes by topic.">AI го подрежда в статии и индекси по теми.</p></div>
         <div class="varrow"><b>→</b>ask</div>
-        <div class="vbox out"><div class="mono">отговорите идват тук</div><h3>output/</h3><p>Отговори, отчети, презентации.</p></div>
+        <div class="vbox out"><div class="mono" data-en="answers land here">отговорите идват тук</div><h3>output/</h3><p data-en="Answers, reports, slide decks.">Отговори, отчети, презентации.</p></div>
       </div>
 
       <div class="mem2">
         <div class="card">
           <h3>Obsidian</h3>
-          <p>Основната памет: прости markdown файлове в един vault. Не дава магическа памет на AI, а прави файловете лесни за разглеждане.</p>
-          <ul><li>Един файл в корена описва структурата, за да не се разместя с времето.</li><li>Работи с Claude, Codex и Gemini, защото са обикновени файлове.</li></ul>
+          <p data-en="The main memory: plain markdown files in one vault. It does not give the AI a magic memory; it makes the files easy to browse.">Основната памет: прости markdown файлове в един vault. Не дава магическа памет на AI, а прави файловете лесни за разглеждане.</p>
+          <ul><li data-en="One file at the root describes the structure so it does not drift over time.">Един файл в корена описва структурата, за да не се разместя с времето.</li><li data-en="Works with Claude, Codex and Gemini because they are ordinary files.">Работи с Claude, Codex и Gemini, защото са обикновени файлове.</li></ul>
         </div>
         <div class="card">
           <h3>NotebookLM</h3>
-          <p>Втората памет: задавам въпроси към подбрани източници и получавам отговори с цитати.</p>
-          <ul><li>Добра за книги, статии и документи, които искам да „разпитам“.</li><li>Източниците идват от vault-а.</li></ul>
+          <p data-en="The second memory: I ask questions over chosen sources and get answers with citations.">Втората памет: задавам въпроси към подбрани източници и получавам отговори с цитати.</p>
+          <ul><li data-en="Good for books, articles and documents I want to question.">Добра за книги, статии и документи, които искам да „разпитам“.</li><li data-en="The sources come from the vault.">Източниците идват от vault-а.</li></ul>
         </div>
       </div>
 
       <div class="open">
-        <h3>Отворено: как се свързват двете</h3>
+        <h3 data-en="Open: how the two connect">Отворено: как се свързват двете</h3>
         <ul>
-          <li>За NotebookLM Enterprise има официален API. За обикновен акаунт няма официален.</li>
-          <li>Има неофициална библиотека за Python (notebooklm-py). Работи чрез недокументирани точки на Google и може да се счупи.</li>
-          <li>Дали Colab може да изтегля от NotebookLM, още не е проверено. Влизането с акаунт през браузър може да е пречката.</li>
+          <li data-en="NotebookLM Enterprise has an official API. A regular account has no official one.">За NotebookLM Enterprise има официален API. За обикновен акаунт няма официален.</li>
+          <li data-en="There is an unofficial Python library (notebooklm-py). It uses undocumented Google endpoints and may break.">Има неофициална библиотека за Python (notebooklm-py). Работи чрез недокументирани точки на Google и може да се счупи.</li>
+          <li data-en="Whether Colab can pull from NotebookLM is not tested yet. Signing in through a browser may be the obstacle.">Дали Colab може да изтегля от NotebookLM, още не е проверено. Влизането с акаунт през браузър може да е пречката.</li>
         </ul>
-        <p>Решението ще се вземе след изпитание. Засега връзката е ръчна: копирам източници от vault-а в NotebookLM.</p>
+        <p data-en="The decision will come after a trial. For now the link is manual: I copy sources from the vault into NotebookLM.">Решението ще се вземе след изпитание. Засега връзката е ръчна: копирам източници от vault-а в NotebookLM.</p>
       </div>
     </section>
 
     <section class="s reveal" id="projects">
-      <div class="mono">// работа</div>
-      <h2>Проекти</h2>
-      <p class="lead">Избери проект, за да видиш подробности.</p>
-      <div class="filters" id="filters" role="group" aria-label="Филтър на проектите"></div>
+      <div class="mono">// <span data-en="work">работа</span></div>
+      <h2 data-en="Projects">Проекти</h2>
+      <p class="lead" data-en="Pick a project to see the details.">Избери проект, за да видиш подробности.</p>
+      <div class="filters" id="filters" role="group" aria-label="Филтър на проектите" data-en-aria="Project filter"></div>
       <div class="grid" id="projects-grid"></div>
     </section>
 
-    <section class="s reveal" id="platforms">
-      <div class="mono">// платформи</div>
-      <h2>Къде съм</h2>
-      <p class="lead">Социалните ми платформи. Връзките се добавят скоро.</p>
+    <section class="s reveal" id="contact">
+      <div class="mono">// <span data-en="contact">контакти</span></div>
+      <h2><span data-en="Martin Urumov">Мартин Урумов</span></h2>
+      <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен към отдалечена международна работа.</p>
+      <div class="cvrow">
+        <a class="btn" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="Download CV">Изтегли CV</span> <small id="cv-note">PDF · EN</small></a>
+        <span class="owner-both">Мартин Урумов · Martin Urumov</span>
+      </div>
       <div class="socials" id="socials"></div>
     </section>
 
@@ -227,12 +235,12 @@
 </main>
 
 <dialog id="dlg" aria-labelledby="dlg-title">
-  <button class="close" id="dlg-close" aria-label="Затвори">×</button>
+  <button class="close" id="dlg-close" aria-label="Затвори" data-en-aria="Close">×</button>
   <div id="dlg-body"></div>
 </dialog>
 
 <footer>
-  <div class="wrap">SSC Compass · Shadow Somiyo Compass · <span id="year"></span></div>
+  <div class="wrap">SSC Compass · Shadow Somiyo Compass · Мартин Урумов · Martin Urumov · <span id="year"></span></div>
 </footer>
 
 <script src="assets/data.js"></script>

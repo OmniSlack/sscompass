@@ -1,0 +1,8 @@
+{
+  "name": "ssc-compass-site",
+  "private": true,
+  "version": "0.3.0",
+  "description": "Public site of SSC Compass. Tests only; the site itself has no dependencies.",
+  "scripts": { "test": "node --test \"tests/*.test.js\"" },
+  "devDependencies": { "jsdom": "^24.1.0" }
+}

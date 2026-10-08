@@ -5,7 +5,7 @@
   --bg: #07050b; --panel: rgba(255,255,255,.035); --panel2: rgba(255,255,255,.06);
   --line: rgba(255,255,255,.1); --line2: rgba(255,255,255,.22);
   --text: #ece8f2; --dim: #9a93a8;
-  --accent-rgb: 217 70 239; --accent2-rgb: 240 171 252;
+  --accent-rgb: 217 119 87; --accent2-rgb: 240 170 140;
   --accent: rgb(var(--accent-rgb)); --accent2: rgb(var(--accent2-rgb));
   --ok: #5eead4; --warn: #fbbf24; --blue: #93c5fd; --bad: #f87171;
   --display: "Chakra Petch", system-ui, sans-serif;
@@ -34,6 +34,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .top nav a { padding: 6px 12px; border-radius: 8px; font-size: .86rem; color: var(--dim); white-space: nowrap; transition: .2s; }
 .top nav a:hover { color: var(--text); background: var(--panel); }
 #clock { font: 1rem var(--mono); color: var(--accent2); min-width: 74px; text-align: right; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; flex: 0 0 auto; }
+.lang button { padding: 5px 10px; border: 0; background: transparent; color: var(--dim); font: 500 .74rem var(--mono); letter-spacing: .08em; }
+.lang button[aria-pressed="true"] { background: var(--text); color: #0b0810; }
+.owner { margin: 8px 0 0; font: 400 .95rem var(--display); letter-spacing: .14em; color: var(--accent2); }
+.cvrow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin: -10px 0 22px; }
+.btn { display: inline-flex; gap: 8px; align-items: baseline; padding: 11px 20px; border-radius: 10px; border: 1px solid var(--accent); background: rgb(var(--accent-rgb) / .16); color: var(--text); font-size: .92rem; transition: .2s; }
+.btn:hover { background: rgb(var(--accent-rgb) / .3); }
+.btn small { color: var(--dim); font: .68rem var(--mono); letter-spacing: .1em; }
+.owner-both { font: .8rem var(--mono); letter-spacing: .12em; color: var(--dim); }
 
 /* ---------- герой ---------- */
 .hero { padding: 26px 0 40px; text-align: center; }
