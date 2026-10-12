@@ -68,11 +68,11 @@ test('English: project cards show English status and summary', () => {
   assert.equal(first.querySelector('.chip.st').textContent, D.projects[0].status.en);
   assert.equal(first.querySelector('p').textContent, D.projects[0].summary.en);
 });
-test('English: platform cards say "link soon" for missing links', () => {
+test('English: contact cards say "Open" and tabs are translated', () => {
   const p = page({ lang: 'en-US' });
-  assert.equal(p.doc.querySelector('.soc.off .mono').textContent, 'link soon');
-  p.w.SSCApp.setLang('bg');
-  assert.equal(p.doc.querySelector('.soc.off .mono').textContent, 'линк скоро');
+  assert.match(p.doc.querySelector('#socials .go').textContent, /Open →/);
+  assert.equal(p.doc.getElementById('tab-personal').textContent.trim(), 'Personal');
+  p.w.SSCApp.setLang('bg'); assert.equal(p.doc.getElementById('tab-personal').textContent.trim(), 'Личен контрол');
 });
 test('an open project dialog is re-rendered when the language changes', () => {
   const p = page({ lang: 'bg-BG' });
@@ -96,13 +96,13 @@ test('English mode has no Cyrillic outside the owner name lines', () => {
 });
 test('Bulgarian mode shows Bulgarian navigation', () => {
   const p = page({ lang: 'bg-BG' });
-  assert.equal(p.doc.querySelector('nav a').textContent, 'Архитектура');
+  assert.equal(p.doc.querySelector('#tablist [role=tab] span').textContent, 'Архитектура');
 });
 test('the language can be switched ten times without errors or drift', () => {
   const p = page({ lang: 'bg-BG' });
   for (let i = 0; i < 10; i++) p.w.SSCApp.setLang(i % 2 ? 'bg' : 'en');
   p.w.SSCApp.setLang('bg');
-  assert.equal(p.doc.querySelector('nav a').textContent, 'Архитектура');
+  assert.equal(p.doc.querySelector('#tablist [role=tab] span').textContent, 'Архитектура');
   assert.deepEqual(p.errors, []);
 });
 test('the clock uses the page language locale without breaking', () => {

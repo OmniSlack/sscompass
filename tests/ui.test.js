@@ -139,7 +139,7 @@ test('the highlighted skill card survives a language change', () => {
 
 /* ---------- projects ---------- */
 const count = (tag) => D.projects.filter((x) => tag === 'all' || x.tags.includes(tag)).length;
-for (const tag of ['all', 'ai', 'java', 'unity', 'learn']) {
+for (const tag of ['all', 'system', 'deck']) {
   test(`filter "${tag}" shows exactly ${count(tag)} project cards`, () => {
     const p = page(); p.click(p.doc.querySelector(`[data-f=${tag}]`));
     assert.equal(p.doc.querySelectorAll('#projects-grid .proj').length, count(tag));
@@ -147,7 +147,7 @@ for (const tag of ['all', 'ai', 'java', 'unity', 'learn']) {
   });
 }
 test('each filter shows at least one project', () => {
-  for (const t of ['ai', 'java', 'unity', 'learn']) assert.ok(count(t) >= 1);
+  for (const t of ['system', 'deck']) assert.ok(count(t) >= 1);
 });
 for (const pr of D.projects) {
   test(`project ${pr.name}: opens a dialog with its name, status and summary; closes again`, () => {
@@ -162,18 +162,17 @@ for (const pr of D.projects) {
     assert.ok(!dlg.hasAttribute('open'));
   });
 }
-test('sk15_automation dialog links to GitHub safely; OmniMax has no outgoing link', () => {
+test('deck project dialogs link to the deck inside the site; OmniMax has no outgoing link', () => {
   const p = page();
-  p.click(p.doc.querySelector('[data-p=sk15]'));
+  p.click(p.doc.querySelector('[data-p=deck-coherence]'));
   const a = p.doc.querySelector('#dlg-body a');
-  assert.equal(a.href, 'https://github.com/OmniSlack/sk15_automation');
-  assert.match(a.rel, /noopener/); assert.match(a.rel, /noreferrer/); assert.equal(a.target, '_blank');
+  assert.equal(a.getAttribute('href'), 'decks/index.html#coherence/1'); assert.equal(a.getAttribute('target'), null);
   p.click(p.doc.getElementById('dlg-close'));
   p.click(p.doc.querySelector('[data-p=omnimax]'));
   assert.equal(p.doc.querySelectorAll('#dlg-body a').length, 0);
 });
 test('clicking the dialog backdrop closes it', () => {
-  const p = page(); p.click(p.doc.querySelector('[data-p=nomnom]'));
+  const p = page(); p.click(p.doc.querySelector('[data-p=omnimax]'));
   p.click(p.doc.getElementById('dlg')); assert.ok(!p.doc.getElementById('dlg').hasAttribute('open'));
 });
 test('project text is escaped, so markup in data cannot run', () => {
@@ -188,10 +187,10 @@ test('project text is escaped, so markup in data cannot run', () => {
 });
 
 /* ---------- contact ---------- */
-test('eight platform cards: five live links and three "soon"', () => {
+test('five platform cards, all live links (nothing unfinished is public)', () => {
   const p = page();
   assert.equal(p.doc.querySelectorAll('#socials a.soc').length, 5);
-  assert.equal(p.doc.querySelectorAll('#socials .soc.off').length, 3);
+  assert.equal(p.doc.querySelectorAll('#socials .soc.off').length, 0);
 });
 test('every live platform link opens in a new tab with noopener noreferrer', () => {
   const p = page();

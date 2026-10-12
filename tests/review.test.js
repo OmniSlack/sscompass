@@ -25,7 +25,7 @@ test('the CV link keeps its relative PDF path', () => {
 test('a Content-Security-Policy meta tag forbids third-party and inline scripts', () => {
   const d = loadStatic().window.document;
   const c = d.querySelector('meta[http-equiv="Content-Security-Policy"]').content;
-  assert.match(c, /script-src 'self'/); assert.match(c, /connect-src 'none'/); assert.match(c, /object-src 'none'/);
+  assert.match(c, /script-src 'self'/); assert.match(c, /connect-src 'self'/); assert.match(c, /object-src 'none'/);
   assert.ok(!/unsafe-eval/.test(c)); assert.ok(!/script-src[^;]*unsafe-inline/.test(c));
 });
 test('the CSP lets the page load its own fonts and styles', () => {
@@ -35,8 +35,8 @@ test('the CSP lets the page load its own fonts and styles', () => {
 
 /* ---- focus and keyboard ---- */
 test('clicking a filter keeps the same button element (keyboard focus is not lost)', () => {
-  const p = page(); const btn = p.doc.querySelector('[data-f=java]');
-  p.click(btn); assert.ok(btn.isConnected); assert.equal(p.doc.querySelector('[data-f=java]'), btn);
+  const p = page(); const btn = p.doc.querySelector('[data-f=deck]');
+  p.click(btn); assert.ok(btn.isConnected); assert.equal(p.doc.querySelector('[data-f=deck]'), btn);
 });
 test('clicking a routing example keeps the same button element', () => {
   const p = page(); const btn = p.doc.querySelectorAll('#picks button')[1];
@@ -54,17 +54,17 @@ test('every project card has exactly one button', () => {
   for (const c of p.doc.querySelectorAll('#projects-grid article')) assert.equal(c.querySelectorAll('button').length, 1);
 });
 test('closing the dialog returns focus to the project button', () => {
-  const p = page(); const b = p.doc.querySelector('.more[data-p=nomnom]'); b.focus();
+  const p = page(); const b = p.doc.querySelector('.more[data-p=omnimax]'); b.focus();
   p.click(b); p.click(p.doc.getElementById('dlg-close'));
   assert.equal(p.doc.activeElement, b);
 });
 test('closing the dialog after a language change still finds the button', () => {
-  const p = page(); p.click(p.doc.querySelector('.more[data-p=nomnom]')); p.w.SSCApp.setLang('bg');
-  p.click(p.doc.getElementById('dlg-close')); assert.equal(p.doc.activeElement, p.doc.querySelector('.more[data-p=nomnom]'));
+  const p = page(); p.click(p.doc.querySelector('.more[data-p=omnimax]')); p.w.SSCApp.setLang('bg');
+  p.click(p.doc.getElementById('dlg-close')); assert.equal(p.doc.activeElement, p.doc.querySelector('.more[data-p=omnimax]'));
 });
 test('a click on the dialog padding does not close it, a click outside does', () => {
   const p = page(); const dlg = p.doc.getElementById('dlg');
-  p.click(p.doc.querySelector('.more[data-p=nomnom]'));
+  p.click(p.doc.querySelector('.more[data-p=omnimax]'));
   dlg.getBoundingClientRect = () => ({ left: 100, right: 500, top: 100, bottom: 400, width: 400, height: 300 });
   dlg.dispatchEvent(new p.w.MouseEvent('click', { bubbles: true, clientX: 110, clientY: 110 }));
   assert.ok(dlg.hasAttribute('open'));
@@ -140,7 +140,7 @@ test('small mono labels are at least 12px (0.75rem)', () => {
   assert.match(read('assets/style.css'), /\.mono \{[^}]*font-size: \.75rem/);
 });
 test('the header wraps on phones so the navigation is fully reachable', () => {
-  assert.match(read('assets/style.css'), /\.top nav \{ order: 3; flex: 1 1 100%/);
+  assert.match(read('assets/style.css'), /\.top nav \{ order: 3; flex: 1 1 100%|\.tabs \{ order: 3; flex: 1 1 100%/);
 });
 test('the diagram switches to the readable list below 1000px', () => {
   assert.match(read('assets/style.css'), /@media \(max-width: 1000px\) \{ \.arch svg \{ display: none/);

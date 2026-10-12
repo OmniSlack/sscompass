@@ -214,3 +214,53 @@ footer { margin-top: 96px; padding: 34px 0 54px; border-top: 1px solid var(--lin
 .mono.h { margin: 0 0 10px; }
 .proj { cursor: pointer; }
 .top nav::-webkit-scrollbar { display: none; }
+
+/* ---------- табове ---------- */
+.tabs { margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs [role="tablist"] { display: flex; gap: 2px; align-items: center; }
+.tabs [role="tab"] { display: inline-flex; gap: 7px; align-items: center; padding: 10px 14px; border-radius: 8px; border: 1px solid transparent; background: none; color: var(--dim); font: inherit; font-size: .86rem; cursor: pointer; white-space: nowrap; transition: .2s; }
+.tabs [role="tab"]:hover { color: var(--text); background: var(--panel); }
+.tabs [role="tab"][aria-selected="true"] { color: var(--text); border-color: var(--accent); background: rgb(var(--accent-rgb) / .14); }
+.tabs .tab-personal { margin-left: 14px; border: 1px dashed var(--line2); }
+.tabs .tab-personal[aria-selected="true"] { border-style: solid; }
+.panel:focus { outline: none; }
+.panel[hidden] { display: none; }
+.subsection { margin-top: 76px; }
+.h2b { margin-top: 6px; }
+body[data-view="personal"] .hero { display: none; }
+
+/* ---------- личен контрол ---------- */
+.gate { max-width: 460px; display: grid; gap: 8px; }
+.gate h3, .pf h3, .pitem h3 { margin: 0; font: 600 1.05rem var(--display); letter-spacing: .04em; }
+.gate label, .pform label, .pf label { display: grid; gap: 4px; font: .78rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.gate input, .pform input, .pform textarea, .pf input, .pf select { width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line2); background: rgb(255 255 255 / .05); color: var(--text); font: inherit; font-size: .95rem; text-transform: none; letter-spacing: normal; }
+.pform textarea { min-height: 90px; resize: vertical; }
+.gate input:focus-visible, .pform input:focus-visible, .pform textarea:focus-visible, .pf input:focus-visible, .pf select:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
+.prow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.prow .btn { cursor: pointer; font-family: inherit; }
+.btn.ghost { background: transparent; border-color: var(--line2); }
+.pmsg { min-height: 1.4em; margin: 8px 0 0; font-size: .86rem; color: var(--ok); }
+.pmsg.bad { color: var(--bad); }
+.pwrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 20px; align-items: start; }
+.pmenu { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 76px; }
+.pmenu button { text-align: left; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--dim); font: inherit; font-size: .9rem; cursor: pointer; }
+.pmenu button[aria-current="true"] { color: var(--text); border-color: var(--accent); background: rgb(var(--accent-rgb) / .14); }
+.pview { display: grid; gap: 12px; min-width: 0; }
+.pgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
+.pf { display: grid; gap: 8px; }
+.pitem { position: relative; display: grid; gap: 6px; padding-right: 40px; }
+.pitem p { margin: 0; color: var(--dim); overflow-wrap: anywhere; white-space: pre-wrap; }
+.pitem ul { margin: 4px 0 0; padding-left: 18px; color: var(--dim); font-size: .92rem; }
+.pitem.done .ptxt { text-decoration: line-through; opacity: .55; }
+.pitem .ptxt { overflow-wrap: anywhere; white-space: pre-wrap; }
+.pitem input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); }
+.pitem a { color: var(--accent2); font-size: .9rem; }
+.pitem .x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: none; color: var(--dim); font-size: 1.4rem; cursor: pointer; }
+.pitem .x:hover { color: var(--bad); }
+.pitem.open { border-style: dashed; border-color: rgb(251 191 36 / .5); }
+.oh { margin: 18px 0 0; font: 600 1rem var(--display); color: var(--warn); }
+.empty { padding: 22px; border: 1px dashed var(--line); border-radius: 12px; text-align: center; color: var(--dim); }
+@media (max-width: 760px) { .pwrap { grid-template-columns: 1fr; } .pmenu { position: static; flex-direction: row; overflow-x: auto; } .pmenu button { white-space: nowrap; } }
+@media (max-width: 640px) { .tabs { order: 3; flex: 1 1 100%; margin-left: 0; } .tabs .tab-personal { margin-left: 8px; } }
+.pitem:has(> input[type="checkbox"]) { display: flex; align-items: flex-start; gap: 12px; }

@@ -27,16 +27,43 @@ test('all element ids are unique', () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
-for (const id of ['architecture', 'skills', 'memory', 'projects', 'contact']) {
-  test(`section #${id} exists and is reachable from the navigation`, () => {
-    assert.ok(doc.getElementById(id));
-    assert.ok(doc.querySelector(`nav a[href="#${id}"]`));
+for (const id of ['architecture', 'skills', 'projects', 'contact', 'personal']) {
+  test(`tab "${id}" has a panel and is wired with aria-controls / aria-labelledby`, () => {
+    const tab = doc.getElementById('tab-' + id), panel = doc.getElementById('panel-' + id);
+    assert.ok(tab && panel);
+    assert.equal(tab.getAttribute('role'), 'tab'); assert.equal(panel.getAttribute('role'), 'tabpanel');
+    assert.equal(tab.getAttribute('aria-controls'), 'panel-' + id); assert.equal(panel.getAttribute('aria-labelledby'), 'tab-' + id);
   });
 }
-test('every in-page link points at an existing id', () => {
+test('the memory part lives inside the Architecture panel', () => {
+  assert.ok(doc.querySelector('#panel-architecture #memory'));
+});
+test('exactly one tab is selected and focusable at the start (roving tabindex)', () => {
+  const sel = doc.querySelectorAll('[role=tab][aria-selected=true]'); assert.equal(sel.length, 1);
+  assert.equal(doc.querySelectorAll('[role=tab][tabindex="0"]').length, 1);
+  assert.equal(doc.getElementById('tab-architecture').getAttribute('aria-selected'), 'true');
+});
+test('all panels except the first start hidden', () => {
+  for (const id of ['skills', 'projects', 'contact', 'personal']) assert.ok(doc.getElementById('panel-' + id).hasAttribute('hidden'), id);
+  assert.ok(!doc.getElementById('panel-architecture').hasAttribute('hidden'));
+});
+test('the Personal tab comes last and is marked apart from the public tabs', () => {
+  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')];
+  assert.equal(tabs[tabs.length - 1].id, 'tab-personal'); assert.ok(tabs[tabs.length - 1].classList.contains('tab-personal'));
+  assert.equal(tabs.length, 5);
+});
+test('public panels contain no personal controls', () => {
+  for (const id of ['architecture', 'skills', 'projects', 'contact']) assert.equal(doc.querySelectorAll('#panel-' + id + ' input, #panel-' + id + ' textarea').length, 0, id);
+});
+test('the personal panel is empty markup until unlocked (no data in the HTML)', () => {
+  const p = doc.getElementById('p-root'); assert.equal(p.innerHTML.trim(), '');
+  assert.ok(!/NomNom|GapInTheGap|Kompas|Selenium|Snapchat|Twitch|The Game/.test(read('index.html')));
+});
+
+test('every in-page link points at a tab', () => {
   for (const a of doc.querySelectorAll('a[href^="#"]')) {
-    const id = a.getAttribute('href').slice(1);
-    assert.ok(id === 'top' || doc.getElementById(id), a.getAttribute('href'));
+    const id = a.getAttribute('href').slice(1).split('/')[0];
+    assert.ok(['top', 'memory', 'architecture', 'skills', 'projects', 'contact', 'personal'].includes(id), a.getAttribute('href'));
   }
 });
 test('there is a #top target for the brand link', () => assert.ok(doc.getElementById('top')));
@@ -96,9 +123,9 @@ test('the dialog has a labelled close button', () => {
   assert.ok(doc.querySelector('dialog#dlg #dlg-close[aria-label]'));
 });
 
-test('the page loads exactly three local scripts in the right order', () => {
+test('the page loads exactly five local scripts in the right order', () => {
   const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src'));
-  assert.deepEqual(srcs, ['assets/data.js', 'assets/cores.js', 'assets/app.js']);
+  assert.deepEqual(srcs, ['assets/data.js', 'assets/cores.js', 'assets/vault.js', 'assets/personal.js', 'assets/app.js']);
   srcs.forEach((s) => assert.ok(exists(s), s));
 });
 test('there are no inline scripts and no inline event handlers', () => {

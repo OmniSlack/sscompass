@@ -41,9 +41,9 @@ function loadStatic() {
 
 /** Full page with all three scripts executed, as a browser would. */
 function load(opts = {}) {
-  const { lang = 'bg-BG', storage = {}, reduce = false, width = 1200 } = opts;
+  const { lang = 'bg-BG', storage = {}, reduce = false, width = 1200, hash = '' } = opts;
   const html = read('index.html').replace(/<script src="[^"]*"><\/script>/g, '');
-  const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'http://localhost/' });
+  const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'http://localhost/' + hash });
   const w = dom.window;
   Object.defineProperty(w.navigator, 'language', { value: lang, configurable: true });
   const ctx = makeCtx();
@@ -55,7 +55,10 @@ function load(opts = {}) {
   Object.entries(storage).forEach(([k, v]) => w.localStorage.setItem(k, v));
   const errors = [];
   w.addEventListener('error', (e) => errors.push(e.message));
-  for (const f of ['assets/data.js', 'assets/cores.js', 'assets/app.js']) {
+  Object.defineProperty(w, 'crypto', { value: require('node:crypto').webcrypto, configurable: true });
+  w.TextEncoder = TextEncoder; w.TextDecoder = TextDecoder;
+  if (opts.fetch) w.fetch = opts.fetch;
+  for (const f of ['assets/data.js', 'assets/cores.js', 'assets/vault.js', 'assets/personal.js', 'assets/app.js']) {
     try { w.eval(read(f)); } catch (e) { errors.push(f + ': ' + e.message); }
   }
   opened.push(w);

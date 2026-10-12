@@ -21,7 +21,7 @@
     states: [['idle', { bg: 'Покой', en: 'Idle' }], ['listening', { bg: 'Слуша', en: 'Listening' }], ['working', { bg: 'Работи', en: 'Working' }], ['speaking', { bg: 'Говори', en: 'Speaking' }], ['error', { bg: 'Грешка', en: 'Error' }]],
     auto: { bg: 'Авто', en: 'Auto' }, pause: { bg: 'Пауза на движението', en: 'Pause motion' },
     mode: { bg: 'Режим', en: 'Mode' }, autoWord: { bg: 'авто', en: 'auto' },
-    filters: [['all', { bg: 'Всички', en: 'All' }], ['ai', { bg: 'AI и документи', en: 'AI and documents' }], ['java', { bg: 'Java', en: 'Java' }], ['unity', { bg: 'Unity', en: 'Unity' }], ['learn', { bg: 'Учене', en: 'Learning' }]],
+    filters: [['all', { bg: 'Всички', en: 'All' }], ['system', { bg: 'Системи', en: 'Systems' }], ['deck', { bg: 'Презентации', en: 'Decks' }]],
     kind: { time: { bg: 'по график', en: 'on a schedule' }, event: { bg: 'при събитие', en: 'when something happens' }, manual: { bg: 'ръчно', en: 'manual' } },
     task: { bg: 'задача', en: 'task' }, skill: { bg: 'умение', en: 'skill' }, auto2: { bg: 'автоматизация', en: 'automation' },
     more: { bg: 'Подробности →', en: 'Details →' }, newTab: { bg: '(отваря се в нов таб)', en: '(opens in a new tab)' }, open: { bg: 'Отвори →', en: 'Open →' }, profile: { bg: 'профил', en: 'profile' }, soon: { bg: 'линк скоро', en: 'link soon' },
@@ -193,6 +193,7 @@
     Array.prototype.forEach.call($('lang').children, function (b) { b.setAttribute('aria-pressed', b.dataset.lang === l); });
     $('cv-note').textContent = tx(D.cv.note);
     renderStates(); readout(); renderFilters(); renderProjects(); renderDomains(); renderSocials(); showRoute(routeIdx, true);
+    if (window.SSCPersonal) window.SSCPersonal.render(l);
     if (dlg.hasAttribute('open')) renderDialog();
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
@@ -213,12 +214,49 @@
   setAI(saved && D.ais.some(function (a) { return a.id === saved; }) ? saved : D.ais[0].id, true);
   setState('idle'); setAuto(!reduce);
 
-  /* ---------- плавно появяване ---------- */
-  var els = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: .08 });
-    els.forEach(function (el) { io.observe(el); });
-  } else els.forEach(function (el) { el.classList.add('in'); });
+  /* ---------- табове: публична част и личен контрол ---------- */
+  var TABS = ['architecture', 'skills', 'projects', 'contact', 'personal'];
+  var ALIAS = { memory: 'architecture', top: 'architecture' };
+  var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
+  var current = 'architecture';
+  function parseHash() {
+    var h = (location.hash || '').replace('#', '').split('/');
+    var id = ALIAS[h[0]] || h[0];
+    return { tab: TABS.indexOf(id) > -1 ? id : null, sub: h[1] || '' };
+  }
+  function showTab(id, opts) {
+    opts = opts || {};
+    if (TABS.indexOf(id) < 0) id = 'architecture';
+    current = id;
+    tabEls.forEach(function (t) {
+      var on = t.dataset.tab === id;
+      t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
+      var panel = $('panel-' + t.dataset.tab); if (panel) panel.hidden = !on;
+    });
+    document.body.setAttribute('data-view', id === 'personal' ? 'personal' : 'public');
+    if (id === 'personal' && window.SSCPersonal) window.SSCPersonal.onShow(opts.sub);
+    else if (window.SSCPersonal) window.SSCPersonal.lockNow();          // личното се заключва, когато го напуснеш
+    if (!opts.keepHash) { try { history.replaceState(null, '', '#' + id + (opts.sub ? '/' + opts.sub : '')); } catch (e) {} }
+    if (opts.focus) { var p = $('panel-' + id); if (p) p.focus({ preventScroll: false }); }
+    if (opts.scroll) { var top = $('tablist'); if (top && top.scrollIntoView) top.scrollIntoView({ block: 'start' }); }
+  }
+  tabEls.forEach(function (t, i) {
+    t.addEventListener('click', function () { showTab(t.dataset.tab, { scroll: true }); });
+    t.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % tabEls.length; else if (e.key === 'ArrowLeft') n = (i - 1 + tabEls.length) % tabEls.length;
+      else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = tabEls.length - 1;
+      if (n !== null) { e.preventDefault(); showTab(tabEls[n].dataset.tab, {}); tabEls[n].focus(); }
+    });
+  });
+  window.addEventListener('hashchange', function () { var h = parseHash(); if (h.tab && h.tab !== current) showTab(h.tab, { sub: h.sub, keepHash: true, scroll: true }); });
+  // връзките в страницата (бърз достъп, „към съдържанието“) сменят таба
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+    var h = a.getAttribute('href').slice(1).split('/')[0]; var id = ALIAS[h] || h;
+    if (TABS.indexOf(id) > -1) { e.preventDefault(); showTab(id, { scroll: true, focus: true }); }
+  });
+  var h0 = parseHash(); showTab(h0.tab || 'architecture', { sub: h0.sub, keepHash: !h0.tab });
 
-  window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, setAI: setAI, setState: setState };
+  window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, setAI: setAI, setState: setState, showTab: showTab, tab: function () { return current; } };
 })();

@@ -48,8 +48,8 @@ test('project ids are unique', () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
-test('there are thirteen projects (ten work items and three decks) and none is the employer project', () => {
-  assert.equal(D.projects.length, 13);
+test('there are five finished projects (two systems and three decks) and none is the employer project', () => {
+  assert.equal(D.projects.length, 5);
   assert.ok(!D.projects.some((p) => /dzjin|dzhin|broadcapp/i.test(p.id + p.name)));
 });
 
@@ -57,7 +57,7 @@ test('JDK and automation tool folders are not listed as projects', () => {
   assert.ok(!D.projects.some((p) => /jdk/i.test(p.name) || p.name === 'automation'));
 });
 
-const TAGS = ['ai', 'java', 'unity', 'learn'];
+const TAGS = ['system', 'deck'];
 for (const p of D.projects) {
   test(`project ${p.id}: required fields exist and are bilingual`, () => {
     assert.ok(p.name && p.name.trim());
@@ -74,18 +74,25 @@ for (const p of D.projects) {
   });
 }
 
-test('the only outgoing project link is sk15_automation on the owner GitHub; the others are the three decks', () => {
+test('the only outgoing project links are the three decks (relative links inside the site)', () => {
   const withLinks = D.projects.filter((p) => p.links);
-  assert.deepEqual(Array.from(withLinks, (p) => p.id), ['deck-omniecho', 'deck-coherence', 'deck-dream', 'sk15']);
+  assert.deepEqual(Array.from(withLinks, (p) => p.id), ['deck-omniecho', 'deck-coherence', 'deck-dream']);
   for (const p of withLinks) for (const l of p.links) {
     assert.ok(bilingual(l.label));
-    assert.ok(l.url.startsWith('https://github.com/OmniSlack/') || /^decks\/index\.html#(omniecho|coherence|dream)\/1$/.test(l.url), l.url);
+    assert.ok(/^decks\/index\.html#(omniecho|coherence|dream)\/1$/.test(l.url), l.url);
   }
 });
 
-test('GapInTheGap states its content is not published', () => {
-  const p = D.projects.find((x) => x.id === 'gapinthegap');
-  assert.ok(p.details.some((d) => /не се публикува/.test(d.bg) && /not published/.test(d.en)));
+test('unfinished work is not in the public data (it lives in the personal vault)', () => {
+  const ids = Array.from(D.projects, (p) => p.id);
+  for (const gone of ['gapinthegap', 'kompas', 'response-gap', 'nomnom', 'the-game', 'sk15', 'selenium', 'exercise']) assert.ok(!ids.includes(gone), gone);
+});
+test('no placeholder wording ("description will follow", "soon") is left in the public data', () => {
+  const t = JSON.stringify(D.projects) + JSON.stringify(D.socials);
+  assert.ok(!/will follow|ще се допълни|link soon|линк скоро/i.test(t));
+});
+test('every public project is finished: it has a status, a summary and details', () => {
+  for (const p of D.projects) { assert.ok(bilingual(p.status)); assert.ok(bilingual(p.summary)); assert.ok(p.details.length >= 1); }
 });
 
 test('OmniEcho Core is described without a link (repository is not public)', () => {
@@ -110,9 +117,9 @@ test('exactly one domain is manual on purpose (Clients)', () => {
   assert.equal(m.length, 1); assert.equal(m[0].name.en, 'Clients');
 });
 
-test('eight platform entries with unique names', () => {
-  assert.equal(D.socials.length, 8);
-  assert.equal(new Set(D.socials.map((s) => s.name)).size, 8);
+test('five public platform entries with unique names', () => {
+  assert.equal(D.socials.length, 5);
+  assert.equal(new Set(D.socials.map((s) => s.name)).size, 5);
 });
 
 const EXPECT = {
@@ -132,8 +139,10 @@ for (const [name, [host, slug]] of Object.entries(EXPECT)) {
     assert.ok(s.handle.replace(/^@/, '') === slug);
   });
 }
-test('X, Snapchat and Twitch have no link yet', () => {
-  for (const n of ['X / Twitter', 'Snapchat', 'Twitch']) assert.equal(D.socials.find((s) => s.name === n).url, '');
+test('platforms without a link yet (X, Snapchat, Twitch) are not in the public data', () => {
+  const names = Array.from(D.socials, (x) => x.name);
+  for (const n of ['X / Twitter', 'Snapchat', 'Twitch']) assert.ok(!names.includes(n), n);
+  for (const x of D.socials) assert.ok(x.url.startsWith('https://'));
 });
 
 /* --- privacy: nothing personal or employer-related ships in the public files --- */

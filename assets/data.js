@@ -26,74 +26,46 @@ window.SSC = {
     { name: { bg: 'Финанси', en: 'Finance' },            task: { bg: 'подреждам разписките', en: 'sort receipts' },           skill: '/receipts',        note: { bg: 'разписки + главна книга', en: 'receipts + ledger' },       auto: { bg: 'На 1-во число', en: '1st of the month' },   kind: 'time' }
   ],
 
-  /* Проекти. Кликът върху карта отваря подробности. Описанията са само това, което е видимо в проекта. */
+  /* Проекти: само завършените. Недовършеното стои в личния таб (запечатан vault), не тук. */
   projects: [
-    { id: 'omnimax', name: 'OmniMax', tags: ['ai'], chips: [{ bg: 'AI', en: 'AI' }, { bg: 'Глас', en: 'Voice' }], status: { bg: 'Съществува', en: 'Exists' },
+    { id: 'omnimax', name: 'OmniMax', tags: ['system'], chips: [{ bg: 'AI', en: 'AI' }, { bg: 'Глас', en: 'Voice' }], status: { bg: 'Съществува', en: 'Exists' },
       summary: { bg: 'Гласово приложение, което действа като рутер: приема заявка и я насочва към подходящия AI модел.', en: 'A voice app that works as a router: it takes a request and sends it to the right AI model.' },
       details: [{ bg: 'Част от по-голямата система Compass, но стои отделно от този сайт.', en: 'Part of the larger Compass system, but separate from this site.' }, { bg: 'Сайтът не го променя и не го управлява.', en: 'This site does not change or control it.' }] },
 
-    { id: 'omniecho-core', name: 'OmniEcho Core', tags: ['ai'], chips: [{ bg: 'JavaScript', en: 'JavaScript' }, { bg: 'AI оценка', en: 'AI evaluation' }], status: { bg: '2026', en: '2026' },
+    { id: 'omniecho-core', name: 'OmniEcho Core', tags: ['system'], chips: [{ bg: 'JavaScript', en: 'JavaScript' }, { bg: 'AI оценка', en: 'AI evaluation' }], status: { bg: '2026', en: '2026' },
       summary: { bg: 'JavaScript оценител на граници на авторитета, без зависимости. Решава по подредена скала: STOP > HOLD > CLEAR.', en: 'A dependency-free JavaScript evaluator for authority boundaries. It decides on an ordered scale: STOP > HOLD > CLEAR.' },
       details: [{ bg: 'STOP е окончателно и не може да бъде отслабено от по-късна проверка.', en: 'STOP is final and cannot be weakened by a later check.' }, { bg: 'История на версиите, включително намерен дефект и регресионни тестове.', en: 'Version history, including a found defect and regression tests.' }, { bg: 'Описанието е взето от CV-то ми. Хранилището още не е публично.', en: 'Description taken from my CV. The repository is not public yet.' }] },
 
-    { id: 'deck-omniecho', name: 'The OmniEcho Architecture', tags: ['ai'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Архитектура', en: 'Architecture' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
+    { id: 'deck-omniecho', name: 'The OmniEcho Architecture', tags: ['deck'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Архитектура', en: 'Architecture' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
       summary: { bg: 'Презентация от 15 слайда за петте слоя на архитектурата OmniEcho / KOMPAS: 16 инварианта, 10 гейта, 8 възела, 5 оси и 4 въпроса.', en: 'A 15-slide deck on the five layers of the OmniEcho / KOMPAS architecture: 16 invariants, 10 gates, 8 nodes, 5 axes and 4 questions.' },
       details: [{ bg: 'На английски. Концептуален модел, не сертифициран стандарт.', en: 'In English. A conceptual model, not a certified standard.' }, { bg: 'Последният слайд описва какво е поправено спрямо първата чернова.', en: 'The last slide lists what was corrected from the first draft.' }],
       links: [{ label: { bg: 'Отвори презентацията', en: 'Open the deck' }, url: 'decks/index.html#omniecho/1' }] },
 
-    { id: 'deck-coherence', name: 'The Coherence Protocol', tags: ['ai'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Контрол на ИИ', en: 'AI control' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
+    { id: 'deck-coherence', name: 'The Coherence Protocol', tags: ['deck'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Контрол на ИИ', en: 'AI control' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
       summary: { bg: 'Презентация от 20 слайда за ограничаване на правомощията на ИИ: разделение между познание и изпълнение, двоен ключ за действие и защитни прегради за промоция.', en: 'A 20-slide deck on bounding AI authority: cognition kept apart from execution, a dual-key action gate and promotion firewalls.' },
       details: [{ bg: 'На английски. Състоянието е прототип с локална проверка: 53 от 53 unit теста и 24 от 24 PostgreSQL теста.', en: 'In English. Status is a prototype with local verification: 53 of 53 unit tests and 24 of 24 PostgreSQL tests.' }, { bg: 'Твърденията от невронауката са означени като работни допускания.', en: 'Claims from neuroscience are marked as working assumptions.' }],
       links: [{ label: { bg: 'Отвори презентацията', en: 'Open the deck' }, url: 'decks/index.html#coherence/1' }] },
 
-    { id: 'deck-dream', name: 'Dream Protocol', tags: ['ai'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Български', en: 'Bulgarian' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
+    { id: 'deck-dream', name: 'Dream Protocol', tags: ['deck'], chips: [{ bg: 'Презентация', en: 'Deck' }, { bg: 'Български', en: 'Bulgarian' }], status: { bg: 'Поправено издание', en: 'Corrected edition' },
       summary: { bg: 'Презентация от 15 слайда на български: интегрирана киберзащитна и когнитивна архитектура, описана с метафори.', en: 'A 15-slide deck in Bulgarian: an integrated cyber-defence and cognitive architecture, described through metaphors.' },
       details: [{ bg: 'Киберзащитният език е метафора за вътрешни процеси, не описание на реална защита.', en: 'The cyber-defence language is a metaphor for inner processes, not a description of real protection.' }, { bg: 'Последният слайд описва поправките.', en: 'The last slide lists the corrections.' }],
       links: [{ label: { bg: 'Отвори презентацията', en: 'Open the deck' }, url: 'decks/index.html#dream/1' }] },
 
-    { id: 'gapinthegap', name: 'GapInTheGap', tags: ['ai'], chips: [{ bg: 'Архив', en: 'Archive' }, { bg: 'Claude', en: 'Claude' }], status: { bg: 'Работна папка', en: 'Working folder' },
-      summary: { bg: 'Архив с разговори, проекти и дизайн-чатове, изнесени от Claude. Служи като суров материал и памет за Compass.', en: 'An archive of conversations, projects and design chats exported from Claude. It is raw material and memory for Compass.' },
-      details: [{ bg: 'Съдържа експорт на разговори, спомени, проекти и дизайн-чатове.', en: 'Contains an export of conversations, memories, projects and design chats.' }, { bg: 'Има и ранен вариант на таблото. Не се ползва: сайтът е изграден от нулата.', en: 'It also holds an early version of the dashboard. It is not used: the site was built from scratch.' }, { bg: 'Съдържанието е лично и не се публикува тук.', en: 'The content is personal and is not published here.' }] },
 
-    { id: 'kompas', name: 'Kompas', tags: ['ai'], chips: [{ bg: 'Документи', en: 'Documents' }, { bg: 'Markdown', en: 'Markdown' }], status: { bg: 'В развитие', en: 'In progress' },
-      summary: { bg: 'Колекция от markdown документи за Compass: живо ядро, карти, промптове и диспачи за пренос между чатове.', en: 'A collection of markdown documents for Compass: a living core, maps, prompts and dispatches for carrying work between chats.' },
-      details: [{ bg: 'Ядрото е един файл, който се прикачва в нов чат. Версията и датата стоят вътре в него.', en: 'The core is one file attached to a new chat. Its version and date live inside it.' }, { bg: 'Правилото: един файл = един чат = една задача.', en: 'The rule: one file = one chat = one task.' }] },
 
-    { id: 'response-gap', name: 'The Response Gap', tags: ['ai'], chips: [{ bg: 'Книга', en: 'Book' }], status: { bg: 'В развитие', en: 'In progress' },
-      summary: { bg: 'Книга „Празнината на реакцията“: личен модел за емоционално възстановяване.', en: 'A book, “The Response Gap”: a personal model for emotional recovery.' },
-      details: [{ bg: 'Основна идея: между стимула и реакцията има интервал. Осъзнатостта в него превръща автоматичната реакция в избран отговор.', en: 'Core idea: there is an interval between stimulus and reaction. Awareness placed in it turns an automatic reaction into a chosen response.' }, { bg: 'Налични са български текст, скелет, пълно издание (PDF) и английска HTML версия.', en: 'A Bulgarian text, an outline, a full edition (PDF) and an English HTML version exist.' }] },
 
-    { id: 'nomnom', name: 'NomNom', tags: ['java'], chips: [{ bg: 'Java', en: 'Java' }, { bg: 'Maven', en: 'Maven' }], status: { bg: 'Проект', en: 'Project' },
-      summary: { bg: 'Java проект със структура по Maven.', en: 'A Java project with a Maven structure.' },
-      details: [{ bg: 'Maven артефакт NomNom (pom.xml).', en: 'Maven artifact NomNom (pom.xml).' }, { bg: 'Описанието ще се допълни.', en: 'A description will follow.' }] },
 
-    { id: 'the-game', name: 'The Game', tags: ['unity'], chips: [{ bg: 'Unity', en: 'Unity' }, { bg: 'C#', en: 'C#' }], status: { bg: 'Прототип', en: 'Prototype' },
-      summary: { bg: 'Игрален прототип в Unity 2018.3.', en: 'A game prototype in Unity 2018.3.' },
-      details: [{ bg: 'Скрипт за движение на героя (Movement.cs).', en: 'A character movement script (Movement.cs).' }, { bg: 'Материали, палитра и сцени.', en: 'Materials, a palette and scenes.' }] },
 
-    { id: 'sk15', name: 'sk15_automation', tags: ['java'], chips: [{ bg: 'Java', en: 'Java' }, { bg: 'Автоматизация', en: 'Automation' }], status: { bg: 'Проект', en: 'Project' },
-      summary: { bg: 'Java проект за автоматизация, разделен на пакети.', en: 'A Java automation project split into packages.' },
-      details: [{ bg: 'Описанието ще се допълни.', en: 'A description will follow.' }],
-      links: [{ label: { bg: 'Код в GitHub', en: 'Code on GitHub' }, url: 'https://github.com/OmniSlack/sk15_automation' }] },
 
-    { id: 'selenium', name: 'Selenium', tags: ['java'], chips: [{ bg: 'Java', en: 'Java' }, { bg: 'Тестване', en: 'Testing' }], status: { bg: 'Среда', en: 'Setup' },
-      summary: { bg: 'Библиотеки на Selenium за Java, събрани за автоматизирано тестване на уеб.', en: 'Selenium libraries for Java, gathered for automated web testing.' },
-      details: [{ bg: 'Съдържа jar файлове (Selenium, ByteBuddy, commons-exec и др.), лиценз и списък с промени.', en: 'Holds jar files (Selenium, ByteBuddy, commons-exec and others), a licence and a changelog.' }] },
 
-    { id: 'exercise', name: 'exercise', tags: ['learn'], chips: [{ bg: 'Учене', en: 'Learning' }], status: { bg: 'Упражнения', en: 'Exercises' },
-      summary: { bg: 'Упражнения по лекции, от lecture2 до lecture13.', en: 'Lecture exercises, from lecture2 to lecture13.' },
-      details: [{ bg: 'Описанието ще се допълни.', en: 'A description will follow.' }] }
   ],
 
-  /* Контакти и платформи. Празен `url` = „линк скоро“. */
+  /* Контакти: само живите връзки. Платформите без линк са в личния таб. */
   socials: [
     { name: 'GitHub',      url: 'https://github.com/OmniSlack',                 handle: 'OmniSlack' },
     { name: 'LinkedIn',    url: 'https://www.linkedin.com/in/martin-urumov/',   handle: 'martin-urumov' },
     { name: 'YouTube',     url: 'https://www.youtube.com/@OmniEcho26',          handle: '@OmniEcho26' },
     { name: 'TikTok',      url: 'https://www.tiktok.com/@omniecho26',           handle: '@omniecho26' },
     { name: 'Facebook',    url: 'https://www.facebook.com/martin.urumov.7/',    handle: 'martin.urumov.7' },
-    { name: 'X / Twitter', url: '', handle: '' },
-    { name: 'Snapchat',    url: '', handle: '' },
-    { name: 'Twitch',      url: '', handle: '' }
   ]
 };
