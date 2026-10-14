@@ -17,7 +17,7 @@
     unlockText: { bg: 'Тук са платформите, новините, бележките и недовършеното ми. Всичко е запечатано с парола и не е публично.', en: 'Platforms, news, notes and my unfinished work live here. Everything is sealed with a passphrase and is not public.' },
     createTitle: { bg: 'Създай личния си vault', en: 'Create your personal vault' },
     createText: { bg: 'Още няма vault на това устройство. Избери парола (поне 8 знака). Няма как да се възстанови, ако я забравиш. По желание зареди начален файл vault.json.', en: 'There is no vault on this device yet. Choose a passphrase (at least 8 characters). It cannot be recovered if you forget it. Optionally load a starter file, vault.json.' },
-    pass: { bg: 'Парола', en: 'Passphrase' }, pass2: { bg: 'Повтори паролата', en: 'Repeat the passphrase' },
+    name: { bg: 'Име', en: 'Name' }, needName: { bg: 'Въведи име.', en: 'Enter a name.' }, pass: { bg: 'Парола', en: 'Passphrase' }, pass2: { bg: 'Повтори паролата', en: 'Repeat the passphrase' },
     seed: { bg: 'Начален файл vault.json (по желание)', en: 'Starter file vault.json (optional)' },
     unlock: { bg: 'Отключи', en: 'Unlock' }, create: { bg: 'Създай', en: 'Create' },
     wrong: { bg: 'Грешна парола.', en: 'Wrong passphrase.' }, weak: { bg: 'Паролата трябва да е поне 8 знака.', en: 'The passphrase must be at least 8 characters.' },
@@ -56,6 +56,7 @@
     var create = mode === 'create';
     return '<form class="card gate" id="p-form" autocomplete="off" novalidate><h3>' + esc(tx(create ? T.createTitle : T.unlockTitle)) + '</h3>' +
       '<p class="note">' + esc(tx(create ? T.createText : T.unlockText)) + '</p>' +
+      '<label for="p-name">' + esc(tx(T.name)) + '</label><input id="p-name" type="text" autocomplete="username" autocapitalize="none" spellcheck="false">' +
       '<label for="p-pass">' + esc(tx(T.pass)) + '</label><input id="p-pass" type="password" autocomplete="' + (create ? 'new-password' : 'current-password') + '">' +
       (create ? '<label for="p-pass2">' + esc(tx(T.pass2)) + '</label><input id="p-pass2" type="password" autocomplete="new-password">' +
         '<label for="p-seed">' + esc(tx(T.seed)) + '</label><input id="p-seed" type="file" accept="application/json,.json">' : '') +
@@ -75,19 +76,21 @@
 
   function submitGate(e) {
     e.preventDefault();
-    var pass = $('p-pass').value, create = !!$('p-pass2');
+    var name = $('p-name').value.trim().toLowerCase(), create = !!$('p-pass2');
+    if (!name) { msg(tx(T.needName), true); return; }
+    var pass = $('p-pass').value;
     if (create) {
       if (pass.length < 8) { msg(tx(T.weak), true); return; }
       if (pass !== $('p-pass2').value) { msg(tx(T.mismatch), true); return; }
       var file = $('p-seed').files && $('p-seed').files[0];
-      var done = function (seed) { V.create(pass, seed).then(function () { renderApp(); }, function () { msg(tx(T.saveFail), true); }); };
+      var done = function (seed) { V.create(name + ':' + pass, seed).then(function () { renderApp(); }, function () { msg(tx(T.saveFail), true); }); };
       if (!file) { done(null); return; }
       var fr = new FileReader();
       fr.onload = function () { var seed; try { seed = JSON.parse(String(fr.result)); } catch (x) { msg(tx(T.badSeed), true); return; } done(seed); };
       fr.onerror = function () { msg(tx(T.badSeed), true); };
       fr.readAsText(file);
     } else {
-      V.unlock(pass).then(function () { renderApp(); }, function (err) { msg(tx(err && err.message === 'no-vault' ? T.novault : T.wrong), true); });
+      V.unlock(name + ':' + pass).then(function () { renderApp(); }, function (err) { msg(tx(err && err.message === 'no-vault' ? T.novault : T.wrong), true); });
     }
   }
 

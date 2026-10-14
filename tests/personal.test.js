@@ -21,7 +21,7 @@ const setv = (p, id, v) => { $(p, id).value = v; };
 const submit = (p, id) => $(p, id).dispatchEvent(new p.w.Event('submit', { bubbles: true, cancelable: true }));
 async function openGate(o) { const p = page(o); p.click($(p, 'tab-personal')); await until(() => $(p, 'p-form')); return p; }
 async function createVault(p, seed) {
-  setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS);
+  setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS);
   if (seed) { const f = new p.w.File([JSON.stringify(seed)], 'vault.json', { type: 'application/json' }); Object.defineProperty($(p, 'p-seed'), 'files', { value: [f] }); }
   submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
 }
@@ -37,11 +37,11 @@ test('the lock screen shows no personal data', async () => {
   const p = await openGate(); assert.ok(!/NomNom|YouTube|Twitch|notes/i.test(text(p).replace(/personal|notes to/gi, '')));
 });
 test('a weak passphrase is refused with a message', async () => {
-  const p = await openGate(); setv(p, 'p-pass', 'short'); setv(p, 'p-pass2', 'short'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
+  const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', 'short'); setv(p, 'p-pass2', 'short'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /at least 8/); assert.ok(!$(p, 'pmenu'));
 });
 test('two different passphrases are refused', async () => {
-  const p = await openGate(); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS + 'x'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
+  const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS + 'x'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /do not match/); assert.ok(!$(p, 'pmenu'));
 });
 test('creating a vault opens the five-section personal menu', async () => {
@@ -52,18 +52,18 @@ test('loading vault.json while creating fills the platforms and the unfinished w
   const p = await openApp(); assert.equal(p.doc.querySelectorAll('#pview .pf').length, 2); await section(p, 'progress'); assert.match(text(p), /NomNom/);
 });
 test('a broken starter file is refused', async () => {
-  const p = await openGate(); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS);
+  const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS);
   Object.defineProperty($(p, 'p-seed'), 'files', { value: [new p.w.File(['{not json'], 'vault.json')] }); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /not valid JSON/); assert.ok(!$(p, 'pmenu'));
 });
 test('with a vault on the device the screen asks for the passphrase, and a wrong one is refused', async () => {
   const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
   const b = await openGate({ storage: { 'ssc-vault': stored } }); assert.match(text(b), /Unlock personal control/); assert.ok(!$(b, 'p-pass2'));
-  setv(b, 'p-pass', 'wrong wrong wrong'); submit(b, 'p-form'); await until(() => $(b, 'p-msg').textContent); assert.match($(b, 'p-msg').textContent, /Wrong passphrase/); assert.ok(!$(b, 'pmenu'));
+  setv(b, 'p-name', 'omnivorous'); setv(b, 'p-pass', 'wrong wrong wrong'); submit(b, 'p-form'); await until(() => $(b, 'p-msg').textContent); assert.match($(b, 'p-msg').textContent, /Wrong passphrase/); assert.ok(!$(b, 'pmenu'));
 });
 test('the right passphrase unlocks and shows the saved data', async () => {
   const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
-  const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-pass', PASS); submit(b, 'p-form'); await until(() => $(b, 'pmenu'));
+  const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-name', 'omnivorous'); setv(b, 'p-pass', PASS); submit(b, 'p-form'); await until(() => $(b, 'pmenu'));
   assert.equal(b.doc.querySelectorAll('#pview .pf').length, 2);
 });
 test('leaving the tab locks it; coming back asks for the passphrase again', async () => {
@@ -113,7 +113,7 @@ test('an empty note is not added', async () => {
 });
 test('notes survive locking and unlocking', async () => {
   const p = await openApp(); await section(p, 'notes'); setv(p, 'n-text', 'remember this'); submit(p, 'n-form'); await until(() => p.doc.querySelector('[data-ndone]'));
-  const stored = p.w.localStorage.getItem('ssc-vault'); const q = await openGate({ storage: { 'ssc-vault': stored } }); setv(q, 'p-pass', PASS); submit(q, 'p-form'); await until(() => $(q, 'pmenu'));
+  const stored = p.w.localStorage.getItem('ssc-vault'); const q = await openGate({ storage: { 'ssc-vault': stored } }); setv(q, 'p-name', 'omnivorous'); setv(q, 'p-pass', PASS); submit(q, 'p-form'); await until(() => $(q, 'pmenu'));
   await section(q, 'notes'); assert.match(text(q), /remember this/);
 });
 test('note text is shown as text, never as markup', async () => {
@@ -161,7 +161,7 @@ test('an empty In progress says so', async () => {
 /* ---------- language and separation ---------- */
 test('the lock screen and the app follow the language switch', async () => {
   const p = await openGate(); p.w.SSCApp.setLang('bg'); await until(() => /Създай личния/.test(text(p)));
-  setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
+  setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
   assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Vault']);
 });
 test('personal data never appears on the public tabs, even while the vault is open', async () => {
@@ -177,4 +177,27 @@ test('menu sections can be reached by the hash', async () => {
 });
 test('nothing throws while moving through every section', async () => {
   const p = await openApp(); for (const s of ['news', 'notes', 'progress', 'vault', 'platforms']) await section(p, s); assert.deepEqual(p.errors, []);
+});
+
+/* ---------- the name field ---------- */
+test('the lock screen asks for a name and a passphrase', async () => {
+  const p = await openGate(); assert.ok($(p, 'p-name')); assert.equal($(p, 'p-name').getAttribute('autocomplete'), 'username');
+});
+test('an empty name is refused', async () => {
+  const p = await openGate(); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); setv(p, 'p-name', ''); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
+  assert.match($(p, 'p-msg').textContent, /Enter a name/); assert.ok(!$(p, 'pmenu'));
+});
+test('the name is part of the key: a different name with the right passphrase is refused', async () => {
+  const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
+  const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-name', 'someone'); setv(b, 'p-pass', PASS); submit(b, 'p-form'); await until(() => $(b, 'p-msg').textContent);
+  assert.match($(b, 'p-msg').textContent, /Wrong passphrase/); assert.ok(!$(b, 'pmenu'));
+});
+test('the name ignores capitals and surrounding spaces', async () => {
+  const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
+  const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-name', '  OmniVorous '); setv(b, 'p-pass', PASS); submit(b, 'p-form'); await until(() => $(b, 'pmenu'));
+});
+test('the passphrase stays case-sensitive', async () => {
+  const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
+  const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-name', 'omnivorous'); setv(b, 'p-pass', PASS.toUpperCase()); submit(b, 'p-form'); await until(() => $(b, 'p-msg').textContent);
+  assert.match($(b, 'p-msg').textContent, /Wrong passphrase/);
 });
