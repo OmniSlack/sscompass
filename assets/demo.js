@@ -142,136 +142,134 @@
     }
   ];
 
-  var root, lang = 'bg', prev = null, S = { f: 0, sc: 0, i: 0, timer: null, playing: false };
+  var root, lang = 'bg', S = { f: 0, sc: 0, i: 0, timer: null, playing: false }, E = null;
   var UI = {
     title: T('Избери проект', 'Choose a project'),
     scen: T('Сценарий', 'Scenario'),
-    play: T('▶ Пусни', '▶ Play'), pause: T('⏸ Пауза', '⏸ Pause'), step: T('Стъпка ›', 'Step ›'), reset: T('↺ Отначало', '↺ Restart'),
-    ready: T('Натисни Пусни или Стъпка.', 'Press Play or Step.'),
+    play: T('▶', '▶'), pause: T('⏸', '⏸'), prev: T('‹', '‹'), next: T('›', '›'), reset: T('↺', '↺'),
+    playL: T('Пусни', 'Play'), pauseL: T('Пауза', 'Pause'), prevL: T('Назад', 'Back'), nextL: T('Напред', 'Forward'), resetL: T('Отначало', 'Restart'),
+    ready: T('Натисни ▶ или › или избери стъпка по-горе.', 'Press ▶ or ›, or pick a step above.'),
     stepOf: T('Стъпка', 'Step'), of: T('от', 'of'),
     legend: T('Зелено: премина · Жълто: задържа · Червено: спира · Пунктир: не е построено', 'Green: passed · Amber: holds · Red: stops · Dashed: not built'),
-    note: T('Плик/пакет: малката икона пътува по етапите и сменя цвят според решението. Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'The small icon travels through the stages and changes colour with the verdict. This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
-    skipped: T('не се достига', 'not reached')
+    note: T('Прилепът е пакетът: пътува по етапите и сменя цвят според решението. Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'The bat is the packet: it travels through the stages and changes colour with the verdict. This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
+    skipped: T('не се достига', 'not reached'), jump: T('Към стъпка', 'Go to step')
   };
   function tx(v) { return typeof v === 'string' ? v : (v[lang] || v.en); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function btn(cls, label, aria, fn) { var b = el('button', cls, label); b.type = 'button'; if (aria) b.setAttribute('aria-label', aria); b.addEventListener('click', fn); return b; }
   function flow() { return FLOWS[S.f]; }
   function scen() { return flow().scenarios[S.sc]; }
+  function setHdr() { var h = document.querySelector('.top'); if (h) document.documentElement.style.setProperty('--hdr', h.offsetHeight + 'px'); }
 
-  function makeToken(label, st) {
-    var d = el('div', 'dm-tok t-' + st); d.setAttribute('aria-hidden', 'true'); d.title = label;
-    d.innerHTML = '<svg viewBox="0 0 28 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="1" y="1" width="26" height="18" rx="2.5"/><path d="M1.5 2.5 14 11.5 26.5 2.5"/></svg>';
-    var l = el('span', 'dm-tok-l', label); d.appendChild(l);
-    return d;
-  }
-  function tokState(sc, done) {
-    if (S.i === 0) return 'idle';
-    var last = sc.steps[S.i - 1].st;
-    return last === 'pass' && done ? 'pass' : last;
-  }
-  function tokTarget(ol, k, tok) {
-    var li = ol.children[k];
-    return { x: li.offsetLeft + li.offsetWidth - tok.offsetWidth - 8, y: li.offsetTop + li.offsetHeight - 40 };
-  }
   function stageStates() {
-    var st = []; var sc = scen(); var i;
+    var st = [], sc = scen(), i;
     for (i = 0; i < flow().stages.length; i++) st.push('idle');
     for (i = 0; i < S.i; i++) st[sc.steps[i].s] = sc.steps[i].st;
     return st;
   }
-  function draw() {
-    if (!root) return;
-    var f = flow(), sc = scen(), done = S.i >= sc.steps.length, states = stageStates();
-    var current = S.i > 0 ? sc.steps[S.i - 1].s : -1;
-    root.textContent = '';
+  function halt() { if (S.timer) { clearInterval(S.timer); S.timer = null; } S.playing = false; }
+  function goto(i) { halt(); S.i = Math.max(0, Math.min(scen().steps.length, i)); update(); }
+  function advance() { if (S.i < scen().steps.length) S.i++; if (S.i >= scen().steps.length) halt(); update(); }
+  function toggle() {
+    if (S.playing) { halt(); update(); return; }
+    if (S.i >= scen().steps.length) S.i = 0;
+    S.playing = true; advance();
+    if (S.playing) S.timer = setInterval(advance, 1500);
+  }
 
+  /* The skeleton is built only when the project, scenario or language changes. Steps only update it in place,
+     so the page never jumps and the controls keep focus. */
+  function build() {
+    if (!root) return;
+    var f = flow(), sc = scen(), keep = root.offsetHeight;
+    if (keep) root.style.minHeight = keep + 'px';
+    root.textContent = ''; E = {};
     var tabs = el('div', 'dm-flows'); tabs.setAttribute('role', 'group'); tabs.setAttribute('aria-label', tx(UI.title));
-    FLOWS.forEach(function (x, k) {
-      var b = el('button', 'dm-flow', tx(x.name)); b.type = 'button'; b.setAttribute('aria-pressed', String(k === S.f));
-      b.addEventListener('click', function () { S.f = k; S.sc = 0; reset(); });
-      tabs.appendChild(b);
-    });
+    FLOWS.forEach(function (x, k) { var b = btn('dm-flow', tx(x.name), null, function () { halt(); S.f = k; S.sc = 0; S.i = 0; build(); }); b.setAttribute('aria-pressed', String(k === S.f)); tabs.appendChild(b); });
     root.appendChild(tabs);
     root.appendChild(el('p', 'lead dm-intro', tx(f.intro)));
     root.appendChild(el('p', 'mono dm-repo', 'repo / ' + f.repo));
-
     var scs = el('div', 'dm-scen'); scs.setAttribute('role', 'group'); scs.setAttribute('aria-label', tx(UI.scen));
     scs.appendChild(el('span', 'mono', tx(UI.scen)));
-    f.scenarios.forEach(function (x, k) {
-      var b = el('button', 'dm-sc', tx(x.name)); b.type = 'button'; b.setAttribute('aria-pressed', String(k === S.sc));
-      b.addEventListener('click', function () { S.sc = k; reset(); });
-      scs.appendChild(b);
-    });
+    f.scenarios.forEach(function (x, k) { var b = btn('dm-sc', tx(x.name), null, function () { halt(); S.sc = k; S.i = 0; build(); }); b.setAttribute('aria-pressed', String(k === S.sc)); scs.appendChild(b); });
     root.appendChild(scs);
 
-    var ol = el('ol', 'dm-pipe'); ol.style.setProperty('--n', f.stages.length);
+    var stick = el('div', 'dm-stick');
+    var ctl = el('div', 'dm-ctl');
+    E.prev = btn('dm-b', tx(UI.prev), tx(UI.prevL), function () { goto(S.i - 1); });
+    E.play = btn('dm-b dm-play', '', null, toggle);
+    E.next = btn('dm-b', tx(UI.next), tx(UI.nextL), function () { halt(); advance(); });
+    E.reset = btn('dm-b', tx(UI.reset), tx(UI.resetL), function () { goto(0); });
+    E.dots = el('div', 'dm-dots'); E.dots.setAttribute('role', 'group'); E.dots.setAttribute('aria-label', tx(UI.jump));
+    E.dotEls = sc.steps.map(function (s, k) { var d = btn('dm-dot-b', String(k + 1), tx(UI.jump) + ' ' + (k + 1), function () { goto(k + 1); }); E.dots.appendChild(d); return d; });
+    E.count = el('span', 'mono dm-count');
+    ctl.appendChild(E.prev); ctl.appendChild(E.play); ctl.appendChild(E.next); ctl.appendChild(E.reset); ctl.appendChild(E.dots); ctl.appendChild(E.count);
+    stick.appendChild(ctl);
+
+    var ol = el('ol', 'dm-pipe'); ol.style.setProperty('--n', f.stages.length); E.pipe = ol; E.stages = [];
     f.stages.forEach(function (g, k) {
-      var li = el('li', 'dm-stage s-' + states[k] + (k === current && !done ? ' on' : '') + (g.nb ? ' nbld' : ''));
-      li.appendChild(el('span', 'dm-num', String(k + 1)));
-      li.appendChild(el('b', null, tx(g.n)));
-      li.appendChild(el('span', 'dm-d', states[k] === 'idle' && S.i > 0 ? tx(UI.skipped) : tx(g.d)));
-      if (k === current) li.appendChild(el('i', 'dm-dot'));
+      var li = el('li', 'dm-stage' + (g.nb ? ' nbld' : '')); li.tabIndex = 0; li.setAttribute('role', 'button');
+      li.appendChild(el('span', 'dm-num', String(k + 1))); li.appendChild(el('b', null, tx(g.n))); E.stages.push({ li: li, d: li.appendChild(el('span', 'dm-d')) });
+      var first = -1; sc.steps.some(function (s, j) { if (s.s === k) { first = j; return true; } return false; });
+      if (first >= 0) { li.addEventListener('click', function () { goto(first + 1); }); li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goto(first + 1); } }); }
+      else li.removeAttribute('role');
       ol.appendChild(li);
     });
-    root.appendChild(ol);
-    var tok = null, tgt = null;
-    if (S.i === 0) prev = null; else {
-    tok = makeToken(tx(f.tok), tokState(sc, done));
-    ol.appendChild(tok);
-    tgt = tokTarget(ol, current, tok);
-    var from = prev && prev.f === S.f && prev.sc === S.sc ? prev : null;
-    if (from) { tok.style.transition = 'none'; tok.style.transform = 'translate(' + from.x + 'px,' + from.y + 'px)'; void tok.offsetWidth; tok.style.transition = ''; if (from.x !== tgt.x || from.y !== tgt.y) tok.classList.add('fly'); }
-    requestAnimationFrame(function () { tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)'; });
-    if (!from) tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)';
-    prev = { f: S.f, sc: S.sc, x: tgt.x, y: tgt.y };
-    }
+    E.tok = makeToken(tx(f.tok)); E.tok.classList.add('hidden'); ol.appendChild(E.tok);
+    stick.appendChild(ol);
+    E.cur = el('div', 'dm-cur'); E.cur.setAttribute('role', 'status'); E.cur.setAttribute('aria-live', 'polite'); stick.appendChild(E.cur);
+    root.appendChild(stick);
 
-    var ctl = el('div', 'dm-ctl');
-    var play = el('button', 'btn', S.playing ? tx(UI.pause) : tx(UI.play)); play.type = 'button'; play.addEventListener('click', toggle);
-    var step = el('button', 'btn', tx(UI.step)); step.type = 'button'; step.addEventListener('click', function () { pause(); advance(); });
-    var rs = el('button', 'btn', tx(UI.reset)); rs.type = 'button'; rs.addEventListener('click', function () { reset(); });
-    ctl.appendChild(play); ctl.appendChild(step); ctl.appendChild(rs);
-    ctl.appendChild(el('span', 'mono dm-count', tx(UI.stepOf) + ' ' + S.i + ' ' + tx(UI.of) + ' ' + sc.steps.length));
-    root.appendChild(ctl);
-
-    var log = el('div', 'dm-log'); log.setAttribute('role', 'status'); log.setAttribute('aria-live', 'polite');
-    if (S.i === 0) log.appendChild(el('p', 'dm-line dim', tx(UI.ready)));
-    for (var i = 0; i < S.i; i++) {
-      var s = sc.steps[i];
-      var p = el('p', 'dm-line l-' + s.st + (i === S.i - 1 ? ' new' : ''));
-      p.appendChild(el('b', null, (i + 1) + '. ' + tx(f.stages[s.s].n) + ' — '));
-      p.appendChild(document.createTextNode(tx(s.t)));
-      log.appendChild(p);
-    }
-    if (done) {
-      var end = el('div', 'dm-end e-' + sc.end.k);
-      end.appendChild(el('b', null, tx(sc.end.l))); end.appendChild(el('span', null, tx(sc.end.t)));
-      log.appendChild(end);
-    }
-    root.appendChild(log);
+    E.log = el('div', 'dm-log'); root.appendChild(E.log);
     root.appendChild(el('p', 'note', tx(UI.legend) + '. ' + tx(UI.note)));
+    E.placed = false;
+    setHdr(); update();
+    requestAnimationFrame(function () { root.style.minHeight = ''; });
   }
-  function halt() { if (S.timer) { clearInterval(S.timer); S.timer = null; } S.playing = false; }
-  function advance() {
-    if (S.i < scen().steps.length) S.i++;
-    if (S.i >= scen().steps.length) halt();
-    draw();
+  function makeToken(label) {
+    var d = el('div', 'dm-tok t-idle'); d.setAttribute('aria-hidden', 'true'); d.title = label;
+    d.innerHTML = '<svg viewBox="0 0 30 18" fill="currentColor"><path d="M15 1.5 13.3 5C11.6 3.8 9 3.5 6.5 4.6 4.5 5.5 2.6 7.5 1 11c2.4-1.4 4-1.2 5.3.4.9-1.8 2.7-2 4.3-.6 1.1 1.4 2.3 4 4.4 6.2 2.1-2.2 3.3-4.8 4.4-6.2 1.6-1.4 3.4-1.2 4.3.6 1.3-1.6 2.9-1.8 5.3-.4-1.6-3.5-3.5-5.5-5.5-6.4C21 3.5 18.4 3.8 16.7 5z"/></svg>';
+    d.appendChild(el('span', 'dm-tok-l', label)); return d;
   }
-  function pause() { if (S.playing) { halt(); draw(); } }
-  function toggle() {
-    if (S.playing) { pause(); return; }
-    if (S.i >= scen().steps.length) S.i = 0;
-    S.playing = true; draw();
-    S.timer = setInterval(function () { advance(); }, 1500);
-    advance();
+  function update() {
+    if (!E) return;
+    var f = flow(), sc = scen(), n = sc.steps.length, done = S.i >= n, states = stageStates();
+    var current = S.i > 0 ? sc.steps[S.i - 1].s : -1;
+    E.stages.forEach(function (o, k) {
+      o.li.className = 'dm-stage s-' + states[k] + (k === current && !done ? ' on' : '') + (f.stages[k].nb ? ' nbld' : '');
+      o.d.textContent = states[k] === 'idle' && S.i > 0 ? tx(UI.skipped) : tx(f.stages[k].d);
+    });
+    E.play.textContent = S.playing ? tx(UI.pause) : tx(UI.play); E.play.setAttribute('aria-label', S.playing ? tx(UI.pauseL) : tx(UI.playL));
+    E.prev.disabled = S.i === 0; E.next.disabled = done; E.reset.disabled = S.i === 0;
+    E.dotEls.forEach(function (d, k) { var st = k < S.i ? sc.steps[k].st : 'idle'; d.className = 'dm-dot-b d-' + st + (k + 1 === S.i ? ' cur' : ''); d.setAttribute('aria-pressed', String(k + 1 === S.i)); });
+    E.count.textContent = tx(UI.stepOf) + ' ' + S.i + ' ' + tx(UI.of) + ' ' + n;
+    if (S.i === 0) { E.tok.classList.add('hidden'); E.placed = false; }
+    else {
+      var last = sc.steps[S.i - 1].st, li = E.stages[current].li;
+      var x = li.offsetLeft + li.offsetWidth - E.tok.offsetWidth - 6, y = li.offsetTop + li.offsetHeight - E.tok.offsetHeight - 6;
+      E.tok.className = 'dm-tok t-' + (last === 'pass' && done ? 'pass' : last);
+      if (!E.placed) { E.tok.style.transition = 'none'; E.tok.style.transform = 'translate(' + x + 'px,' + y + 'px)'; void E.tok.offsetWidth; E.tok.style.transition = ''; E.placed = true; }
+      else { E.tok.classList.add('fly'); E.tok.style.transform = 'translate(' + x + 'px,' + y + 'px)'; }
+    }
+    E.cur.textContent = '';
+    if (S.i === 0) { E.cur.className = 'dm-cur dim'; E.cur.textContent = tx(UI.ready); }
+    else {
+      var s = sc.steps[S.i - 1]; E.cur.className = 'dm-cur c-' + s.st;
+      E.cur.appendChild(el('b', null, S.i + '. ' + tx(f.stages[s.s].n) + ' — ')); E.cur.appendChild(document.createTextNode(tx(s.t)));
+      if (done) { var end = el('div', 'dm-end e-' + sc.end.k); end.appendChild(el('b', null, tx(sc.end.l))); end.appendChild(el('span', null, tx(sc.end.t))); E.cur.appendChild(end); }
+    }
+    E.log.textContent = '';
+    for (var i = 0; i < S.i; i++) {
+      var q = sc.steps[i], p = el('p', 'dm-line l-' + q.st);
+      p.appendChild(el('b', null, (i + 1) + '. ' + tx(f.stages[q.s].n) + ' — ')); p.appendChild(document.createTextNode(tx(q.t))); E.log.appendChild(p);
+    }
   }
-  function reset() { halt(); S.i = 0; draw(); }
 
-  window.addEventListener('resize', function () { prev = null; if (root && root.offsetParent) draw(); });
+  window.addEventListener('resize', function () { setHdr(); if (E && root && root.offsetParent) { E.placed = false; update(); } });
   window.SSCDemo = {
-    render: function (l) { lang = l === 'en' ? 'en' : 'bg'; root = root || document.getElementById('demo-root'); draw(); },
-    stop: function () { halt(); if (root) draw(); },
+    render: function (l) { lang = l === 'en' ? 'en' : 'bg'; root = root || document.getElementById('demo-root'); build(); },
+    stop: function () { halt(); if (E) update(); },
     flows: FLOWS
   };
-  document.addEventListener('DOMContentLoaded', function () { root = document.getElementById('demo-root'); if (root) draw(); });
+  document.addEventListener('DOMContentLoaded', function () { root = document.getElementById('demo-root'); if (root && !E) build(); });
 })();

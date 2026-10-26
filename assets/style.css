@@ -365,3 +365,68 @@ button:active, a.btn:active, a.tile:active { transform: scale(.96); }
 @keyframes railflow { to { background-position: 0 12px; } }
 @keyframes railpkt { 0% { top: 8px; } 100% { top: calc(100% - 22px); } }
 @media (prefers-reduced-motion: reduce) { .arch ol.steps.mobile::before, .arch ol.steps.mobile::after, .dg-info.on { animation: none; } }
+
+/* ---------- How it works: sticky controls and a compact, always-visible pipeline ---------- */
+:root { --hdr: 58px; }
+.dm-stick { position: sticky; top: var(--hdr); z-index: 6; margin: 0 -8px; padding: 8px 8px 8px; background: rgb(8 3 4 / .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line2); border-radius: 0 0 14px 14px; }
+.dm-ctl { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin: 0 0 8px; }
+.dm-b { min-width: 36px; height: 34px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel2); font-size: 1rem; line-height: 1; }
+.dm-b:disabled { opacity: .35; cursor: default; }
+.dm-b:not(:disabled):hover { border-color: var(--accent); background: rgb(var(--accent-rgb) / .18); }
+.dm-play { border-color: var(--accent); background: rgb(var(--accent-rgb) / .2); min-width: 44px; }
+.dm-dots { display: flex; flex-wrap: wrap; gap: 5px; margin-left: 4px; }
+.dm-dot-b { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line2); background: transparent; font: .68rem var(--mono); color: var(--dim); }
+.dm-dot-b.d-pass { border-color: var(--ok); color: var(--ok); } .dm-dot-b.d-hold { border-color: var(--warn); color: var(--warn); } .dm-dot-b.d-stop { border-color: var(--bad); color: var(--bad); } .dm-dot-b.d-nb { border-style: dashed; color: var(--text); }
+.dm-dot-b.cur { background: rgb(255 255 255 / .16); box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / .35); color: var(--text); }
+.dm-stick .dm-pipe { margin: 8px 0 8px; gap: 16px 14px; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); }
+.dm-stick .dm-stage { min-height: 74px; padding: 9px 11px 8px; cursor: pointer; }
+.dm-stage:not([role]) { cursor: default; }
+.dm-cur { min-height: 42px; font-size: .9rem; padding: 7px 10px; border-left: 3px solid var(--line2); background: var(--panel); border-radius: 0 10px 10px 0; }
+.dm-cur.dim { color: var(--dim); } .dm-cur.c-pass { border-color: var(--ok); } .dm-cur.c-hold { border-color: var(--warn); } .dm-cur.c-stop { border-color: var(--bad); } .dm-cur.c-nb { border-color: var(--dim); }
+.dm-cur .dm-end { margin-top: 6px; padding: 6px 10px; }
+.dm-log { margin-top: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 10px 14px 4px; min-height: 0; }
+.dm-log:empty { display: none; }
+.dm-tok.hidden { display: none; }
+.dm-tok { background: rgb(8 3 4 / .94); border: 1.5px solid var(--accent); color: var(--accent2); box-shadow: 0 0 14px rgb(var(--accent-rgb) / .45); height: 28px; padding: 0 8px; }
+.dm-tok svg { width: 26px; height: 16px; }
+.dm-tok.t-pass { border-color: var(--ok); color: var(--ok); box-shadow: 0 0 16px rgb(74 222 128 / .55); }
+.dm-tok.t-hold { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 16px rgb(251 191 36 / .55); }
+.dm-tok.t-stop { border-color: var(--bad); color: var(--bad); box-shadow: 0 0 16px rgb(255 107 107 / .6); }
+.dm-tok.t-nb { border-color: var(--dim); color: var(--dim); box-shadow: none; }
+@media (max-width: 640px) {
+  .dm-stick .dm-pipe { grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 6px 0; }
+  .dm-stick .dm-stage { min-height: 52px; padding: 6px 6px 5px; border-radius: 10px; }
+  .dm-stick .dm-stage::after { display: none; }
+  .dm-stick .dm-stage b { font-size: .9rem; line-height: 1.1; }
+  .dm-stick .dm-num, .dm-stick .dm-d { display: none; }
+  .dm-tok-l { display: none; } .dm-tok { padding: 0 6px; height: 24px; } .dm-tok svg { width: 22px; height: 14px; }
+  .dm-cur { font-size: .82rem; min-height: 36px; }
+  .dm-count { margin-left: 0; width: 100%; }
+}
+@media (max-height: 560px) { .dm-stick { position: static; } }
+
+/* ---------- AI platforms tab ---------- */
+.corebox { position: relative; height: clamp(260px, 46vh, 420px); margin: 18px 0 10px; border: 1px solid var(--line2); border-radius: 18px; overflow: hidden; background: radial-gradient(60% 70% at 50% 50%, rgb(var(--accent-rgb) / .12), rgb(0 0 0 / .5)); }
+.corebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.aipick, .aistate { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.ai-b, .st-b { padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel); font-size: .92rem; transition: .2s; }
+.ai-b { font: 400 1.2rem var(--gothic); letter-spacing: .04em; padding: 7px 18px; }
+.ai-b[aria-pressed="true"], .st-b[aria-pressed="true"] { border-color: var(--accent); background: rgb(var(--accent-rgb) / .2); }
+.ai-b.ai-claude[aria-pressed="true"] { border-color: #e08060; background: rgb(224 128 96 / .22); }
+.ai-b.ai-gpt[aria-pressed="true"] { border-color: #34d399; background: rgb(52 211 153 / .18); }
+.ai-b.ai-codex[aria-pressed="true"] { border-color: #93c5fd; background: rgb(147 197 253 / .18); }
+.ai-b.ai-gemini[aria-pressed="true"] { border-color: #60a5fa; background: rgb(96 165 250 / .2); }
+.st-b { font-size: .82rem; padding: 7px 13px; }
+.st-play { border-style: dashed; }
+.ai-b:hover, .st-b:hover { border-color: var(--accent2); }
+.aiinfo { padding: 14px 18px; border: 1px solid var(--line2); border-radius: 14px; background: var(--panel); }
+.aiinfo b { font: 400 1.5rem var(--gothic); letter-spacing: .04em; color: var(--accent2); margin-right: 10px; }
+.aiinfo p { margin: 6px 0 0; }
+
+/* motion: nodes flash as the packet arrives, trail dots follow it, a scan line sweeps the diagram */
+@keyframes nodeflash { 0% { stroke-width: 4; filter: drop-shadow(0 0 16px rgb(var(--accent-rgb) / .95)); } 14% { stroke-width: 3.4; filter: drop-shadow(0 0 12px rgb(var(--accent-rgb) / .7)); } 30%, 100% { stroke-width: 1.8; filter: drop-shadow(0 0 0 rgb(var(--accent-rgb) / 0)); } }
+.arch .scan { pointer-events: none; animation: scansweep 6.5s linear infinite; }
+@keyframes scansweep { from { transform: translateX(0); } to { transform: translateX(var(--sw, 1220px)); } }
+.arch .pkt.trail { filter: drop-shadow(0 0 5px #ff5a4a); }
+.arch .nd.sel rect.node { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .arch rect.node, .mdg rect.node { animation: none !important; } .arch .scan, .arch .pkt.trail { display: none; } }

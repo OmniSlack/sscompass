@@ -23,9 +23,9 @@
         var next = n.nextSibling; if (n.nodeType === 1) g.appendChild(n); n = next;
       }
       g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button');
-      g.style.animationDelay = '-' + (k * 0.8).toFixed(1) + 's'; r.style.animationDelay = '-' + (k * 0.8).toFixed(1) + 's';
       groups.push(g);
     });
+    motion(card, svg, groups);
     var st = { card: card, svg: svg, lis: lis, groups: groups, sel: -1, timer: null, playing: false };
     var bar = el('div', 'dg-bar'), info = el('div', 'dg-info'); info.setAttribute('role', 'status'); info.setAttribute('aria-live', 'polite');
     var play = el('button', 'btn'), next = el('button', 'btn'), clear = el('button', 'btn'), count = el('span', 'mono dg-count');
@@ -51,6 +51,30 @@
       li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); st.stop(); st.select(k === st.sel ? -1 : k); } });
     });
     cards.push(st); draw(st);
+  }
+  /* Motion: each box lights up as the packet reaches it, the packet drags a short trail, and a faint scan line sweeps across. */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function motion(card, svg, groups) {
+    var method = card.classList.contains('mdg');
+    var dur = method ? 8 : 9, times = method ? [0, 2, 4, 6, 7.9] : [0, .86, 1.9, 2.9, 3.5, 4.7, 5.95, 6.5, 7.7, 8.8];
+    groups.forEach(function (g, k) {
+      var r = g.querySelector('rect.node'), t = times[k] == null ? 0 : times[k];
+      r.style.animation = 'nodeflash ' + dur + 's linear infinite'; r.style.animationDelay = Math.max(0, t - .2).toFixed(2) + 's';
+    });
+    var pkt = svg.querySelector('circle.pkt');
+    if (pkt) [[.22, 4.6, .6], [.46, 3.2, .35], [.7, 2.2, .2]].forEach(function (c) {
+      var d = pkt.cloneNode(true); d.setAttribute('r', String(c[1])); d.setAttribute('opacity', String(c[2])); d.classList.add('trail');
+      var am = d.querySelector('animateMotion'); if (am) am.setAttribute('begin', '-' + c[0] + 's');
+      svg.insertBefore(d, pkt);
+    });
+    var vb = (svg.getAttribute('viewBox') || '0 0 1100 400').split(/\s+/).map(Number), defs = svg.querySelector('defs');
+    if (!defs) { defs = document.createElementNS(SVGNS, 'defs'); svg.insertBefore(defs, svg.firstChild); }
+    var gr = document.createElementNS(SVGNS, 'linearGradient'); gr.setAttribute('id', 'scan-' + (method ? 'm' : 'a'));
+    [['0', '0'], ['.5', '.2'], ['1', '0']].forEach(function (s) { var st = document.createElementNS(SVGNS, 'stop'); st.setAttribute('offset', s[0]); st.setAttribute('stop-color', '#ff5a4a'); st.setAttribute('stop-opacity', s[1]); gr.appendChild(st); });
+    defs.appendChild(gr);
+    var sc = document.createElementNS(SVGNS, 'rect'); sc.setAttribute('class', 'scan'); sc.setAttribute('x', '-120'); sc.setAttribute('y', '0'); sc.setAttribute('width', '120'); sc.setAttribute('height', String(vb[3])); sc.setAttribute('fill', 'url(#scan-' + (method ? 'm' : 'a') + ')');
+    sc.style.setProperty('--sw', String(vb[2] + 120) + 'px');
+    svg.insertBefore(sc, groups[0]);
   }
   function infoFor(st, k, hover) {
     var li = st.lis[k], title, body;

@@ -112,6 +112,7 @@
     if (window.SSCPersonal) window.SSCPersonal.render(l);
     if (window.SSCDemo) window.SSCDemo.render(l);
     if (window.SSCDiagrams) window.SSCDiagrams.render(l);
+    if (window.SSCAI) window.SSCAI.render(l);
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
@@ -119,8 +120,8 @@
   applyLang(detectLang());
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['home', 'work', 'architecture', 'demo', 'method', 'about', 'personal'];
-  var ALIAS = { top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo' };
+  var TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+  var ALIAS = { top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo', platforms: 'ai', tools: 'ai', models: 'ai' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
   var current = 'home';
   function parseHash() {
@@ -139,6 +140,7 @@
     });
     if (id !== 'demo' && window.SSCDemo) window.SSCDemo.stop();
     if (window.SSCDiagrams) window.SSCDiagrams.stop();
+    if (window.SSCAI) window.SSCAI.onShow(id === 'ai');
     document.body.setAttribute('data-view', id === 'personal' ? 'personal' : 'public');
     if (id === 'personal' && window.SSCPersonal) window.SSCPersonal.onShow(opts.sub);
     else if (window.SSCPersonal) window.SSCPersonal.lockNow();          // личното се заключва, когато го напуснеш

@@ -140,23 +140,64 @@ test('demo: English text has no Cyrillic', () => {
   const walk = (v) => { if (v && typeof v === 'object') { if (typeof v.en === 'string' && /[Ѐ-ӿ]/.test(v.en)) bad.push(v.en); Object.values(v).forEach(walk); } };
   walk(Array.from(dv(p))); assert.deepEqual(bad, []);
 });
-test('demo: renders four steps in the log after four clicks on Step, then Restart empties it', () => {
-  const p = demoPage(); const step = () => p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1]; for (let i = 0; i < 4; i++) step().click();
-  assert.equal(p.doc.querySelectorAll('#demo-root .dm-line:not(.dim)').length, 4);
-  p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[2].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line:not(.dim)').length, 0);
+const btns = (p) => p.doc.querySelectorAll('#demo-root .dm-ctl .dm-b'); // prev, play, next, reset
+test('demo: renders four steps in the log after four clicks on Next, then Restart empties it', () => {
+  const p = demoPage(); for (let i = 0; i < 4; i++) btns(p)[2].click();
+  assert.equal(p.doc.querySelectorAll('#demo-root .dm-line').length, 4);
+  btns(p)[3].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line').length, 0);
 });
 test('demo: finishing the first scenario shows an end banner and marks the adapter as not built', () => {
-  const p = demoPage(); for (let i = 0; i < 8; i++) p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1].click();
+  const p = demoPage(); for (let i = 0; i < 8; i++) btns(p)[2].click();
   assert.ok(p.doc.querySelector('#demo-root .dm-end')); assert.ok(p.doc.querySelector('#demo-root .dm-stage.nbld.s-nb')); assert.match(p.doc.getElementById('demo-root').textContent, /no real external action has ever been run/);
 });
 test('demo: a missing-support scenario ends in NO PERMIT and never reaches the executor stages', () => {
-  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-sc')[1].click(); for (let i = 0; i < 3; i++) p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1].click();
+  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-sc')[1].click(); for (let i = 0; i < 3; i++) btns(p)[2].click();
   assert.equal(p.doc.querySelector('#demo-root .dm-end b').textContent, 'NO PERMIT'); assert.equal(p.doc.querySelectorAll('#demo-root .dm-stage.s-idle').length >= 4, true);
 });
 test('demo: switching language redraws the walk-through in Bulgarian', () => {
   const p = demoPage(); p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('demo-root').textContent, /Контролен цикъл/);
 });
 test('demo: leaving the tab stops a running animation', () => {
-  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[0].click(); p.w.SSCApp.showTab('work');
-  assert.equal(p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[0].textContent.includes('Play'), true);
+  const p = demoPage(); btns(p)[1].click(); assert.equal(btns(p)[1].getAttribute('aria-label'), 'Pause'); p.w.SSCApp.showTab('work'); assert.equal(btns(p)[1].getAttribute('aria-label'), 'Play');
+});
+test('demo: a step can be picked directly, and Back goes one step back', () => {
+  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-dot-b')[4].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line').length, 5);
+  btns(p)[0].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line').length, 4);
+});
+test('demo: a stage can be clicked to jump to its first step', () => {
+  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-stage')[3].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line').length, 4);
+});
+test('demo: stepping updates in place and does not rebuild the page (so it never jumps)', () => {
+  const p = demoPage(); const stick = p.doc.querySelector('#demo-root .dm-stick'); const flows = p.doc.querySelector('#demo-root .dm-flows'); for (let i = 0; i < 3; i++) btns(p)[2].click();
+  assert.equal(p.doc.querySelector('#demo-root .dm-stick'), stick); assert.equal(p.doc.querySelector('#demo-root .dm-flows'), flows);
+});
+test('demo: the packet is hidden before the first step and shown after it', () => {
+  const p = demoPage(); assert.ok(p.doc.querySelector('#demo-root .dm-tok').classList.contains('hidden')); btns(p)[2].click(); assert.ok(!p.doc.querySelector('#demo-root .dm-tok').classList.contains('hidden'));
+});
+
+/* --- AI platforms tab --- */
+const aip = () => page({ hash: '#ai' });
+test('ai: the tab has the core canvas, four platform buttons and five states plus a cycle button', () => {
+  const p = aip(); assert.ok(p.doc.querySelector('#panel-ai canvas#core'));
+  assert.deepEqual(Array.from(p.doc.querySelectorAll('#panel-ai .ai-b'), (b) => b.dataset.ai), ['claude', 'codex', 'gpt', 'gemini']);
+  assert.deepEqual(Array.from(p.doc.querySelectorAll('#panel-ai .st-b[data-state]'), (b) => b.dataset.state), ['idle', 'listening', 'working', 'speaking', 'error']);
+});
+test('ai: choosing a platform switches the core and the description', () => {
+  const p = aip(); p.click(p.doc.querySelector('#panel-ai .ai-b[data-ai="codex"]')); assert.equal(p.w.SSCCore.current().ai, 'codex');
+  assert.match(p.doc.querySelector('#panel-ai .aiinfo').textContent, /Codex/); assert.equal(p.doc.querySelector('#panel-ai .ai-b[data-ai="codex"]').getAttribute('aria-pressed'), 'true');
+});
+test('ai: choosing a state is passed to the core', () => {
+  const p = aip(); p.click(p.doc.querySelector('#panel-ai .st-b[data-state="working"]')); assert.equal(p.w.SSCCore.current().state, 'working');
+});
+test('ai: descriptions are honest: agreement between models is not confirmation, nothing off-CV is claimed', () => {
+  const p = aip(); const t = p.doc.getElementById('panel-ai').textContent; assert.match(t, /not independent confirmation/); assert.ok(!/NotebookLM|Selenium/.test(t));
+});
+test('ai: the page text follows the language', () => {
+  const p = aip(); p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('panel-ai').textContent, /Съгласието между моделите/);
+});
+test('ai: leaving the tab pauses the core', () => {
+  const p = aip(); assert.equal(p.w.SSCCore.isPaused(), false); p.w.SSCApp.showTab('home'); assert.equal(p.w.SSCCore.isPaused(), true);
+});
+test('ai: with reduced motion the core stays still even on the tab', () => {
+  const p = load({ lang: 'en-US', hash: '#ai', reduce: true }); assert.equal(p.w.SSCCore.isPaused(), true);
 });
