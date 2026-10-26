@@ -161,6 +161,7 @@
   function makeToken(label, st) {
     var d = el('div', 'dm-tok t-' + st); d.setAttribute('aria-hidden', 'true'); d.title = label;
     d.innerHTML = '<svg viewBox="0 0 28 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="1" y="1" width="26" height="18" rx="2.5"/><path d="M1.5 2.5 14 11.5 26.5 2.5"/></svg>';
+    var l = el('span', 'dm-tok-l', label); d.appendChild(l);
     return d;
   }
   function tokState(sc, done) {
@@ -168,9 +169,9 @@
     var last = sc.steps[S.i - 1].st;
     return last === 'pass' && done ? 'pass' : last;
   }
-  function tokTarget(ol, k) {
+  function tokTarget(ol, k, tok) {
     var li = ol.children[k];
-    return { x: li.offsetLeft + li.offsetWidth - 52, y: li.offsetTop + li.offsetHeight - 40 };
+    return { x: li.offsetLeft + li.offsetWidth - tok.offsetWidth - 8, y: li.offsetTop + li.offsetHeight - 40 };
   }
   function stageStates() {
     var st = []; var sc = scen(); var i;
@@ -213,14 +214,17 @@
       ol.appendChild(li);
     });
     root.appendChild(ol);
-    var tok = makeToken(tx(f.tok), tokState(sc, done));
+    var tok = null, tgt = null;
+    if (S.i === 0) prev = null; else {
+    tok = makeToken(tx(f.tok), tokState(sc, done));
     ol.appendChild(tok);
-    var tgt = tokTarget(ol, current < 0 ? 0 : current);
+    tgt = tokTarget(ol, current, tok);
     var from = prev && prev.f === S.f && prev.sc === S.sc ? prev : null;
     if (from) { tok.style.transition = 'none'; tok.style.transform = 'translate(' + from.x + 'px,' + from.y + 'px)'; void tok.offsetWidth; tok.style.transition = ''; if (from.x !== tgt.x || from.y !== tgt.y) tok.classList.add('fly'); }
     requestAnimationFrame(function () { tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)'; });
     if (!from) tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)';
     prev = { f: S.f, sc: S.sc, x: tgt.x, y: tgt.y };
+    }
 
     var ctl = el('div', 'dm-ctl');
     var play = el('button', 'btn', S.playing ? tx(UI.pause) : tx(UI.play)); play.type = 'button'; play.addEventListener('click', toggle);

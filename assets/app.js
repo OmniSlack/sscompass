@@ -111,6 +111,7 @@
     if (dlg.hasAttribute('open')) renderDialog();
     if (window.SSCPersonal) window.SSCPersonal.render(l);
     if (window.SSCDemo) window.SSCDemo.render(l);
+    if (window.SSCDiagrams) window.SSCDiagrams.render(l);
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
@@ -137,6 +138,7 @@
       var panel = $('panel-' + t.dataset.tab); if (panel) panel.hidden = !on;
     });
     if (id !== 'demo' && window.SSCDemo) window.SSCDemo.stop();
+    if (window.SSCDiagrams) window.SSCDiagrams.stop();
     document.body.setAttribute('data-view', id === 'personal' ? 'personal' : 'public');
     if (id === 'personal' && window.SSCPersonal) window.SSCPersonal.onShow(opts.sub);
     else if (window.SSCPersonal) window.SSCPersonal.lockNow();          // личното се заключва, когато го напуснеш

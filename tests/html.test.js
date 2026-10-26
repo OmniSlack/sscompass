@@ -93,8 +93,8 @@ test('the personal panel is empty markup until unlocked: no data in the HTML', (
 test('public panels contain no form controls', () => { for (const id of ['work', 'architecture', 'method', 'about']) assert.equal(doc.querySelectorAll('#panel-' + id + ' input, #panel-' + id + ' textarea').length, 0, id); });
 test('the dialog has a labelled close button', () => { assert.ok(doc.querySelector('dialog#dlg #dlg-close[aria-label]')); });
 
-test('the page loads exactly six local scripts in the right order, no inline scripts or handlers', () => {
-  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/app.js', 'assets/rain.js']);
+test('the page loads exactly seven local scripts in the right order, no inline scripts or handlers', () => {
+  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/diagrams.js', 'assets/app.js', 'assets/rain.js']);
   for (const s of srcs) assert.ok(exists(s), s); assert.equal(doc.querySelectorAll('script:not([src])').length, 0); assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
 test('the page makes no third-party requests (fonts are self-hosted)', () => { assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], ['https://github.com/OmniSlack/martin-urumov-portfolio']); });
@@ -110,4 +110,32 @@ test('the Content-Security-Policy forbids third-party and inline scripts', () =>
 test('the method tab has a working-loop diagram with five steps, an accessible label and a mobile text version', () => {
   const svg = doc.querySelector('#panel-method .mdg svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label')); assert.equal(svg.querySelectorAll('rect.node').length, 5);
   assert.equal(doc.querySelectorAll('#panel-method .mdg ol.steps li').length, 5); assert.match(svg.textContent, /Мартин Урумов|МАРТИН УРУМОВ/); assert.match(svg.textContent, /AI АСИСТЕНТИ/);
+});
+
+/* --- interactive diagrams (need the scripts, so they load the full page) --- */
+const { load, closeAll } = require('./helpers');
+test.after(closeAll);
+const dpage = () => load({ lang: 'en-US' });
+test('diagrams: every box of the architecture and method diagrams is a focusable button', () => {
+  const p = dpage(); assert.equal(p.doc.querySelectorAll('#panel-architecture .nd').length, 10); assert.equal(p.doc.querySelectorAll('#panel-method .nd').length, 5);
+  for (const g of p.doc.querySelectorAll('.nd')) { assert.equal(g.getAttribute('role'), 'button'); assert.equal(g.getAttribute('tabindex'), '0'); }
+});
+test('diagrams: clicking a box selects it and shows what it does; clicking again clears', () => {
+  const p = dpage(); const g = p.doc.querySelectorAll('#panel-architecture .nd')[1]; p.click(g);
+  assert.ok(g.classList.contains('sel')); assert.match(p.doc.querySelector('#panel-architecture .dg-info').textContent, /EVALUATOR/i); p.click(g); assert.ok(!g.classList.contains('sel'));
+});
+test('diagrams: Enter on a box selects it', () => {
+  const p = dpage(); const g = p.doc.querySelectorAll('#panel-method .nd')[2]; g.dispatchEvent(new p.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); assert.ok(g.classList.contains('sel'));
+});
+test('diagrams: tapping a step in the phone list selects the same box', () => {
+  const p = dpage(); p.click(p.doc.querySelectorAll('#panel-method ol.steps li')[3]); assert.ok(p.doc.querySelectorAll('#panel-method .nd')[3].classList.contains('sel'));
+});
+test('diagrams: Next walks through the boxes and wraps around', () => {
+  const p = dpage(); const nxt = p.doc.querySelectorAll('#panel-method .dg-bar .btn')[1]; for (let i = 0; i < 5; i++) nxt.click(); assert.ok(p.doc.querySelectorAll('#panel-method .nd')[4].classList.contains('sel')); nxt.click(); assert.ok(p.doc.querySelectorAll('#panel-method .nd')[0].classList.contains('sel'));
+});
+test('diagrams: the description follows the language', () => {
+  const p = dpage(); p.click(p.doc.querySelectorAll('#panel-method .nd')[0]); p.w.SSCApp.setLang('bg'); assert.match(p.doc.querySelector('#panel-method .dg-info').textContent, /Мартин/);
+});
+test('diagrams: leaving the tab stops a running walk-through', () => {
+  const p = dpage(); p.doc.querySelectorAll('#panel-method .dg-bar .btn')[0].click(); p.w.SSCApp.showTab('home'); assert.match(p.doc.querySelectorAll('#panel-method .dg-bar .btn')[0].textContent, /Walk/);
 });
