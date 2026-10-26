@@ -52,3 +52,56 @@
 .overview button span { display: block; font: .7rem var(--mono); color: var(--dim); letter-spacing: .1em; }
 @media (max-width: 700px) { .deckpage .top .wrap { flex-wrap: wrap; height: auto; padding-block: 8px; } #decknav { order: 3; flex: 1 1 100%; margin-left: 0; } .deckpage .back { display: none; } }
 .overview[hidden] { display: none; }
+
+/* ---------- architecture blueprint: dark navy, cyan wireframe, amber glow (the look of the original slides) ---------- */
+.stats .stat { min-width: 96px; padding: 14px 16px; border: 1px solid var(--line2); border-radius: 12px; text-align: center; background: var(--panel); color: var(--text); font: inherit; cursor: pointer; transition: transform .25s, border-color .25s, box-shadow .25s, background .25s; }
+.stats .stat:hover { transform: translateY(-3px); border-color: #4fd1e6; box-shadow: 0 8px 22px rgb(0 0 0 / .5); }
+.stats .stat[aria-pressed="true"] { border-color: #ffb347; background: rgb(255 179 71 / .14); box-shadow: 0 0 18px rgb(255 179 71 / .35); }
+.stats .stat b { display: block; font: 300 2.2rem var(--display); color: var(--accent2); }
+.stats .stat span { font: .74rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.bp { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 18px; align-items: start; margin-top: 22px; }
+.bp-fig { border: 1px solid rgb(79 209 230 / .45); border-radius: 18px; overflow: hidden; box-shadow: 0 0 30px rgb(79 209 230 / .12), inset 0 0 40px rgb(0 0 0 / .5); }
+.bpsvg { display: block; width: 100%; height: auto; }
+.bpsvg .bpframe { fill: none; stroke: #4fd1e6; stroke-opacity: .45; stroke-width: 1.4; }
+.bpsvg .bpbr { fill: none; stroke: #ffb347; stroke-width: 3; stroke-linecap: round; }
+.bpsvg .bptick { stroke: #4fd1e6; stroke-opacity: .55; stroke-width: 1.2; }
+.bpsvg .bpring { fill: none; stroke: #4fd1e6; stroke-opacity: .4; stroke-width: 1.4; stroke-dasharray: 2 7; }
+.bpsvg .bpring.outer { stroke-dasharray: none; stroke-opacity: .55; }
+.bpsvg .bpspoke { stroke: #4fd1e6; stroke-opacity: .35; stroke-width: 1.2; stroke-dasharray: 7 6; animation: bpflow 1.4s linear infinite; }
+.bpsvg .bppent { fill: rgb(255 179 71 / .06); stroke: #ffb347; stroke-opacity: .6; stroke-width: 1.4; }
+.bpsvg .bpc { fill: #ffb347; font: 300 30px var(--display); filter: drop-shadow(0 0 8px rgb(255 179 71 / .8)); }
+.bpsvg .bpcap { fill: #7fd8e8; fill-opacity: .7; font: 11px var(--mono); letter-spacing: .22em; }
+.bpsvg .bpsweep { transform-box: view-box; transform-origin: 50% 50%; animation: bpspin 14s linear infinite; pointer-events: none; }
+@keyframes bpflow { to { stroke-dashoffset: -26; } }
+@keyframes bpspin { to { transform: rotate(360deg); } }
+.bpm { cursor: pointer; outline: none; }
+.bpm circle, .bpm rect, .bpm polygon { fill: #04101e; stroke-width: 2; transition: fill .25s, filter .25s, stroke-width .25s; }
+.bpm text { font: 600 16px var(--mono); fill: #e8f6ff; pointer-events: none; }
+.bpm.cyan circle, .bpm.cyan rect, .bpm.cyan polygon { stroke: #4fd1e6; }
+.bpm.amber circle, .bpm.amber rect, .bpm.amber polygon { stroke: #ffb347; }
+.bpm.teal circle, .bpm.teal rect, .bpm.teal polygon { stroke: #5eead4; }
+.bpm.rose circle, .bpm.rose rect, .bpm.rose polygon { stroke: #ff7ab6; }
+.bpm.red circle, .bpm.red rect, .bpm.red polygon { stroke: #ff6b6b; }
+.bpm:hover circle, .bpm:hover rect, .bpm:hover polygon, .bpm:focus-visible circle, .bpm:focus-visible rect, .bpm:focus-visible polygon { fill: #0d2a46; stroke-width: 3.2; filter: drop-shadow(0 0 7px rgb(255 255 255 / .6)); }
+.bpm.grp circle, .bpm.grp rect, .bpm.grp polygon { fill: #0b2a44; stroke-width: 3; filter: drop-shadow(0 0 6px currentColor); }
+.bpm.sel circle, .bpm.sel rect, .bpm.sel polygon { fill: #ffb347; stroke: #fff; stroke-width: 3.6; filter: drop-shadow(0 0 12px rgb(255 179 71 / .95)); }
+.bpm.sel text { fill: #1a0f00; }
+.bp.has-sel .bpm:not(.grp) { opacity: .38; }
+.bp-side { display: grid; gap: 12px; min-width: 0; }
+.bp-detail { padding: 16px 18px; border: 1px solid rgb(79 209 230 / .5); border-radius: 14px; background: linear-gradient(180deg, rgb(8 24 46 / .9), rgb(4 10 22 / .9)); box-shadow: inset 0 0 0 1px rgb(255 179 71 / .15); animation: bpin .35s ease-out 1; }
+.bp-detail.idle { color: var(--dim); border-style: dashed; animation: none; }
+.bp-detail .k { font: .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #ffb347; }
+.bp-detail h3 { margin: 4px 0 6px; font: 400 1.55rem var(--gothic, var(--display)); letter-spacing: .04em; color: #e8f6ff; }
+.bp-detail p { margin: 0 0 8px; color: #cfe3ee; font-size: .95rem; }
+.bp-detail .bp-extra { padding-top: 8px; border-top: 1px dashed rgb(79 209 230 / .35); }
+.bp-detail .bp-crumb { margin-top: 6px; font: .7rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #7fd8e8; opacity: .8; }
+@keyframes bpin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.bp-list { display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); }
+.bp-item { display: flex; gap: 10px; align-items: center; min-height: 44px; padding: 8px 12px; text-align: left; border: 1px solid rgb(79 209 230 / .35); border-radius: 10px; background: rgb(8 24 46 / .6); color: var(--text); font: inherit; font-size: .88rem; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.bp-item:hover { border-color: #ffb347; transform: translateX(3px); }
+.bp-item[aria-pressed="true"] { border-color: #ffb347; background: rgb(255 179 71 / .16); }
+.bp-item .n { flex: none; min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid #4fd1e6; font: 600 .78rem var(--mono); color: #e8f6ff; }
+.bp-item.amber .n { border-color: #ffb347; border-radius: 6px; } .bp-item.teal .n { border-color: #5eead4; } .bp-item.rose .n { border-color: #ff7ab6; } .bp-item.red .n { border-color: #ff6b6b; border-radius: 8px; }
+@media (max-width: 900px) { .bp { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .bpsvg .bpspoke, .bpsvg .bpsweep, .bp-detail { animation: none; } }
+.bpm .hit { fill: transparent !important; stroke: none !important; filter: none !important; }

@@ -197,14 +197,14 @@ test('the stage is announced politely and can receive focus after a move', () =>
   p.click(p.doc.getElementById('next')); assert.equal(p.doc.activeElement, p.doc.getElementById('stage'));
 });
 test('the page title names the deck and the owner', () => {
-  const p = loadDeck('#coherence/1'); assert.match(p.doc.title, /The Coherence Protocol · SSC Compass · Martin Urumov/);
+  const p = loadDeck('#coherence/1'); assert.match(p.doc.title, /The Coherence Protocol · Martin Urumov/);
 });
 test('slide text is escaped (markup in deck data cannot run)', () => {
   const p = loadDeck('#omniecho/1'); p.w.DECKS.omniecho.slides[1].title = '<img src=x onerror=window.__x=1>';
   p.w.SSCDecks.go(1); assert.equal(p.doc.querySelectorAll('#stage img').length, 0); assert.equal(p.w.__x, undefined);
 });
 test('the title slide renders its five numbers', () => {
-  const p = loadDeck('#omniecho/1'); assert.equal(p.doc.querySelectorAll('#stage .stats div').length, 5);
+  const p = loadDeck('#omniecho/1'); assert.equal(p.doc.querySelectorAll('#stage .stats .stat').length, 5);
 });
 test('a closing slide renders its lines in large type', () => {
   const p = loadDeck('#omniecho/15'); assert.ok(p.doc.querySelector('#stage .closing')); assert.equal(p.doc.querySelectorAll('#stage .closing p').length, 4);
@@ -227,4 +227,44 @@ test('the deck scripts compile and use no eval or document.write', () => {
 });
 test('the main site links to all three decks', () => {
   const d = read('assets/data.js'); for (const id of IDS) assert.ok(d.includes('decks/index.html#' + id + '/1'), id);
+});
+
+/* --- architecture blueprint on the first OmniEcho slide --- */
+test('blueprint: the five totals are buttons and the data holds 16 + 10 + 8 + 5 + 4 items', () => {
+  const p = loadDeck('#omniecho/1'); const g = p.w.DECKS.omniecho.slides[0].blueprint.groups;
+  assert.deepEqual(Array.from(g, (x) => x.items.length), [16, 10, 8, 5, 4]); assert.deepEqual(Array.from(g, (x) => x.n), ['16', '10', '8', '5', '4']);
+  assert.equal(p.doc.querySelectorAll('.stats button.stat').length, 5);
+});
+test('blueprint: the drawing has one tappable marker for every item (43)', () => {
+  const p = loadDeck('#omniecho/1'); assert.equal(p.doc.querySelectorAll('.bpm').length, 43);
+  for (const m of p.doc.querySelectorAll('.bpm')) { assert.equal(m.getAttribute('role'), 'button'); assert.ok(m.getAttribute('aria-label')); }
+});
+test('blueprint: the gates are Canon sections 3 to 12 and the rules are sections 13 to 28', () => {
+  const p = loadDeck('#omniecho/1'); const g = p.w.DECKS.omniecho.slides[0].blueprint.groups;
+  assert.deepEqual(Array.from(g[1].items, (x) => x.n), ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12']); assert.deepEqual(Array.from(g[0].items, (x) => x.n), Array.from({ length: 16 }, (_, i) => String(13 + i)));
+  assert.equal(g[1].items[3].h, 'Dual Observer'); assert.equal(g[1].items[4].h, 'Open Hand'); assert.equal(g[0].items[3].h, 'Evidence / Provenance Contract');
+});
+test('blueprint: clicking a total shows its items and a description; clicking a marker shows the specifics', () => {
+  const p = loadDeck('#omniecho/1'); p.doc.querySelector('.stat[data-bpg="10"]').click();
+  assert.equal(p.doc.querySelectorAll('.bp-item').length, 10); assert.match(p.doc.querySelector('.bp-detail').textContent, /capability-free/);
+  p.doc.querySelector('.bpm[data-bpg="10"][data-bpi="3"]').dispatchEvent(new p.w.MouseEvent('click', { bubbles: true }));
+  assert.match(p.doc.querySelector('.bp-detail').textContent, /Dual Observer/); assert.match(p.doc.querySelector('.bp-detail').textContent, /Observer A/); assert.ok(p.doc.querySelector('.bpm.sel'));
+});
+test('blueprint: clicking a list item selects the matching marker; clicking it again clears the item', () => {
+  const p = loadDeck('#omniecho/1'); p.doc.querySelector('.stat[data-bpg="16"]').click(); p.doc.querySelectorAll('.bp-item')[2].click();
+  assert.match(p.doc.querySelector('.bp-detail').textContent, /Anti-Loop/); assert.equal(p.doc.querySelector('.bpm.sel').dataset.bpi, '2');
+  p.doc.querySelectorAll('.bp-item')[2].click(); assert.equal(p.doc.querySelector('.bpm.sel'), null);
+});
+test('blueprint: Enter on a marker selects it', () => {
+  const p = loadDeck('#omniecho/1'); const m = p.doc.querySelector('.bpm[data-bpg="5"][data-bpi="3"]'); m.dispatchEvent(new p.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); assert.match(p.doc.querySelector('.bp-detail').textContent, /Shadow/);
+});
+test('blueprint: the selection is cleared when the slide changes', () => {
+  const p = loadDeck('#omniecho/1'); p.doc.querySelector('.stat[data-bpg="4"]').click(); p.w.SSCDecks.go(1); p.w.SSCDecks.go(0); assert.equal(p.doc.querySelector('.bpm.grp'), null);
+});
+test('blueprint: honest about what the source does not say (unnamed nodes, conceptual model)', () => {
+  const g = loadDecks().omniecho.slides[0].blueprint.groups; assert.equal(g[2].items.filter((x) => /Not named/.test(x.h)).length, 4);
+  assert.match(loadDecks().omniecho.slides[0].note, /not a certified standard/);
+});
+test('decks: the viewer carries the portfolio name, not the old project name', () => {
+  const p = loadDeck('#omniecho/1'); assert.match(p.doc.querySelector('.brand').textContent, /MARTIN\/URUMOV/); assert.ok(!/SSC/.test(p.doc.body.textContent));
 });

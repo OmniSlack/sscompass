@@ -79,7 +79,7 @@ function loadDeck(hash = '', opts = {}) {
   Object.entries(storage).forEach(([k, v]) => w.localStorage.setItem(k, v));
   const errors = [];
   w.addEventListener('error', (e) => errors.push(e.message));
-  for (const f of ['decks/data/omniecho.js', 'decks/data/coherence.js', 'decks/data/dream.js', 'decks/deck.js']) {
+  for (const f of ['decks/data/omniecho.js', 'decks/data/blueprint.js', 'decks/data/coherence.js', 'decks/data/dream.js', 'decks/deck.js']) {
     try { w.eval(read(f)); } catch (e) { errors.push(f + ': ' + e.message); }
   }
   opened.push(w);
@@ -91,7 +91,7 @@ function loadDeck(hash = '', opts = {}) {
 /** deck data evaluated on its own */
 function loadDecks() {
   const sandbox = {}; sandbox.window = sandbox; vm.createContext(sandbox);
-  for (const f of ['omniecho', 'coherence', 'dream']) vm.runInContext(read(`decks/data/${f}.js`), sandbox);
+  for (const f of ['omniecho', 'blueprint', 'coherence', 'dream']) vm.runInContext(read(`decks/data/${f}.js`), sandbox);
   return sandbox.DECKS;
 }
 
