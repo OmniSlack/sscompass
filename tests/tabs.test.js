@@ -5,14 +5,14 @@ const assert = require('node:assert/strict');
 const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 
-const TABS = ['work', 'architecture', 'demo', 'method', 'about', 'personal'];
+const TABS = ['home', 'work', 'architecture', 'demo', 'method', 'about', 'personal'];
 const page = (o) => load(Object.assign({ lang: 'en-US' }, o));
 const visible = (p) => TABS.filter((t) => !p.doc.getElementById('panel-' + t).hasAttribute('hidden'));
 const wait = (ms = 20) => new Promise((r) => setTimeout(r, ms));
 const key = (p, el, k) => el.dispatchEvent(new p.w.KeyboardEvent('keydown', { key: k, bubbles: true }));
 
-test('the page opens on Work, public view, nothing else visible', () => {
-  const p = page(); assert.deepEqual(visible(p), ['work']); assert.equal(p.doc.body.getAttribute('data-view'), 'public'); assert.equal(p.w.SSCApp.tab(), 'work');
+test('the page opens on Home, public view, nothing else visible', () => {
+  const p = page(); assert.deepEqual(visible(p), ['home']); assert.equal(p.doc.body.getAttribute('data-view'), 'public'); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 for (const t of TABS) {
   test(`clicking the ${t} tab shows only its panel and selects the tab`, () => {
@@ -22,17 +22,17 @@ for (const t of TABS) {
   });
 }
 test('ArrowRight and ArrowLeft move between tabs and wrap around', () => {
-  const p = page(); const t0 = p.doc.getElementById('tab-work');
-  key(p, t0, 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'architecture'); key(p, p.doc.getElementById('tab-architecture'), 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'work');
-  key(p, t0, 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'work');
+  const p = page(); const t0 = p.doc.getElementById('tab-home');
+  key(p, t0, 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'work'); key(p, p.doc.getElementById('tab-work'), 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'home');
+  key(p, t0, 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('Home and End jump to the first and last tab', () => {
-  const p = page(); key(p, p.doc.getElementById('tab-work'), 'End'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'Home'); assert.equal(p.w.SSCApp.tab(), 'work');
+  const p = page(); key(p, p.doc.getElementById('tab-home'), 'End'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'Home'); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('keyboard navigation moves focus to the new tab', () => {
-  const p = page(); p.doc.getElementById('tab-work').focus(); key(p, p.doc.getElementById('tab-work'), 'ArrowRight'); assert.equal(p.doc.activeElement, p.doc.getElementById('tab-architecture'));
+  const p = page(); p.doc.getElementById('tab-home').focus(); key(p, p.doc.getElementById('tab-home'), 'ArrowRight'); assert.equal(p.doc.activeElement, p.doc.getElementById('tab-work'));
 });
-for (const [hash, want] of [['#work', 'work'], ['#architecture', 'architecture'], ['#demo', 'demo'], ['#live', 'demo'], ['#animation', 'demo'], ['#method', 'method'], ['#about', 'about'], ['#projects', 'work'], ['#contact', 'about'], ['#skills', 'method'], ['#memory', 'architecture'], ['#personal', 'personal'], ['#personal/news', 'personal'], ['#nonsense', 'work'], ['', 'work']]) {
+for (const [hash, want] of [['#work', 'work'], ['#architecture', 'architecture'], ['#demo', 'demo'], ['#live', 'demo'], ['#animation', 'demo'], ['#method', 'method'], ['#about', 'about'], ['#projects', 'work'], ['#contact', 'about'], ['#skills', 'method'], ['#memory', 'architecture'], ['#personal', 'personal'], ['#personal/news', 'personal'], ['#nonsense', 'home'], ['', 'home'], ['#home', 'home'], ['#top', 'home']]) {
   test(`opening the site at "${hash}" shows the ${want} tab`, () => { const p = page({ hash }); assert.equal(p.w.SSCApp.tab(), want); assert.deepEqual(visible(p), [want]); });
 }
 test('changing the hash while the page is open switches the tab', async () => {
@@ -42,10 +42,10 @@ test('the hero buttons switch tabs instead of scrolling', () => {
   const p = page(); p.w.SSCApp.showTab('about'); p.click(p.doc.getElementById('cta-work')); assert.equal(p.w.SSCApp.tab(), 'work');
 });
 test('the skip link opens the first tab', () => {
-  const p = page(); p.w.SSCApp.showTab('about'); p.click(p.doc.querySelector('a.skip')); assert.equal(p.w.SSCApp.tab(), 'work');
+  const p = page(); p.w.SSCApp.showTab('about'); p.click(p.doc.querySelector('a.skip')); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('the brand link goes to the first tab', () => {
-  const p = page(); p.w.SSCApp.showTab('method'); p.click(p.doc.querySelector('a.brand')); assert.equal(p.w.SSCApp.tab(), 'work');
+  const p = page(); p.w.SSCApp.showTab('method'); p.click(p.doc.querySelector('a.brand')); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('the Personal tab hides the hero; public tabs show it', () => {
   const p = page(); p.click(p.doc.getElementById('tab-personal')); assert.equal(p.doc.body.getAttribute('data-view'), 'personal'); p.click(p.doc.getElementById('tab-method')); assert.equal(p.doc.body.getAttribute('data-view'), 'public');
@@ -54,11 +54,11 @@ test('the active tab survives a language change', () => {
   const p = page(); p.click(p.doc.getElementById('tab-method')); p.w.SSCApp.setLang('bg'); assert.equal(p.w.SSCApp.tab(), 'method'); assert.deepEqual(visible(p), ['method']);
 });
 test('tab labels are translated', () => {
-  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Work', 'Architecture', 'How it works', 'Method', 'About', 'Personal']);
-  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Проекти', 'Архитектура', 'Как работи', 'Метод', 'За мен', 'Личен контрол']);
+  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'Method', 'About', 'Personal']);
+  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'Метод', 'За мен', 'Личен контрол']);
 });
 test('every public tab has real content', () => {
-  const p = page(); for (const t of ['work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);
+  const p = page(); for (const t of ['home', 'work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);
 });
 test('Work shows all fifteen projects; About shows five links and the CV button', () => {
   const p = page(); assert.equal(p.doc.querySelectorAll('#panel-work .proj').length, 15); assert.equal(p.doc.querySelectorAll('#panel-about #socials a').length, 5); assert.ok(p.doc.querySelector('#panel-about #cv-link'));
@@ -73,3 +73,11 @@ test('leaving the Personal tab empties it, so nothing stays in the page', async 
   p.click(p.doc.getElementById('tab-method')); assert.equal(p.doc.getElementById('p-root').innerHTML, '');
 });
 test('switching tabs raises no script errors', () => { const p = page(); for (const t of TABS.concat(TABS)) p.click(p.doc.getElementById('tab-' + t)); assert.deepEqual(p.errors, []); });
+test('Home holds the hero and a tile for every other public tab', () => {
+  const p = page(); assert.ok(p.doc.querySelector('#panel-home h1')); assert.equal(p.doc.querySelectorAll('#panel-home .stats b').length, 4);
+  assert.deepEqual([...p.doc.querySelectorAll('#panel-home a.tile')].map((a) => a.getAttribute('href')), ['#work', '#architecture', '#demo', '#method', '#about']);
+  assert.ok(!p.doc.querySelector('#panel-work h1, #panel-work .stats'), 'the numbers no longer sit above every tab');
+});
+test('clicking a Home tile opens that tab', () => { const p = page(); p.click(p.doc.querySelector('#panel-home a.tile[href="#method"]')); assert.equal(p.w.SSCApp.tab(), 'method'); });
+test('every tab button carries an icon', () => { const p = page(); for (const t of TABS) assert.ok(p.doc.querySelector('#tab-' + t + ' svg'), t); });
+test('clicking a button gives it the pop animation class', () => { const p = page(); const b = p.doc.getElementById('tab-about'); p.click(b); assert.ok(b.classList.contains('pop')); });

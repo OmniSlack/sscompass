@@ -2,12 +2,12 @@
    Композиция: тясна HUD лента, ядро в средата (в собствена кутия, нищо не го припокрива),
    след него секции в една колона. Тъмна тема по замисъл. */
 :root {
-  --bg: #1b1e44; --panel: rgba(255,255,255,.06); --panel2: rgba(255,255,255,.1);
-  --line: rgba(255,255,255,.15); --line2: rgba(255,255,255,.28);
-  --text: #ecebf8; --dim: #b4b3d8;
-  --accent-rgb: 224 128 96; --accent2-rgb: 244 176 146;
+  --bg: #080304; --panel: rgba(255,255,255,.045); --panel2: rgba(255,255,255,.08);
+  --line: rgba(255,255,255,.14); --line2: rgba(255,255,255,.3);
+  --text: #f1eae9; --dim: #bcaeae;
+  --accent-rgb: 238 78 64; --accent2-rgb: 255 150 122;
   --accent: rgb(var(--accent-rgb)); --accent2: rgb(var(--accent2-rgb));
-  --ok: #5eead4; --warn: #fbbf24; --blue: #93c5fd; --bad: #f87171;
+  --ok: #4ade80; --warn: #fbbf24; --blue: #7fb2ff; --bad: #ff6b6b;
   --display: "Chakra Petch", system-ui, sans-serif;
   --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -16,7 +16,7 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 70px; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--body); overflow-x: hidden;
-  background-image: linear-gradient(180deg, #292d62 0, #1b1e44 50%, #14163a 100%);
+  background-image: radial-gradient(75% 42% at 50% 0, rgb(125 12 16 / .3), transparent 72%), linear-gradient(180deg, #0d0405 0, #070304 100%);
   background-repeat: no-repeat; background-attachment: fixed; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; }
@@ -25,7 +25,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .mono { font-family: var(--mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* ---------- горна лента ---------- */
-.top { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgb(24 27 64 / .86); border-bottom: 1px solid var(--line); }
+.top { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgb(9 3 4 / .84); border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; align-items: center; gap: 16px; height: 58px; }
 .brand { font: 600 .95rem var(--display); letter-spacing: .24em; }
 .brand b { color: var(--accent); font-weight: 600; }
@@ -94,8 +94,8 @@ h2 { margin: 6px 0 8px; font: 400 clamp(1.6rem, 4vw, 2.3rem) var(--display); let
 .more { align-self: flex-start; padding: 9px 14px; border: 1px solid var(--line2); border-radius: 9px; background: transparent; font: .75rem var(--mono); letter-spacing: .1em; color: var(--accent2); text-transform: uppercase; cursor: pointer; }
 .more:hover { background: rgb(var(--accent-rgb) / .14); }
 dialog:not([open]) { display: none; }
-dialog { max-width: 560px; width: calc(100% - 32px); border: 1px solid var(--line2); border-radius: 18px; background: #22265a; color: var(--text); padding: 26px; }
-dialog::backdrop { background: rgb(5 6 26 / .65); backdrop-filter: blur(3px); }
+dialog { max-width: 560px; width: calc(100% - 32px); border: 1px solid var(--line2); border-radius: 18px; background: #170708; color: var(--text); padding: 26px; }
+dialog::backdrop { background: rgb(0 0 0 / .72); backdrop-filter: blur(3px); }
 dialog h3 { margin: 0 0 8px; font: 500 1.5rem var(--display); letter-spacing: .06em; }
 dialog p { color: var(--text); font-weight: 400; }
 dialog ul { padding-left: 18px; color: var(--dim); }
@@ -118,7 +118,7 @@ footer { margin-top: 96px; padding: 34px 0 54px; border-top: 1px solid var(--lin
 
 /* помощни / helpers */
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 16px; border-radius: 8px; background: var(--text); color: #14163a; font-size: .9rem; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 16px; border-radius: 8px; background: var(--text); color: #120405; font-size: .9rem; }
 .skip:focus { top: 8px; }
 .mono.h { margin: 0 0 10px; }
 .proj { cursor: pointer; }
@@ -174,7 +174,7 @@ footer { margin-top: 96px; padding: 34px 0 54px; border-top: 1px solid var(--lin
 /* ---------- портфолио: начало и съдържание ---------- */
 .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; flex: 0 0 auto; }
 .lang button { padding: 9px 12px; border: 0; background: transparent; color: var(--dim); font: 500 .74rem var(--mono); letter-spacing: .08em; cursor: pointer; }
-.lang button[aria-pressed="true"] { background: var(--text); color: #14163a; }
+.lang button[aria-pressed="true"] { background: var(--text); color: #120405; }
 .card { position: relative; padding: 20px; border: 1px solid var(--line); background: var(--panel); border-radius: 14px; }
 .card::before, .card::after { content: ""; position: absolute; width: 12px; height: 12px; border: 1px solid var(--accent); opacity: .7; }
 .card::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; border-radius: 14px 0 0 0; }
@@ -208,7 +208,7 @@ footer { margin-top: 96px; padding: 34px 0 54px; border-top: 1px solid var(--lin
 .rules { max-width: 74ch; padding-left: 22px; line-height: 1.7; }
 .plain-list { max-width: 74ch; padding-left: 20px; line-height: 1.65; color: var(--dim); }
 .plain-list li { margin: 8px 0; }
-.code { margin: 10px 0; padding: 14px 16px; border: 1px solid var(--line2); border-radius: 12px; background: rgb(0 0 0 / .32); overflow-x: auto; font: .84rem/1.6 var(--mono); }
+.code { margin: 10px 0; padding: 14px 16px; border: 1px solid var(--line2); border-radius: 12px; background: rgb(0 0 0 / .5); overflow-x: auto; font: .84rem/1.6 var(--mono); }
 .deckrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 12px; margin: 10px 0; }
 .deck { display: grid; gap: 6px; transition: .25s; }
 .deck:hover { transform: translateY(-3px); border-color: rgb(var(--accent-rgb) / .6); }
@@ -286,12 +286,52 @@ dialog .btn{margin-top:14px}
 .mdg { border-color: rgb(236 235 248 / .35); }
 .mdg .lane.m { fill: rgb(46 125 91 / .16); stroke: rgb(94 190 150 / .55); stroke-width: 1.6; }
 .mdg .lane.a { fill: rgb(246 199 68 / .1); stroke: rgb(240 160 60 / .65); stroke-width: 1.6; }
-.mdg .node { fill: rgb(14 16 42 / .92); stroke: rgb(236 235 248 / .85); stroke-width: 2.2; }
+.mdg .node { fill: rgb(14 4 6 / .94); stroke: rgb(255 235 230 / .9); stroke-width: 2.4; }
 .mdg .band { stroke: rgb(236 235 248 / .7); stroke-width: 1.2; }
 .mdg .hanko circle { fill: #b3202a; stroke: #7d1119; stroke-width: 1.5; }
 .mdg .hanko text { fill: #fff; font: 700 15px var(--body); }
 .mdg path.ln { stroke: #d9d7f2; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
 .mdg path.dashln { stroke: #ff6b6b; stroke-width: 3.6; stroke-dasharray: 11 8; animation: dmflow 1.1s linear infinite; marker-end: none; }
 @keyframes dmflow { to { stroke-dashoffset: -19; } }
-.mdg text.d { fill: #c4c2e6; }
+.mdg text.d { fill: #e6d3d1; }
 @media (prefers-reduced-motion: reduce) { .mdg path.dashln { animation: none; } }
+
+/* ---------- home, tiles, icons, click feedback ---------- */
+.hero { padding-top: 38px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 26px 0 6px; }
+.tile { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 16px 16px 14px; border: 1px solid var(--line2); border-radius: 14px; background: var(--panel); transition: transform .25s, border-color .25s, background .25s, box-shadow .25s; }
+.tile .ic { width: 26px; height: 26px; color: var(--accent2); transition: transform .35s; }
+.tile b { font: 400 1.35rem var(--gothic); letter-spacing: .04em; }
+.tile span { font-size: .84rem; color: var(--dim); line-height: 1.4; }
+.tile:hover, .tile:focus-visible { transform: translateY(-4px); border-color: var(--accent); background: rgb(var(--accent-rgb) / .1); box-shadow: 0 10px 26px rgb(0 0 0 / .55), 0 0 0 1px rgb(var(--accent-rgb) / .4); }
+.tile:hover .ic { transform: rotate(-8deg) scale(1.18); }
+.ic { flex: none; }
+.btn .ic { width: 16px; height: 16px; align-self: center; }
+.tabs [role="tab"] .ic { width: 15px; height: 15px; opacity: .85; transition: transform .3s; }
+.tabs [role="tab"]:hover .ic, .tabs [role="tab"][aria-selected="true"] .ic { transform: scale(1.18); opacity: 1; }
+.tabs [role="tab"][aria-selected="true"] .ic { color: var(--accent2); }
+button, a.btn, a.tile, a.brand { -webkit-tap-highlight-color: transparent; }
+button:active, a.btn:active, a.tile:active { transform: scale(.96); }
+.pop { animation: pop .5s ease-out 1; }
+@keyframes pop { 0% { box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / .65); transform: scale(.94); } 60% { transform: scale(1.04); } 100% { box-shadow: 0 0 0 14px rgb(var(--accent-rgb) / 0); transform: none; } }
+.panel:not([hidden]) { animation: panelin .55s cubic-bezier(.2,.7,.2,1) 1; }
+@keyframes panelin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ---------- display type for diagrams: blackletter (Latin) and calligraphic (Cyrillic) ---------- */
+:root { --gothic: "Pirata One", "Ruslan Display", var(--display); }
+.arch text.h, .mdg text.h { font-family: var(--gothic); font-weight: 400; font-size: 16px; letter-spacing: .05em; }
+.dm-stage b, .dm-end b, .dm-flow, .sh { font-family: var(--gothic); font-weight: 400; letter-spacing: .04em; }
+.dm-stage b { font-size: 1.12rem; } .dm-end b { font-size: 1.3rem; }
+.sh { font-size: 1.5rem; }
+
+/* ---------- living diagrams: flowing lines, breathing nodes, travelling packet ---------- */
+.arch .node { stroke: rgb(255 255 255 / .6); stroke-width: 1.8; fill: rgb(255 255 255 / .06); animation: nodeglow 5s ease-in-out infinite; }
+.arch .hub { fill: rgb(var(--accent-rgb) / .18); stroke: var(--accent2); }
+.arch text.d { fill: #e2d4d2; }
+.arch path.ln, .arch path.ln2 { stroke: #f1eae9; stroke-width: 2; stroke-dasharray: 7 6; animation: dmflow 1.1s linear infinite; }
+.arch rect.node:nth-of-type(3n) { animation-delay: -1.7s; } .arch rect.node:nth-of-type(3n+1) { animation-delay: -3.4s; }
+@keyframes nodeglow { 0%, 100% { filter: drop-shadow(0 0 0 rgb(var(--accent-rgb) / 0)); } 50% { filter: drop-shadow(0 0 9px rgb(var(--accent-rgb) / .7)); } }
+.arch .pkt { fill: #ff5a4a; filter: drop-shadow(0 0 7px #ff5a4a) drop-shadow(0 0 14px #ff3b2a); }
+.mdg .node { animation: nodeglow 5s ease-in-out infinite; }
+.mdg path.ln { stroke-dasharray: 8 6; }
+@media (prefers-reduced-motion: reduce) { .arch .node, .mdg .node, .arch path.ln, .arch path.ln2, .mdg path.ln, .panel:not([hidden]), .pop { animation: none; } .arch .pkt { display: none; } .tile, .tile .ic { transition: none; } }

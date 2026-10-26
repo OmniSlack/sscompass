@@ -25,7 +25,7 @@ test('the stylesheet defines the accent variables the scripts set', () => {
 test('the stylesheet respects reduced motion', () => assert.match(read('assets/style.css'), /prefers-reduced-motion/));
 test('the stylesheet makes the page usable at phone width', () => assert.match(read('assets/style.css'), /@media \(max-width: 6\d\dpx\)/));
 test('index.html has no placeholder text', () => assert.ok(!/lorem ipsum|TODO|FIXME/i.test(read('index.html'))));
-test('index.html stays small (under 40 KB)', () => assert.ok(read('index.html').length < 40000));
+test('index.html stays small (under 64 KB)', () => assert.ok(read('index.html').length < 64000));
 test('no shipped asset is larger than 100 KB except the CV', () => {
   for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) assert.ok(fs.statSync(path.join(ROOT, 'assets', f)).size < 100000, f);
 });

@@ -91,7 +91,7 @@ test('project cards are translated both ways', () => {
   assert.equal(p.doc.querySelector('#filters button').textContent, 'Всички');
 });
 test('switching the language ten times causes no errors or drift', () => {
-  const p = page(); for (let i = 0; i < 10; i++) p.w.SSCApp.setLang(i % 2 ? 'bg' : 'en'); p.w.SSCApp.setLang('bg'); assert.equal(p.doc.querySelector('#tablist [role=tab] span').textContent, 'Проекти'); assert.deepEqual(p.errors, []);
+  const p = page(); for (let i = 0; i < 10; i++) p.w.SSCApp.setLang(i % 2 ? 'bg' : 'en'); p.w.SSCApp.setLang('bg'); assert.equal(p.doc.querySelector('#tablist [role=tab] span').textContent, 'Начало'); assert.deepEqual(p.errors, []);
 });
 
 /* ---------- contact ---------- */

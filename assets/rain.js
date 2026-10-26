@@ -15,23 +15,24 @@
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = SIZE + 'px "IBM Plex Mono", ui-monospace, Consolas, monospace';
   }
   function glyph() { return String.fromCharCode(48 + Math.floor(Math.random() * 10)); }
-  function spawn() {
-    var cols = Math.floor(W / (SIZE + 6)), c = Math.floor(Math.random() * cols);
-    streams.push({ x: c * (SIZE + 6) + 3, y: -SIZE, v: 55 + Math.random() * 70, n: 7 + Math.floor(Math.random() * 9), ch: [], acc: 0 });
+  function spawn(anywhere) {
+    var cols = Math.floor(W / (SIZE + 6)), c = Math.floor(Math.random() * cols), n = 8 + Math.floor(Math.random() * 10);
+    streams.push({ x: c * (SIZE + 6) + 3, y: anywhere ? Math.random() * H : -SIZE, v: 34 + Math.random() * 12, n: n, ch: [], acc: 0 });
   }
+  function seed() { streams = []; var k = Math.max(6, Math.floor(W / 46)); for (var i = 0; i < k; i++) spawn(true); }
   function frame(t) {
     raf = requestAnimationFrame(frame);
     var dt = Math.min((t - last) / 1000, .1); last = t;
-    var max = Math.max(3, Math.min(14, Math.floor(W / 110)));
-    if (streams.length < max && Math.random() < dt * 1.3) spawn();
+    var max = Math.max(6, Math.floor(W / 40));
+    if (streams.length < max && Math.random() < dt * 5) spawn(false);
     ctx.clearRect(0, 0, W, H);
     for (var i = streams.length - 1; i >= 0; i--) {
       var s = streams[i]; s.y += s.v * dt; s.acc += s.v * dt;
       while (s.acc >= SIZE) { s.acc -= SIZE; s.ch.unshift(glyph()); if (s.ch.length > s.n) s.ch.pop(); }
-      if (!s.ch.length) s.ch.push(glyph());
+      while (s.ch.length < Math.min(s.n, 1 + Math.floor((s.y + SIZE) / SIZE))) s.ch.push(glyph());
       for (var k = 0; k < s.ch.length; k++) {
-        var a = (1 - k / s.n) * (k === 0 ? .7 : .4);
-        ctx.fillStyle = 'rgba(70,255,140,' + a.toFixed(3) + ')';
+        var a = (1 - k / s.n) * (k === 0 ? .62 : .34);
+        ctx.fillStyle = 'rgba(60,255,120,' + a.toFixed(3) + ')';
         ctx.fillText(s.ch[k], s.x, s.y - k * SIZE);
       }
       if (s.y - s.n * SIZE > H) streams.splice(i, 1);
@@ -42,5 +43,5 @@
   window.addEventListener('resize', fit);
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
   if (mq.addEventListener) mq.addEventListener('change', function (e) { if (e.matches) { stop(); cv.style.display = 'none'; } else { cv.style.display = ''; start(); } });
-  fit(); start();
+  fit(); seed(); start();
 })();

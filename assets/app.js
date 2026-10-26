@@ -118,10 +118,10 @@
   applyLang(detectLang());
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['work', 'architecture', 'demo', 'method', 'about', 'personal'];
-  var ALIAS = { top: 'work', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo' };
+  var TABS = ['home', 'work', 'architecture', 'demo', 'method', 'about', 'personal'];
+  var ALIAS = { top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
-  var current = 'work';
+  var current = 'home';
   function parseHash() {
     var h = (location.hash || '').replace('#', '').split('/');
     var id = ALIAS[h[0]] || h[0];
@@ -129,7 +129,7 @@
   }
   function showTab(id, opts) {
     opts = opts || {};
-    if (TABS.indexOf(id) < 0) id = 'work';
+    if (TABS.indexOf(id) < 0) id = 'home';
     current = id;
     tabEls.forEach(function (t) {
       var on = t.dataset.tab === id;
@@ -160,7 +160,14 @@
     var h = a.getAttribute('href').slice(1).split('/')[0]; var id = ALIAS[h] || h;
     if (TABS.indexOf(id) > -1) { e.preventDefault(); showTab(id, { scroll: true, focus: true }); }
   });
-  var h0 = parseHash(); showTab(h0.tab || 'work', { sub: h0.sub, keepHash: !h0.tab });
+  var h0 = parseHash(); showTab(h0.tab || 'home', { sub: h0.sub, keepHash: !h0.tab });
+
+  // малка анимация при натискане на всяко копче, таб и плочка
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('button, a.btn, a.tile, a.brand'); if (!b) return;
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    setTimeout(function () { b.classList.remove('pop'); }, 520);
+  });
 
   window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
 })();

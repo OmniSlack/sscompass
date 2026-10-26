@@ -6,7 +6,7 @@ const { loadStatic, read, exists } = require('./helpers');
 const dom = loadStatic();
 const doc = dom.window.document;
 test.after(() => dom.window.close());
-const TABS = ['work', 'architecture', 'demo', 'method', 'about', 'personal'];
+const TABS = ['home', 'work', 'architecture', 'demo', 'method', 'about', 'personal'];
 
 test('document declares HTML5, Bulgarian language, charset and viewport', () => {
   assert.match(read('index.html'), /^<!doctype html>/i); assert.equal(doc.documentElement.lang, 'bg');
@@ -23,13 +23,13 @@ for (const id of TABS) {
     assert.equal(tab.getAttribute('aria-controls'), 'panel-' + id); assert.equal(panel.getAttribute('aria-labelledby'), 'tab-' + id);
   });
 }
-test('Work is the selected, focusable tab at the start; the other panels start hidden', () => {
-  assert.equal(doc.querySelectorAll('[role=tab][aria-selected=true]').length, 1); assert.equal(doc.getElementById('tab-work').getAttribute('aria-selected'), 'true');
+test('Home is the selected, focusable tab at the start; the other panels start hidden', () => {
+  assert.equal(doc.querySelectorAll('[role=tab][aria-selected=true]').length, 1); assert.equal(doc.getElementById('tab-home').getAttribute('aria-selected'), 'true');
   assert.equal(doc.querySelectorAll('[role=tab][tabindex="0"]').length, 1);
   for (const id of TABS.slice(1)) assert.ok(doc.getElementById('panel-' + id).hasAttribute('hidden'), id);
 });
 test('the Personal tab comes last and is marked apart', () => {
-  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[5].classList.contains('tab-personal'));
+  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[6].classList.contains('tab-personal'));
 });
 test('the old command-centre concept is gone from the page', () => {
   const h = read('index.html');
@@ -102,7 +102,7 @@ test('both stylesheets exist and every font file they name exists', () => {
   assert.ok(exists('assets/style.css')); assert.ok(exists('assets/fonts.css')); const files = read('assets/fonts.css').match(/url\(fonts\/[^)]+\)/g) || [];
   assert.ok(files.length >= 12); for (const f of files) assert.ok(exists('assets/' + f.slice(4, -1)), f);
 });
-test('a skip link and a no-script fallback exist', () => { assert.ok(doc.querySelector('a.skip[href="#work"]')); assert.match(read('index.html'), /<noscript><style>\.panel\[hidden\]/); });
+test('a skip link and a no-script fallback exist', () => { assert.ok(doc.querySelector('a.skip[href="#home"]')); assert.match(read('index.html'), /<noscript><style>\.panel\[hidden\]/); });
 test('the Content-Security-Policy forbids third-party and inline scripts', () => {
   const c = doc.querySelector('meta[http-equiv="Content-Security-Policy"]').content; assert.match(c, /script-src 'self'/); assert.match(c, /object-src 'none'/); assert.match(c, /connect-src 'self'/);
   assert.ok(!/unsafe-eval/.test(c)); assert.ok(!/script-src[^;]*unsafe-inline/.test(c));
