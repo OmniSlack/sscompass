@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 
-const TABS = ['work', 'architecture', 'method', 'about', 'personal'];
+const TABS = ['work', 'architecture', 'demo', 'method', 'about', 'personal'];
 const page = (o) => load(Object.assign({ lang: 'en-US' }, o));
 const visible = (p) => TABS.filter((t) => !p.doc.getElementById('panel-' + t).hasAttribute('hidden'));
 const wait = (ms = 20) => new Promise((r) => setTimeout(r, ms));
@@ -32,7 +32,7 @@ test('Home and End jump to the first and last tab', () => {
 test('keyboard navigation moves focus to the new tab', () => {
   const p = page(); p.doc.getElementById('tab-work').focus(); key(p, p.doc.getElementById('tab-work'), 'ArrowRight'); assert.equal(p.doc.activeElement, p.doc.getElementById('tab-architecture'));
 });
-for (const [hash, want] of [['#work', 'work'], ['#architecture', 'architecture'], ['#method', 'method'], ['#about', 'about'], ['#projects', 'work'], ['#contact', 'about'], ['#skills', 'method'], ['#memory', 'architecture'], ['#personal', 'personal'], ['#personal/news', 'personal'], ['#nonsense', 'work'], ['', 'work']]) {
+for (const [hash, want] of [['#work', 'work'], ['#architecture', 'architecture'], ['#demo', 'demo'], ['#live', 'demo'], ['#animation', 'demo'], ['#method', 'method'], ['#about', 'about'], ['#projects', 'work'], ['#contact', 'about'], ['#skills', 'method'], ['#memory', 'architecture'], ['#personal', 'personal'], ['#personal/news', 'personal'], ['#nonsense', 'work'], ['', 'work']]) {
   test(`opening the site at "${hash}" shows the ${want} tab`, () => { const p = page({ hash }); assert.equal(p.w.SSCApp.tab(), want); assert.deepEqual(visible(p), [want]); });
 }
 test('changing the hash while the page is open switches the tab', async () => {
@@ -54,8 +54,8 @@ test('the active tab survives a language change', () => {
   const p = page(); p.click(p.doc.getElementById('tab-method')); p.w.SSCApp.setLang('bg'); assert.equal(p.w.SSCApp.tab(), 'method'); assert.deepEqual(visible(p), ['method']);
 });
 test('tab labels are translated', () => {
-  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Work', 'Architecture', 'Method', 'About', 'Personal']);
-  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Проекти', 'Архитектура', 'Метод', 'За мен', 'Личен контрол']);
+  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Work', 'Architecture', 'How it works', 'Method', 'About', 'Personal']);
+  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Проекти', 'Архитектура', 'Как работи', 'Метод', 'За мен', 'Личен контрол']);
 });
 test('every public tab has real content', () => {
   const p = page(); for (const t of ['work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);

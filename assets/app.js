@@ -110,6 +110,7 @@
     renderFilters(); renderProjects(); renderDecks(); renderSocials();
     if (dlg.hasAttribute('open')) renderDialog();
     if (window.SSCPersonal) window.SSCPersonal.render(l);
+    if (window.SSCDemo) window.SSCDemo.render(l);
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
@@ -117,8 +118,8 @@
   applyLang(detectLang());
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['work', 'architecture', 'method', 'about', 'personal'];
-  var ALIAS = { top: 'work', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method' };
+  var TABS = ['work', 'architecture', 'demo', 'method', 'about', 'personal'];
+  var ALIAS = { top: 'work', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
   var current = 'work';
   function parseHash() {
@@ -135,6 +136,7 @@
       t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
       var panel = $('panel-' + t.dataset.tab); if (panel) panel.hidden = !on;
     });
+    if (id !== 'demo' && window.SSCDemo) window.SSCDemo.stop();
     document.body.setAttribute('data-view', id === 'personal' ? 'personal' : 'public');
     if (id === 'personal' && window.SSCPersonal) window.SSCPersonal.onShow(opts.sub);
     else if (window.SSCPersonal) window.SSCPersonal.lockNow();          // личното се заключва, когато го напуснеш

@@ -127,3 +127,36 @@ test('the scripts use no eval or document.write, and every dynamic string is esc
   for (const f of ['assets/app.js', 'assets/data.js', 'assets/vault.js', 'assets/personal.js']) assert.ok(!/\beval\(|document\.write\(/.test(read(f)), f);
   const s = read('assets/app.js'); assert.match(s, /function esc\(/); assert.ok((s.match(/esc\(/g) || []).length > 30);
 });
+
+/* --- How it works: animated walk-throughs --- */
+const demoPage = () => page({ hash: '#demo' });
+const dv = (p) => p.w.SSCDemo.flows;
+test('demo: three projects, each with stages and scenarios in both languages', () => {
+  const p = demoPage(); assert.equal(dv(p).length, 3);
+  for (const f of dv(p)) { assert.ok(f.scenarios.length >= 3); for (const g of f.stages) { assert.ok(g.n.bg && g.n.en && g.d.bg && g.d.en); } for (const s of f.scenarios) { assert.ok(s.end.l && s.steps.length >= 3); for (const st of s.steps) { assert.ok(st.s >= 0 && st.s < f.stages.length); assert.ok(['pass', 'hold', 'stop', 'nb'].includes(st.st)); assert.ok(st.t.bg && st.t.en || typeof st.t === 'string'); } } }
+});
+test('demo: English text has no Cyrillic', () => {
+  const p = demoPage(); const bad = [];
+  const walk = (v) => { if (v && typeof v === 'object') { if (typeof v.en === 'string' && /[Ѐ-ӿ]/.test(v.en)) bad.push(v.en); Object.values(v).forEach(walk); } };
+  walk(Array.from(dv(p))); assert.deepEqual(bad, []);
+});
+test('demo: renders four steps in the log after four clicks on Step, then Restart empties it', () => {
+  const p = demoPage(); const step = () => p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1]; for (let i = 0; i < 4; i++) step().click();
+  assert.equal(p.doc.querySelectorAll('#demo-root .dm-line:not(.dim)').length, 4);
+  p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[2].click(); assert.equal(p.doc.querySelectorAll('#demo-root .dm-line:not(.dim)').length, 0);
+});
+test('demo: finishing the first scenario shows an end banner and marks the adapter as not built', () => {
+  const p = demoPage(); for (let i = 0; i < 8; i++) p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1].click();
+  assert.ok(p.doc.querySelector('#demo-root .dm-end')); assert.ok(p.doc.querySelector('#demo-root .dm-stage.nbld.s-nb')); assert.match(p.doc.getElementById('demo-root').textContent, /no real external action has ever been run/);
+});
+test('demo: a missing-support scenario ends in NO PERMIT and never reaches the executor stages', () => {
+  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-sc')[1].click(); for (let i = 0; i < 3; i++) p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[1].click();
+  assert.equal(p.doc.querySelector('#demo-root .dm-end b').textContent, 'NO PERMIT'); assert.equal(p.doc.querySelectorAll('#demo-root .dm-stage.s-idle').length >= 4, true);
+});
+test('demo: switching language redraws the walk-through in Bulgarian', () => {
+  const p = demoPage(); p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('demo-root').textContent, /Контролен цикъл/);
+});
+test('demo: leaving the tab stops a running animation', () => {
+  const p = demoPage(); p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[0].click(); p.w.SSCApp.showTab('work');
+  assert.equal(p.doc.querySelectorAll('#demo-root .dm-ctl .btn')[0].textContent.includes('Play'), true);
+});
