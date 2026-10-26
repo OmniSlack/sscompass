@@ -44,9 +44,9 @@ test('two different passphrases are refused', async () => {
   const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS + 'x'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /do not match/); assert.ok(!$(p, 'pmenu'));
 });
-test('creating a vault opens the five-section personal menu', async () => {
+test('creating a vault opens the six-section personal menu', async () => {
   const p = await openApp(null); const names = [...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent);
-  assert.deepEqual(names, ['Platforms', 'News', 'Notes', 'In progress', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
+  assert.deepEqual(names, ['Platforms', 'News', 'Notes', 'In progress', 'Maps', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
 });
 test('loading vault.json while creating fills the platforms and the unfinished work', async () => {
   const p = await openApp(); assert.equal(p.doc.querySelectorAll('#pview .pf').length, 2); await section(p, 'progress'); assert.match(text(p), /NomNom/);
@@ -162,7 +162,7 @@ test('an empty In progress says so', async () => {
 test('the lock screen and the app follow the language switch', async () => {
   const p = await openGate(); p.w.SSCApp.setLang('bg'); await until(() => /Създай личния/.test(text(p)));
   setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
-  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Vault']);
+  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Карти', 'Vault']);
 });
 test('personal data never appears on the public tabs, even while the vault is open', async () => {
   const p = await openApp(); await section(p, 'progress'); assert.match(text(p), /NomNom/);
@@ -200,4 +200,36 @@ test('the passphrase stays case-sensitive', async () => {
   const a = await openApp(); const stored = a.w.localStorage.getItem('ssc-vault');
   const b = await openGate({ storage: { 'ssc-vault': stored } }); setv(b, 'p-name', 'omnivorous'); setv(b, 'p-pass', PASS.toUpperCase()); submit(b, 'p-form'); await until(() => $(b, 'p-msg').textContent);
   assert.match($(b, 'p-msg').textContent, /Wrong passphrase/);
+});
+
+/* ---------- the sealed Maps section (read-only, same passphrase as the vault) ---------- */
+/* The tests seal their own small map with the test passphrase; the real passphrase never appears in the repository. */
+const FS = require('fs'), PATH = require('path'), WC = require('node:crypto').webcrypto;
+const TEST_TREE = { t: 'Root idea', c: [{ t: 'Branch one', c: [{ t: 'Leaf A' }, { t: 'Leaf B' }] }, { t: 'Branch two', c: [{ t: 'Leaf C' }] }] };
+async function sealMaps(secret) {
+  const salt = WC.getRandomValues(new Uint8Array(16)), iv = WC.getRandomValues(new Uint8Array(12)), enc = new TextEncoder();
+  const km = await WC.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveKey']);
+  const key = await WC.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+  const ct = await WC.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(JSON.stringify({ maps: [{ id: 't', title: 'Test map', tree: TEST_TREE }] })));
+  const b64 = (u) => Buffer.from(u).toString('base64');
+  return { v: 1, kdf: 'PBKDF2-SHA256', iter: 250000, salt: b64(salt), iv: b64(iv), data: b64(new Uint8Array(ct)) };
+}
+const fetchWith = (blob) => (url) => Promise.resolve(/maps\.enc\.json/.test(String(url)) ? { ok: true, json: () => Promise.resolve(blob) } : { ok: false, json: () => Promise.resolve(null) });
+test('maps: after unlocking, the sealed maps file is read with the same passphrase and drawn as a map', async () => {
+  const blob = await sealMaps('omnivorous:' + PASS); const p = await openGate({ fetch: fetchWith(blob) }); await createVault(p, SEED);
+  await section(p, 'maps'); await until(() => p.doc.querySelector('#pview .mm-node'));
+  assert.match($(p, 'pview').textContent, /Test map/); assert.equal(p.doc.querySelectorAll('#pview .mm-root > .mm-n > .mm-kids > .mm-n').length, 2);
+  p.doc.querySelector('#pview .mm-b').click(); const t = $(p, 'pview').textContent; for (const s of ['Leaf A', 'Leaf B', 'Leaf C']) assert.ok(t.includes(s), s);
+});
+test('maps: a wrong passphrase cannot read the maps file', async () => {
+  const blob = await sealMaps('omnivorous:' + PASS); const p = await openGate({ fetch: fetchWith(blob) });
+  assert.equal(await p.w.SSCVault.loadMaps('omnivorous:not-the-passphrase'), null); assert.deepEqual(Array.from(await p.w.SSCVault.loadMaps('omnivorous:' + PASS), (m) => m.id), ['t']);
+});
+test('maps: without a maps file the section says there are no maps yet', async () => {
+  const p = await openApp(); await section(p, 'maps'); assert.match($(p, 'pview').textContent, /No maps yet/);
+});
+test('maps: the shipped sealed file holds no readable map text, and the public files hold none of it either', () => {
+  const secret = /Fear as the only error|Truth over ego|Shadow and self-acceptance|Animated storytelling|Hold the gap open/;
+  for (const f of ['index.html', 'assets/data.js', 'assets/app.js', 'assets/maps.js', 'assets/mindmap.js', 'assets/maps.enc.json', 'assets/vault.enc.json']) assert.ok(!secret.test(FS.readFileSync(PATH.join(__dirname, '..', f), 'utf8')), f);
+  const blob = JSON.parse(FS.readFileSync(PATH.join(__dirname, '..', 'assets', 'maps.enc.json'), 'utf8')); assert.equal(blob.kdf, 'PBKDF2-SHA256'); assert.ok(blob.data.length > 1000);
 });

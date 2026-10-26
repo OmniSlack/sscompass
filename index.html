@@ -69,8 +69,10 @@
       <div class="mono">// <span data-en="work">проекти</span></div>
       <h2 data-en="Fifteen projects, each with its evidence">Петнайсет проекта, всеки с доказателствата си</h2>
       <p class="lead" data-en="One folder in the repository is one project. Every number comes with the command that produces it. Open a project for the proof, what it does not prove, and the link to its folder.">Една папка в хранилището е един проект. Всяко число идва с командата, която го произвежда. Отвори проект за доказателството, за това какво не доказва и за връзката към папката му.</p>
+      <div class="viewtoggle" id="work-view" role="group" aria-label="Изглед" data-en-aria="View"></div>
       <div class="filters" id="filters" role="group" aria-label="Филтър на проектите" data-en-aria="Project filter"></div>
       <div class="grid" id="projects-grid"></div>
+      <div id="work-map" hidden></div>
       <p class="note" data-en="Counts were recorded on 2026-10-26. Where I re-ran a suite, the project says so.">Броят е записан на 2026-10-26. Където съм повтарял тестовете, проектът го казва.</p>
     </section>
 
@@ -245,6 +247,9 @@
       </div>
       <p class="note" data-en="The loop repeats until the checks and the review agree. Findings made by an AI are attributed to the AI.">Цикълът се повтаря, докато проверките и прегледът се съгласят. Откритията на AI се приписват на AI.</p>
 
+      <h3 class="sh" data-en="The method as a map">Методът като карта</h3>
+      <div id="method-map"></div>
+
       <h3 class="sh" data-en="Who did what">Кой какво е правил</h3>
       <div class="tablewrap"><table class="tbl who">
         <thead><tr><th data-en="Part">Част</th><th>Martin Urumov</th><th data-en="AI coding assistants (Claude Code, Codex, GitHub Copilot)">AI асистенти (Claude Code, Codex, GitHub Copilot)</th></tr></thead>
@@ -346,6 +351,8 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 <script src="assets/diagrams.js"></script>
 <script src="assets/cores.js"></script>
 <script src="assets/ai.js"></script>
+<script src="assets/mindmap.js"></script>
+<script src="assets/maps.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/rain.js"></script>
 </body>

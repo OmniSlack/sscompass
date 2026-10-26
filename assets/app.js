@@ -59,10 +59,13 @@
     Array.prototype.forEach.call($('filters').children, function (b) { b.setAttribute('aria-pressed', b.dataset.f === filter); });
     renderProjects();
   });
+  function openProj(id) {
+    openProject = id; renderDialog();
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  }
   $('projects-grid').addEventListener('click', function (e) {
     var b = e.target.closest('[data-p]'); if (!b) return;
-    openProject = b.dataset.p; renderDialog();
-    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    openProj(b.dataset.p);
   });
   function closeDlg() {
     if (dlg.close) dlg.close(); else dlg.removeAttribute('open');
@@ -113,6 +116,7 @@
     if (window.SSCDemo) window.SSCDemo.render(l);
     if (window.SSCDiagrams) window.SSCDiagrams.render(l);
     if (window.SSCAI) window.SSCAI.render(l);
+    if (window.SSCMaps) window.SSCMaps.render(l);
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
@@ -173,5 +177,5 @@
     setTimeout(function () { b.classList.remove('pop'); }, 520);
   });
 
-  window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
+  window.SSCApp = { openProject: openProj, setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
 })();

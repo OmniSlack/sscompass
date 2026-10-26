@@ -201,3 +201,32 @@ test('ai: leaving the tab pauses the core', () => {
 test('ai: with reduced motion the core stays still even on the tab', () => {
   const p = load({ lang: 'en-US', hash: '#ai', reduce: true }); assert.equal(p.w.SSCCore.isPaused(), true);
 });
+
+/* --- public mind maps --- */
+test('map: the Work tab can switch from the list to a map of the fifteen projects by kind', () => {
+  const p = page(); p.click(p.doc.querySelector('#work-view [data-v=map]')); assert.ok(!p.doc.getElementById('work-map').hidden); assert.ok(p.doc.getElementById('projects-grid').hidden);
+  p.doc.querySelector('#work-map .mm-b').click();
+  const leaves = [...p.doc.querySelectorAll('#work-map .mm-n.d2 > .mm-row > .mm-node')].map((n) => n.textContent); for (const id of D.projects.map((x) => x.id)) assert.ok(leaves.includes(id), id);
+});
+test('map: the kind nodes show how many projects each holds', () => {
+  const p = page(); const kinds = Array.from(p.doc.querySelectorAll('#work-map .mm-n.d1 > .mm-row > .mm-node'), (n) => n.textContent);
+  assert.deepEqual(kinds, Array.from(D.kinds).filter((k) => k.id !== 'all').map((k) => k.label.en + ' · ' + count(k.id)));
+});
+test('map: choosing a project in the map and pressing Open shows the same dialog as the list', () => {
+  const p = page(); p.click(p.doc.querySelector('#work-view [data-v=map]')); p.doc.querySelector('#work-map .mm-b').click();
+  const node = [...p.doc.querySelectorAll('#work-map .mm-node')].find((n) => n.textContent === 'agent-execution-control'); node.click();
+  const open = p.doc.querySelector('#work-map .mm-detail .btn'); assert.ok(open); open.click(); assert.match(p.doc.getElementById('dlg-body').textContent, /agent-execution-control/);
+});
+test('map: switching back to the list shows the filters and the grid again', () => {
+  const p = page(); p.click(p.doc.querySelector('#work-view [data-v=map]')); p.click(p.doc.querySelector('#work-view [data-v=list]'));
+  assert.ok(!p.doc.getElementById('projects-grid').hidden); assert.ok(!p.doc.getElementById('filters').hidden); assert.ok(p.doc.getElementById('work-map').hidden);
+});
+test('map: the method map has the five branches and follows the language', () => {
+  const p = page(); assert.equal(p.doc.querySelectorAll('#method-map .mm-root > .mm-n > .mm-kids > .mm-n').length, 5);
+  p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('method-map').textContent, /Кой какво е правил/);
+});
+test('map: tapping the arrow opens and closes a branch, and Close all collapses to the root', () => {
+  const p = page(); const root = '#method-map'; const tg = p.doc.querySelector(root + ' .mm-tg[data-path="r.0"]'); assert.ok(tg); assert.equal(p.doc.querySelector(root + ' .mm-n.d1').getAttribute('aria-expanded'), 'false');
+  p.click(tg); assert.equal(p.doc.querySelector(root + ' .mm-n.d1').getAttribute('aria-expanded'), 'true');
+  p.doc.querySelectorAll(root + ' .mm-b')[1].click(); assert.equal(p.doc.querySelectorAll(root + ' .mm-kids').length, 1);
+});

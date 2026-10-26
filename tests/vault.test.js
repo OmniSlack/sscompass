@@ -83,9 +83,9 @@ test('forget removes the vault from this device', async () => {
   const p = page(); await p.w.SSCVault.create(PASS, SEED); p.w.SSCVault.forget(); assert.equal(p.w.SSCVault.hasLocal(), false); assert.equal(p.w.SSCVault.isOpen(), false);
 });
 test('save while locked is refused', async () => { await rejects(page().w.SSCVault.save(), 'locked'); });
-test('the vault code makes no network request of its own except the optional sealed file', () => {
+test('the vault code makes no network request of its own except the two optional sealed files', () => {
   const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'assets', 'vault.js'), 'utf8');
-  assert.ok(!/XMLHttpRequest|WebSocket|sendBeacon/.test(src)); assert.equal((src.match(/fetch\(/g) || []).length, 1); assert.match(src, /assets\/vault\.enc\.json/);
+  assert.ok(!/XMLHttpRequest|WebSocket|sendBeacon/.test(src)); assert.equal((src.match(/fetch\(/g) || []).length, 2); assert.match(src, /assets\/vault\.enc\.json/); assert.match(src, /assets\/maps\.enc\.json/);
 });
 test('the key is never exported (non-extractable)', () => {
   const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'assets', 'vault.js'), 'utf8');

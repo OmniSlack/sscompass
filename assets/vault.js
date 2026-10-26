@@ -5,7 +5,7 @@
    за да се качи в assets/ и да се отключва на друго устройство със същата парола. */
 (function () {
   'use strict';
-  var LS = 'ssc-vault', ITER = 250000, REMOTE = 'assets/vault.enc.json';
+  var LS = 'ssc-vault', ITER = 250000, REMOTE = 'assets/vault.enc.json', MAPS_URL = 'assets/maps.enc.json';
   var cr = window.crypto && window.crypto.subtle ? window.crypto : null;
   var enc = new TextEncoder(), dec = new TextDecoder();
   var key = null, salt = null, state = null;
@@ -81,6 +81,16 @@
     exportSealed: function () { return seal().then(function (b) { return JSON.stringify(b, null, 2); }); },
     lock: function () { key = null; salt = null; state = null; },
     forget: function () { V.lock(); try { localStorage.removeItem(LS); } catch (e) {} },
+    /* Карти (само за четене): отделен запечатан файл със същата парола. Ако го няма, просто няма карти. */
+    loadMaps: function (pass) {
+      if (!cr || typeof fetch !== 'function') return Promise.resolve(null);
+      return fetch(MAPS_URL, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (blob) {
+        if (!blob || !blob.salt || !blob.iv || !blob.data) return null;
+        return derive(pass, unb64(blob.salt), blob.iter || ITER).then(function (k) {
+          return cr.subtle.decrypt({ name: 'AES-GCM', iv: unb64(blob.iv) }, k, unb64(blob.data));
+        }).then(function (pt) { var o = JSON.parse(dec.decode(pt)); return Array.isArray(o.maps) ? o.maps : null; });
+      }).catch(function () { return null; });
+    },
     normalise: normalise
   };
   window.SSCVault = V;

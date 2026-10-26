@@ -93,8 +93,8 @@ test('the personal panel is empty markup until unlocked: no data in the HTML', (
 test('public panels contain no form controls', () => { for (const id of ['work', 'architecture', 'method', 'about']) assert.equal(doc.querySelectorAll('#panel-' + id + ' input, #panel-' + id + ' textarea').length, 0, id); });
 test('the dialog has a labelled close button', () => { assert.ok(doc.querySelector('dialog#dlg #dlg-close[aria-label]')); });
 
-test('the page loads exactly nine local scripts in the right order, no inline scripts or handlers', () => {
-  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/app.js', 'assets/rain.js']);
+test('the page loads exactly eleven local scripts in the right order, no inline scripts or handlers', () => {
+  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js', 'assets/rain.js']);
   for (const s of srcs) assert.ok(exists(s), s); assert.equal(doc.querySelectorAll('script:not([src])').length, 0); assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
 test('the page makes no third-party requests (fonts are self-hosted)', () => { assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], ['https://github.com/OmniSlack/martin-urumov-portfolio']); });

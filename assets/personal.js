@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   var V = window.SSCVault, root = document.getElementById('p-root');
-  var lang = 'bg', section = 'platforms', msgTimer = null, forgetArmed = false;
+  var MAPS = [], lang = 'bg', section = 'platforms', msgTimer = null, forgetArmed = false;
   function $(id) { return document.getElementById(id); }
   function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function safeUrl(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u || '') ? u : ''; }
@@ -24,7 +24,7 @@
     mismatch: { bg: 'Двете пароли не съвпадат.', en: 'The two passphrases do not match.' }, badSeed: { bg: 'Файлът не е валиден JSON.', en: 'The file is not valid JSON.' },
     novault: { bg: 'Няма vault на това устройство.', en: 'There is no vault on this device.' },
     saved: { bg: 'Запазено.', en: 'Saved.' }, saveFail: { bg: 'Не успях да запиша. Мястото в браузъра може да е пълно.', en: 'Could not save. Browser storage may be full or blocked.' },
-    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини', en: 'News' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, vault: { bg: 'Vault', en: 'Vault' } },
+    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини', en: 'News' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, maps: { bg: 'Карти', en: 'Maps' }, vault: { bg: 'Vault', en: 'Vault' } },
     menuLabel: { bg: 'Личен контрол', en: 'Personal control' },
     pfHint: { bg: 'Полетата се попълват на ръка. Нищо не се тегли автоматично от платформите.', en: 'Fields are filled in by hand. Nothing is pulled automatically from the platforms.' },
     status: { bg: 'Състояние', en: 'Status' }, live: { bg: 'има линк', en: 'live' }, soon: { bg: 'скоро', en: 'soon' },
@@ -83,20 +83,20 @@
       if (pass.length < 8) { msg(tx(T.weak), true); return; }
       if (pass !== $('p-pass2').value) { msg(tx(T.mismatch), true); return; }
       var file = $('p-seed').files && $('p-seed').files[0];
-      var done = function (seed) { V.create(name + ':' + pass, seed).then(function () { renderApp(); }, function () { msg(tx(T.saveFail), true); }); };
+      var done = function (seed) { V.create(name + ':' + pass, seed).then(function () { return V.loadMaps(name + ':' + pass).then(function (m) { MAPS = m || []; renderApp(); }); }, function () { msg(tx(T.saveFail), true); }); };
       if (!file) { done(null); return; }
       var fr = new FileReader();
       fr.onload = function () { var seed; try { seed = JSON.parse(String(fr.result)); } catch (x) { msg(tx(T.badSeed), true); return; } done(seed); };
       fr.onerror = function () { msg(tx(T.badSeed), true); };
       fr.readAsText(file);
     } else {
-      V.unlock(name + ':' + pass).then(function () { renderApp(); }, function (err) { msg(tx(err && err.message === 'no-vault' ? T.novault : T.wrong), true); });
+      V.unlock(name + ':' + pass).then(function () { return V.loadMaps(name + ':' + pass).then(function (m) { MAPS = m || []; renderApp(); }); }, function (err) { msg(tx(err && err.message === 'no-vault' ? T.novault : T.wrong), true); });
     }
   }
 
   /* ---------- приложение ---------- */
   function menuHtml() {
-    return ['platforms', 'news', 'notes', 'progress', 'vault'].map(function (k) {
+    return ['platforms', 'news', 'notes', 'progress', 'maps', 'vault'].map(function (k) {
       return '<button data-s="' + k + '" aria-current="' + (k === section) + '">' + esc(tx(T.menu[k])) + '</button>';
     }).join('');
   }
@@ -117,9 +117,19 @@
     else if (section === 'news') v.innerHTML = newsHtml(s);
     else if (section === 'notes') v.innerHTML = notesHtml(s);
     else if (section === 'progress') v.innerHTML = progressHtml(s);
+    else if (section === 'maps') { v.innerHTML = mapsHtml(); mountMaps(); }
     else v.innerHTML = vaultHtml();
   }
 
+  function mapsHtml() {
+    var hint = { bg: 'Карти на идеи, които още не са за витрината. Натисни › за да отвориш клон.', en: 'Maps of ideas that are not for the public page yet. Tap › to open a branch.' };
+    var none = { bg: 'Още няма карти.', en: 'No maps yet.' };
+    return '<p class="note">' + esc(tx(hint)) + '</p>' + (MAPS.length ? MAPS.map(function (m, i) { return '<h3 class="sh">' + esc(m.title) + '</h3><div class="pmap" data-i="' + i + '"></div>'; }).join('') : '<p class="note">' + esc(tx(none)) + '</p>');
+  }
+  function mountMaps() {
+    if (!window.SSCMindmap) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#pview .pmap'), function (box) { var m = MAPS[+box.dataset.i]; if (m && m.tree) window.SSCMindmap.create(box, m.tree, { lang: lang, startDepth: 1 }); });
+  }
   function platformsHtml(s) {
     return '<p class="note">' + esc(tx(T.pfHint)) + '</p><div class="pgrid">' + s.platforms.map(function (p, i) {
       function f(k, label) { return '<label>' + esc(tx(label)) + '<input data-pf="' + i + '" data-f="' + k + '" value="' + esc(p[k]) + '"></label>'; }
@@ -216,7 +226,7 @@
   var P = {
     render: function (l) { if (l) lang = l; if (!root || !root.innerHTML) return; if (V && V.isOpen()) renderApp(); else showGate(); },
     onShow: function (sub) { if (sub && T.menu[sub]) section = sub; showGate(); },
-    lockNow: function () { if (V) V.lock(); if (root) root.innerHTML = ''; forgetArmed = false; },
+    lockNow: function () { if (V) V.lock(); MAPS = []; if (root) root.innerHTML = ''; forgetArmed = false; },
     section: function () { return section; }
   };
   window.SSCPersonal = P;
