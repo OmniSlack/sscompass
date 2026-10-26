@@ -6,7 +6,7 @@
 
   var FLOWS = [
     {
-      id: 'loop', name: T('Контролен цикъл', 'Control loop'), repo: 'agent-execution-control + agent-action-verifier',
+      id: 'loop', tok: T('плик', 'envelope'), name: T('Контролен цикъл', 'Control loop'), repo: 'agent-execution-control + agent-action-verifier',
       intro: T('Как едно AI предложение стига (или не стига) до действие. Мислене, предлагане, разрешаване, изпълнение и проверка са пет различни неща и никое не може да създаде друго.',
                'How one AI proposal reaches an action, or does not. Thinking, proposing, permitting, executing and verifying are five different things, and none of them can create another.'),
       stages: [
@@ -75,7 +75,7 @@
       ]
     },
     {
-      id: 'eval', name: T('Оценител на предложения', 'Proposal evaluator'), repo: 'ai-proposal-evaluator',
+      id: 'eval', tok: T('предложение', 'proposal'), name: T('Оценител на предложения', 'Proposal evaluator'), repo: 'ai-proposal-evaluator',
       intro: T('Как оценителят решава дали едно AI предложение може да продължи. При липсваща информация затваря входа.',
                'How the evaluator decides whether one AI proposal may go ahead. It fails closed on missing information.'),
       stages: [
@@ -110,7 +110,7 @@
       ]
     },
     {
-      id: 'claims', name: T('Проверка на твърдения', 'Claim checker'), repo: 'document-claim-checker',
+      id: 'claims', tok: T('твърдение', 'claim'), name: T('Проверка на твърдения', 'Claim checker'), repo: 'document-claim-checker',
       intro: T('Как документ се сверява с файловете на диска. Документът не доказва сам себе си.',
                'How a document is checked against the files on disk. A document does not prove itself.'),
       stages: [
@@ -142,7 +142,7 @@
     }
   ];
 
-  var root, lang = 'bg', S = { f: 0, sc: 0, i: 0, timer: null, playing: false };
+  var root, lang = 'bg', prev = null, S = { f: 0, sc: 0, i: 0, timer: null, playing: false };
   var UI = {
     title: T('Избери проект', 'Choose a project'),
     scen: T('Сценарий', 'Scenario'),
@@ -150,7 +150,7 @@
     ready: T('Натисни Пусни или Стъпка.', 'Press Play or Step.'),
     stepOf: T('Стъпка', 'Step'), of: T('от', 'of'),
     legend: T('Зелено: премина · Жълто: задържа · Червено: спира · Пунктир: не е построено', 'Green: passed · Amber: holds · Red: stops · Dashed: not built'),
-    note: T('Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
+    note: T('Плик/пакет: малката икона пътува по етапите и сменя цвят според решението. Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'The small icon travels through the stages and changes colour with the verdict. This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
     skipped: T('не се достига', 'not reached')
   };
   function tx(v) { return typeof v === 'string' ? v : (v[lang] || v.en); }
@@ -158,6 +158,20 @@
   function flow() { return FLOWS[S.f]; }
   function scen() { return flow().scenarios[S.sc]; }
 
+  function makeToken(label, st) {
+    var d = el('div', 'dm-tok t-' + st); d.setAttribute('aria-hidden', 'true'); d.title = label;
+    d.innerHTML = '<svg viewBox="0 0 28 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="1" y="1" width="26" height="18" rx="2.5"/><path d="M1.5 2.5 14 11.5 26.5 2.5"/></svg>';
+    return d;
+  }
+  function tokState(sc, done) {
+    if (S.i === 0) return 'idle';
+    var last = sc.steps[S.i - 1].st;
+    return last === 'pass' && done ? 'pass' : last;
+  }
+  function tokTarget(ol, k) {
+    var li = ol.children[k];
+    return { x: li.offsetLeft + li.offsetWidth - 52, y: li.offsetTop + li.offsetHeight - 40 };
+  }
   function stageStates() {
     var st = []; var sc = scen(); var i;
     for (i = 0; i < flow().stages.length; i++) st.push('idle');
@@ -199,6 +213,14 @@
       ol.appendChild(li);
     });
     root.appendChild(ol);
+    var tok = makeToken(tx(f.tok), tokState(sc, done));
+    ol.appendChild(tok);
+    var tgt = tokTarget(ol, current < 0 ? 0 : current);
+    var from = prev && prev.f === S.f && prev.sc === S.sc ? prev : null;
+    if (from) { tok.style.transition = 'none'; tok.style.transform = 'translate(' + from.x + 'px,' + from.y + 'px)'; void tok.offsetWidth; tok.style.transition = ''; if (from.x !== tgt.x || from.y !== tgt.y) tok.classList.add('fly'); }
+    requestAnimationFrame(function () { tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)'; });
+    if (!from) tok.style.transform = 'translate(' + tgt.x + 'px,' + tgt.y + 'px)';
+    prev = { f: S.f, sc: S.sc, x: tgt.x, y: tgt.y };
 
     var ctl = el('div', 'dm-ctl');
     var play = el('button', 'btn', S.playing ? tx(UI.pause) : tx(UI.play)); play.type = 'button'; play.addEventListener('click', toggle);
@@ -241,6 +263,7 @@
   }
   function reset() { halt(); S.i = 0; draw(); }
 
+  window.addEventListener('resize', function () { prev = null; if (root && root.offsetParent) draw(); });
   window.SSCDemo = {
     render: function (l) { lang = l === 'en' ? 'en' : 'bg'; root = root || document.getElementById('demo-root'); draw(); },
     stop: function () { halt(); if (root) draw(); },
