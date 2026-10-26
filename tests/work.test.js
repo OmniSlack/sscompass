@@ -104,7 +104,7 @@ for (const s of D.socials) {
     const p = page(); const a = [...p.doc.querySelectorAll('#socials a')].find((x) => x.querySelector('h3').textContent === s.name); assert.ok(a); assert.equal(a.href, s.url); assert.equal(a.querySelector('.mono').textContent, s.handle);
   });
 }
-test('the CV buttons point at the PDF', () => { const p = page(); assert.equal(p.doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf'); assert.equal(p.doc.getElementById('cv-note').textContent, 'PDF · in English'); });
+test('the CV buttons point at the PDF', () => { const p = page(); assert.equal(p.doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf'); assert.equal(p.doc.getElementById('cv-note').textContent, 'PDF · in Bulgarian'); });
 test('the three background decks are linked inside the site', () => {
   const p = page(); const links = [...p.doc.querySelectorAll('#decks a')]; assert.deepEqual(links.map((a) => a.getAttribute('href')), Array.from(D.decks, (d) => d.url)); for (const a of links) assert.equal(a.getAttribute('target'), null);
 });
