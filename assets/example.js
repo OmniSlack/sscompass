@@ -7,7 +7,7 @@
     play: { bg: 'Пусни', en: 'Play' }, pause: { bg: 'Пауза', en: 'Pause' }, back: { bg: 'Назад', en: 'Back' }, next: { bg: 'Напред', en: 'Forward' }, reset: { bg: 'Отначало', en: 'Restart' },
     jump: { bg: 'Към стъпка', en: 'Go to step' }, step: { bg: 'Стъпка', en: 'Step' }, of: { bg: 'от', en: 'of' },
     ready: { bg: 'Натисни ▶ или › и гледай как примерът минава през етапите.', en: 'Press ▶ or › and watch the example pass through the stages.' },
-    where: { bg: 'Къде в репото', en: 'Where in the repository' }, not: { bg: 'Какво не доказва', en: 'What it does not prove' }
+    where: { bg: 'Къде в репото', en: 'Where in the repository' }, honest: { bg: 'Какво показва репото', en: 'What the repository shows' }, not: { bg: 'Какво не доказва', en: 'What it does not prove' }
   };
   var timer = null;
   function tx(v, lang) { return v == null ? '' : typeof v === 'string' ? v : (v[lang] || v.en || ''); }
@@ -20,6 +20,7 @@
     if (!ex) return;
     var T = function (k) { return UI[k][lang] || UI[k].en; }, S = { i: 0, playing: false }, E = {};
     host.appendChild(el('h4', null, T('title') + ': ' + tx(ex.title, lang)));
+    if (ex.note) { var nt = el('p', 'ex-note'); nt.appendChild(el('b', null, T('honest') + ': ')); nt.appendChild(document.createTextNode(tx(ex.note, lang))); host.appendChild(nt); }
     function code(kind, o) {
       var box = el('div', 'ex-code ex-' + kind); box.appendChild(el('div', 'ex-lbl', T(kind) + ' · ' + tx(o.label, lang)));
       box.appendChild(el('pre', null, o.text)); box.appendChild(el('div', 'ex-src mono', o.src)); return box;

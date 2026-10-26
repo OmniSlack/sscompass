@@ -80,3 +80,39 @@ test('a running example stops when the dialog closes', () => {
 test('code in the example is shown as text, never as markup', () => {
   const p = page(); const h = open(p, 'batch-file-gateway'); assert.equal(h.querySelectorAll('.ex-input pre script, .ex-input pre img').length, 0);
 });
+
+/* ---------- examples on the AI platforms tab ---------- */
+const sandbox2 = { window: {} }; sandbox2.window = sandbox2; vm.createContext(sandbox2); vm.runInContext(read('assets/examples-ai.js'), sandbox2);
+const AIEX = sandbox2.SSC_AIEX;
+test('ai examples: one for each of the four platforms', () => { assert.deepEqual(Object.keys(AIEX).sort(), ['claude', 'codex', 'gemini', 'gpt']); });
+for (const id of Object.keys(AIEX)) {
+  const e = AIEX[id];
+  test(`ai example ${id}: complete, bilingual and well formed`, () => {
+    assert.ok(bil(e.title) && bil(e.why) && bil(e.limits) && bil(e.input.label) && bil(e.output.label)); assert.ok(e.input.text.trim() && e.output.text.trim());
+    assert.ok(e.nodes.length >= 3 && e.nodes.length <= 6); assert.ok(e.steps.length >= 3 && e.steps.length <= 7);
+    for (const n of e.nodes) { assert.ok(bil(n.n)); assert.ok(n.fn); } for (const st of e.steps) { assert.ok(bil(st.text)); assert.ok(st.node >= 0 && st.node < e.nodes.length); assert.ok(['pass', 'hold', 'stop'].includes(st.state)); }
+    if (e.note) assert.ok(bil(e.note));
+    for (const v of [e.title, e.why, e.limits, e.input.label, e.output.label].concat(e.nodes.map((n) => n.n), e.steps.map((st) => st.text), e.note ? [e.note] : [])) { assert.ok(!/[\u0400-\u04FF]/.test(v.en), v.en); assert.ok(/[\u0400-\u04FF]/.test(v.bg), v.bg); }
+  });
+  test(`ai example ${id}: accuracy: input and output are exact excerpts of the cited repository files, and every step cites a real file`, { skip: HAVE }, () => {
+    for (const o of [e.input, e.output]) { const f = path.join(REPO, o.src.replace(/:\d+(-\d+)?$/, '')); assert.ok(fs.existsSync(f), o.src); const body = flat(fs.readFileSync(f, 'utf8')); for (const part of o.text.split(/\r?\n…\r?\n/)) assert.ok(body.includes(flat(part)), o.src + ': ' + part.slice(0, 60)); }
+    for (const st of e.steps) { const f = path.join(REPO, st.src.replace(/:\d+(-\d+)?$/, '')); assert.ok(fs.existsSync(f), st.src); }
+  });
+}
+test('ai examples: GPT and Gemini carry an honest note, because the repository holds no task done with them', () => {
+  assert.ok(AIEX.gpt.note && AIEX.gemini.note); assert.ok(!AIEX.claude.note && !AIEX.codex.note);
+  assert.match(AIEX.gpt.note.en, /no task done with/i); assert.match(AIEX.gemini.note.en, /Gemini/);
+});
+const aipage = () => page({ hash: '#ai' });
+test('ai tab: the selected platform shows its example with input, diagram and result', () => {
+  const p = aipage(); const h = p.doc.getElementById('ai-ex'); assert.ok(h.querySelector('.ex-input pre')); assert.ok(h.querySelector('.ex-output pre')); assert.ok(h.querySelectorAll('.dm-stage').length >= 3);
+});
+test('ai tab: choosing another platform swaps the example, and GPT shows the honest note', () => {
+  const p = aipage(); const t0 = p.doc.querySelector('#ai-ex h4').textContent; p.click(p.doc.querySelector('#panel-ai .ai-b[data-ai="gpt"]'));
+  assert.notEqual(p.doc.querySelector('#ai-ex h4').textContent, t0); assert.ok(p.doc.querySelector('#ai-ex .ex-note'));
+  p.click(p.doc.querySelector('#panel-ai .ai-b[data-ai="codex"]')); assert.ok(!p.doc.querySelector('#ai-ex .ex-note'));
+});
+test('ai tab: the example steps through and follows the language', () => {
+  const p = aipage(); const nx = p.doc.querySelectorAll('#ai-ex .ex-ctl .dm-b')[2]; nx.click(); assert.match(p.doc.querySelector('#ai-ex .dm-cur').textContent, /^1\./);
+  p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('ai-ex').textContent, /Пример/);
+});

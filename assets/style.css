@@ -510,3 +510,6 @@ footer { text-align: left; }
 .pill small { color: var(--dim); font: .62rem var(--mono); letter-spacing: .08em; }
 .pill.off { opacity: .5; border-style: dashed; }
 @media (max-width: 640px) { .foot { justify-content: flex-end; } .foot-name { width: 100%; text-align: right; } .foot-contacts { justify-content: flex-end; } }
+.ex-note { margin: 6px 0 8px; padding: 8px 12px; border-left: 3px solid #ffb347; border-radius: 0 10px 10px 0; background: rgb(255 179 71 / .1); color: #f3e4c8; font-size: .84rem; }
+.ex-note b { color: #ffb347; }
+#ai-ex { margin-top: 14px; }

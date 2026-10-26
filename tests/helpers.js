@@ -58,7 +58,7 @@ function load(opts = {}) {
   Object.defineProperty(w, 'crypto', { value: require('node:crypto').webcrypto, configurable: true });
   w.TextEncoder = TextEncoder; w.TextDecoder = TextDecoder;
   if (opts.fetch) w.fetch = opts.fetch;
-  for (const f of ['assets/data.js', 'assets/examples.js', 'assets/example.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js']) {
+  for (const f of ['assets/data.js', 'assets/examples.js', 'assets/examples-ai.js', 'assets/example.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js']) {
     try { w.eval(read(f)); } catch (e) { errors.push(f + ': ' + e.message); }
   }
   opened.push(w);

@@ -34,6 +34,7 @@
     root.appendChild(el('div', 'aipick'));
     root.appendChild(el('div', 'aistate'));
     var info = el('div', 'aiinfo'); info.setAttribute('role', 'status'); info.setAttribute('aria-live', 'polite'); root.appendChild(info);
+    var exh = el('div', 'ex-host'); exh.id = 'ai-ex'; root.appendChild(exh);
     root.appendChild(el('p', 'note ai-rule'));
     ready = true;
   }
@@ -57,6 +58,7 @@
     var a = AIS.filter(function (x) { return x.id === cur; })[0];
     info.textContent = '';
     info.appendChild(el('b', null, a.name)); info.appendChild(el('span', 'mono ai-kind', tx(a.kind))); info.appendChild(el('p', null, tx(a.what)));
+    if (window.SSCExample) window.SSCExample.mount(document.getElementById('ai-ex'), window.SSC_AIEX && window.SSC_AIEX[cur], lang);
     root.querySelector('.ai-rule').textContent = tx(UI.rule) + ' ' + tx(UI.toolNote);
   }
   function setState(s) { state = s; if (core()) core().setState(s); draw(); }
