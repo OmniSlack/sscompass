@@ -185,6 +185,49 @@
       <h2 data-en="How I work with AI assistants, and how you can check it">Как работя с AI асистенти и как можеш да го провериш</h2>
       <p class="lead" data-en="This is AI-assisted work, and it says so. A number is published only with the command that produces it.">Това е работа с помощта на AI и го казва. Число се публикува само с командата, която го произвежда.</p>
 
+      <h3 class="sh" data-en="The working loop">Работният цикъл</h3>
+      <div class="arch card mdg">
+        <svg viewBox="0 0 1100 400" role="img" aria-label="Работен цикъл: изисквания от Мартин, код и тестове от AI, проверки, преглед от Мартин, запис; отхвърленото се връща към изискванията" data-en-aria="Working loop: requirements from Martin, code and tests by AI, checks, review by Martin, record; what is rejected returns to the requirements">
+          <defs>
+          <pattern id="chk" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#2e7d5b"/><rect width="8" height="8" fill="#16201b"/><rect x="8" y="8" width="8" height="8" fill="#16201b"/></pattern>
+          <pattern id="uro" width="18" height="12" patternUnits="userSpaceOnUse"><rect width="18" height="12" fill="#f6c744"/><path d="M0 12 L9 1 L18 12z" fill="#e2761b"/></pattern>
+          <pattern id="sea" width="40" height="20" patternUnits="userSpaceOnUse"><g fill="none" stroke="#26245a" stroke-opacity=".2" stroke-width="1.2"><circle cx="20" cy="20" r="6"/><circle cx="20" cy="20" r="12"/><circle cx="20" cy="20" r="18"/><circle cx="0" cy="10" r="6"/><circle cx="0" cy="10" r="12"/><circle cx="0" cy="10" r="18"/><circle cx="40" cy="10" r="6"/><circle cx="40" cy="10" r="12"/><circle cx="40" cy="10" r="18"/></g></pattern>
+        </defs>
+        <rect class="lane m" x="10" y="36" width="1080" height="140" rx="14"/><rect x="10" y="36" width="1080" height="140" rx="14" fill="url(#sea)"/><rect class="lane a" x="10" y="216" width="1080" height="140" rx="14"/><rect x="10" y="216" width="1080" height="140" rx="14" fill="url(#sea)"/>
+        <text class="d" x="22" y="47" text-anchor="start" data-en="MARTIN URUMOV">МАРТИН УРУМОВ</text>
+        <text class="d" x="22" y="227" text-anchor="start" data-en="AI ASSISTANTS">AI АСИСТЕНТИ</text>
+        <rect class="node hub" x="30" y="56" width="176" height="100" rx="12"/><rect class="band" x="44" y="52" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="190" cy="58" r="14"/><text x="190" y="64" text-anchor="middle">壱</text></g>
+        <text class="h" x="118" y="84" text-anchor="middle" data-en="1 · REQUIREMENTS">1 · ИЗИСКВАНИЯ</text>
+        <text class="d" x="118" y="106" text-anchor="middle" data-en="questions, acceptance criteria,">въпроси, критерии за приемане,</text>
+        <text class="d" x="118" y="124" text-anchor="middle" data-en="edge-case scenarios">гранични сценарии</text>
+        <rect class="node t2" x="246" y="236" width="176" height="100" rx="12"/><rect class="band" x="260" y="232" width="148" height="9" rx="2" fill="url(#uro)"/><g class="hanko" aria-hidden="true"><circle cx="406" cy="238" r="14"/><text x="406" y="244" text-anchor="middle">弐</text></g>
+        <text class="h" x="334" y="264" text-anchor="middle" data-en="2 · AI WRITES">2 · AI ПИШЕ</text>
+        <text class="d" x="334" y="286" text-anchor="middle" data-en="code and automated tests">код и автоматични тестове</text>
+        <text class="d" x="334" y="304" text-anchor="middle" data-en="Claude Code, Codex, Copilot">Claude Code, Codex, Copilot</text>
+        <rect class="node t3" x="462" y="146" width="176" height="100" rx="12"/><rect class="band" x="476" y="142" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="622" cy="148" r="14"/><text x="622" y="154" text-anchor="middle">参</text></g>
+        <text class="h" x="550" y="174" text-anchor="middle" data-en="3 · CHECKS">3 · ПРОВЕРКИ</text>
+        <text class="d" x="550" y="196" text-anchor="middle" data-en="both of us run them">и двамата ги пускат</text>
+        <text class="d" x="550" y="214" text-anchor="middle" data-en="raw log + counts">суров запис + брой</text>
+        <text class="d" x="550" y="232" text-anchor="middle" data-en="node --test · sha256sum -c">node --test · sha256sum -c</text>
+        <rect class="node hub" x="678" y="56" width="176" height="100" rx="12"/><rect class="band" x="692" y="52" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="838" cy="58" r="14"/><text x="838" y="64" text-anchor="middle">肆</text></g>
+        <text class="h" x="766" y="84" text-anchor="middle" data-en="4 · REVIEW">4 · ПРЕГЛЕД</text>
+        <text class="d" x="766" y="106" text-anchor="middle" data-en="keep or reject">пазя или отхвърлям</text>
+        <text class="d" x="766" y="124" text-anchor="middle" data-en="defects stay on record">дефектите се пазят</text>
+        <rect class="node t2" x="894" y="236" width="176" height="100" rx="12"/><rect class="band" x="908" y="232" width="148" height="9" rx="2" fill="url(#uro)"/><g class="hanko" aria-hidden="true"><circle cx="1054" cy="238" r="14"/><text x="1054" y="244" text-anchor="middle">伍</text></g>
+        <text class="h" x="982" y="264" text-anchor="middle" data-en="5 · RECORD">5 · ЗАПИС</text>
+        <text class="d" x="982" y="286" text-anchor="middle" data-en="AI commits files">AI комитва файлове,</text>
+        <text class="d" x="982" y="304" text-anchor="middle" data-en="I have reviewed">които съм прегледал</text>
+        <path class="ln" d="M206 106 L226 106 L226 286 L244 286"/>
+        <path class="ln" d="M422 286 L442 286 L442 196 L460 196"/>
+        <path class="ln" d="M638 196 L658 196 L658 106 L676 106"/>
+        <path class="ln" d="M854 106 L874 106 L874 286 L892 286"/>
+        <path class="ln dashln" d="M766 56 L766 20 L118 20 L118 54"/>
+        <text class="d" x="442" y="14" text-anchor="middle" data-en="rejected or defect found → back to the requirements">отхвърлено или открит дефект → обратно към изискванията</text>
+        </svg>
+        <ol class="steps mobile"><li><b data-en="1 · REQUIREMENTS">1 · ИЗИСКВАНИЯ</b><span data-en="Martin sets the questions, acceptance criteria and edge-case scenarios.">Мартин задава въпроси, критерии за приемане и гранични сценарии.</span></li><li><b data-en="2 · AI WRITES">2 · AI ПИШЕ</b><span data-en="The AI assistants write the code and the automated tests.">AI асистентите пишат кода и автоматичните тестове.</span></li><li><b data-en="3 · CHECKS">3 · ПРОВЕРКИ</b><span data-en="Both of us run the checks; a raw log and counts are kept.">Двамата пускат проверките; остава суров запис и брой.</span></li><li><b data-en="4 · REVIEW">4 · ПРЕГЛЕД</b><span data-en="Martin decides what is kept and what is rejected; what is rejected goes back to the requirements.">Мартин решава какво се пази и какво се отхвърля; отхвърленото се връща към изискванията.</span></li><li><b data-en="5 · RECORD">5 · ЗАПИС</b><span data-en="An AI commits the files Martin reviewed; the message names the proof.">AI комитва файловете, които Мартин е прегледал; съобщението назовава доказателството.</span></li></ol>
+      </div>
+      <p class="note" data-en="The loop repeats until the checks and the review agree. Findings made by an AI are attributed to the AI.">Цикълът се повтаря, докато проверките и прегледът се съгласят. Откритията на AI се приписват на AI.</p>
+
       <h3 class="sh" data-en="Who did what">Кой какво е правил</h3>
       <div class="tablewrap"><table class="tbl who">
         <thead><tr><th data-en="Part">Част</th><th>Martin Urumov</th><th data-en="AI coding assistants (Claude Code, Codex, GitHub Copilot)">AI асистенти (Claude Code, Codex, GitHub Copilot)</th></tr></thead>
@@ -284,5 +327,6 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 <script src="assets/personal.js"></script>
 <script src="assets/demo.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/rain.js"></script>
 </body>
 </html>

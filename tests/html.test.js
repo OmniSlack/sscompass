@@ -55,11 +55,11 @@ test('English text contains no Cyrillic and Bulgarian originals differ from it',
 test('aria-labels that have a translation have an English version', () => { for (const e of doc.querySelectorAll('[data-en-aria]')) { assert.ok(e.getAttribute('aria-label')); assert.ok(e.dataset.enAria.trim()); } });
 
 test('the architecture diagram is an accessible image with a text alternative', () => {
-  const svg = doc.querySelector('.arch svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label'));
-  assert.equal(doc.querySelectorAll('.arch ol.steps li').length, 9); assert.equal(doc.querySelectorAll('.arch svg rect.node').length, 10);
+  const svg = doc.querySelector('#panel-architecture .arch svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label'));
+  assert.equal(doc.querySelectorAll('#panel-architecture .arch ol.steps li').length, 9); assert.equal(doc.querySelectorAll('#panel-architecture .arch svg rect.node').length, 10);
 });
 test('the diagram names the folders that implement each box', () => {
-  const t = doc.querySelector('.arch svg').textContent; for (const f of ['ai-proposal-evaluator', 'agent-execution-control', 'agent-action-verifier / envelope.js', 'agent-action-verifier / verifier.js']) assert.ok(t.includes(f), f);
+  const t = doc.querySelector('#panel-architecture .arch svg').textContent; for (const f of ['ai-proposal-evaluator', 'agent-execution-control', 'agent-action-verifier / envelope.js', 'agent-action-verifier / verifier.js']) assert.ok(t.includes(f), f);
 });
 test('the diagram and the table agree that the planner and the adapter are not built', () => {
   const t = doc.getElementById('panel-architecture').textContent; assert.match(t, /ПЛАНИРОВЧИК|PLANNER/); assert.match(t, /само дизайн/); assert.match(t, /не е построен/); assert.match(t, /не е направено/);
@@ -93,8 +93,8 @@ test('the personal panel is empty markup until unlocked: no data in the HTML', (
 test('public panels contain no form controls', () => { for (const id of ['work', 'architecture', 'method', 'about']) assert.equal(doc.querySelectorAll('#panel-' + id + ' input, #panel-' + id + ' textarea').length, 0, id); });
 test('the dialog has a labelled close button', () => { assert.ok(doc.querySelector('dialog#dlg #dlg-close[aria-label]')); });
 
-test('the page loads exactly five local scripts in the right order, no inline scripts or handlers', () => {
-  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/app.js']);
+test('the page loads exactly six local scripts in the right order, no inline scripts or handlers', () => {
+  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/app.js', 'assets/rain.js']);
   for (const s of srcs) assert.ok(exists(s), s); assert.equal(doc.querySelectorAll('script:not([src])').length, 0); assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
 test('the page makes no third-party requests (fonts are self-hosted)', () => { assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], ['https://github.com/OmniSlack/martin-urumov-portfolio']); });
@@ -106,4 +106,8 @@ test('a skip link and a no-script fallback exist', () => { assert.ok(doc.querySe
 test('the Content-Security-Policy forbids third-party and inline scripts', () => {
   const c = doc.querySelector('meta[http-equiv="Content-Security-Policy"]').content; assert.match(c, /script-src 'self'/); assert.match(c, /object-src 'none'/); assert.match(c, /connect-src 'self'/);
   assert.ok(!/unsafe-eval/.test(c)); assert.ok(!/script-src[^;]*unsafe-inline/.test(c));
+});
+test('the method tab has a working-loop diagram with five steps, an accessible label and a mobile text version', () => {
+  const svg = doc.querySelector('#panel-method .mdg svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label')); assert.equal(svg.querySelectorAll('rect.node').length, 5);
+  assert.equal(doc.querySelectorAll('#panel-method .mdg ol.steps li').length, 5); assert.match(svg.textContent, /Мартин Урумов|МАРТИН УРУМОВ/); assert.match(svg.textContent, /AI АСИСТЕНТИ/);
 });
