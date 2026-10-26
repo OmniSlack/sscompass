@@ -61,7 +61,7 @@ test('every public tab has real content', () => {
   const p = page(); for (const t of ['home', 'work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);
 });
 test('Work shows all fifteen projects; About shows five links and the CV button', () => {
-  const p = page(); assert.equal(p.doc.querySelectorAll('#panel-work .proj').length, 15); assert.equal(p.doc.querySelectorAll('#panel-about #socials a').length, 5); assert.ok(p.doc.querySelector('#panel-about #cv-link'));
+  const p = page(); assert.equal(p.doc.querySelectorAll('#panel-work .proj').length, 15); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5); assert.ok(p.doc.querySelector('footer #cv-link'));
 });
 test('the Method tab lists the three background decks', () => { const p = page(); assert.equal(p.doc.querySelectorAll('#panel-method #decks a').length, 3); });
 test('the public tabs contain none of the old command-centre text or the unresolved memory question', () => {

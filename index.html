@@ -63,6 +63,14 @@
         <a class="tile" role="listitem" href="#method"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 0-14-5.3M4 12a8 8 0 0 0 14 5.3"/><path d="M6 3v4h4M18 21v-4h-4"/></svg><b data-en="Method">Метод</b><span data-en="Who did what, and how to check it">Кой какво е правил и как да го провериш</span></a>
         <a class="tile" role="listitem" href="#about"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><b data-en="About">За мен</b><span data-en="CV, languages and contact">CV, езици и контакт</span></a>
       </div>
+
+      <h3 class="sh" data-en="What you are looking at">Какво гледаш</h3>
+      <p class="plain" data-en="This is the whole site as one map. Drag to move, pinch to zoom, tap › to open a branch, tap a box and press Open to go there.">Това е целият сайт като една карта. Влачи за движение, щипни за мащаб, натисни › за да отвориш клон, натисни кутия и „Отвори“, за да отидеш там.</p>
+      <div id="home-map"></div>
+
+      <h3 class="sh" data-en="Decks">Презентации</h3>
+      <p class="plain" data-en="Three architecture decks. The first slide of The OmniEcho Architecture has a blueprint you can tap: 16 rules, 10 gates, 8 nodes, 5 axes and 4 questions, each with its specifics.">Три презентации за архитектурата. Първият слайд на The OmniEcho Architecture има чертеж, който можеш да натискаш: 16 правила, 10 гейта, 8 възела, 5 оси и 4 въпроса, всяко с подробностите си.</p>
+      <div class="deckrow" id="decks-home"></div>
     </section>
 
     <section class="s panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work" tabindex="-1" hidden>
@@ -299,7 +307,7 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 
     <section class="s panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1" hidden>
       <div class="mono">// <span data-en="about">за мен</span></div>
-      <h2><span data-en="Martin Urumov">Мартин Урумов</span></h2>
+      <h2 data-en="Who I am">Кой съм аз</h2>
       <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote and international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен към отдалечена и международна работа.</p>
 
       <div class="aboutgrid">
@@ -317,12 +325,7 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
         </div>
       </div>
 
-      <div class="cvrow">
-        <a class="btn primary" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="Download CV">Изтегли CV</span> <small id="cv-note">PDF · EN</small></a>
-        <span class="owner-both">Мартин Урумов · Martin Urumov</span>
-      </div>
-      <h3 class="sh" data-en="Find me">Къде да ме намериш</h3>
-      <div class="socials" id="socials"></div>
+      <p class="plain" data-en="My CV and all my profiles are in the footer, at the bottom right of every page.">Моето CV и всички профили са в долния десен ъгъл на всяка страница.</p>
     </section>
 
     <section class="s panel" id="panel-personal" role="tabpanel" aria-labelledby="tab-personal" tabindex="-1" hidden>
@@ -341,7 +344,13 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 </dialog>
 
 <footer>
-  <div class="wrap">Мартин Урумов · Martin Urumov · <span id="year"></span></div>
+  <div class="wrap foot">
+    <div class="foot-name">Мартин Урумов · Martin Urumov · <span id="year"></span></div>
+    <nav class="foot-contacts" aria-label="Контакти" data-en-aria="Contacts">
+      <a class="pill cv" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span class="n" data-en="CV">CV</span> <small id="cv-note">PDF · EN</small></a>
+      <span class="socials" id="socials"></span>
+    </nav>
+  </div>
 </footer>
 
 <script src="assets/data.js"></script>

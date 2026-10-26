@@ -82,7 +82,7 @@ test('English: every translatable element shows its English text; back to Bulgar
   p.w.SSCApp.setLang('bg'); assert.deepEqual([...p.doc.querySelectorAll('[data-en]')].map((e) => e.textContent), before);
 });
 test('English mode has no Cyrillic outside the owner name lines', () => {
-  const p = page({ lang: 'en-US' }); const allowed = new Set([...p.doc.querySelectorAll('.owner-both, footer')]); const walker = p.doc.createTreeWalker(p.doc.body, p.w.NodeFilter.SHOW_TEXT); let n; const bad = [];
+  const p = page({ lang: 'en-US' }); const allowed = new Set([...p.doc.querySelectorAll('footer')]); const walker = p.doc.createTreeWalker(p.doc.body, p.w.NodeFilter.SHOW_TEXT); let n; const bad = [];
   while ((n = walker.nextNode())) { if (!CYRILLIC.test(n.nodeValue)) continue; const el = n.parentElement; let ok = false; for (let e = el; e; e = e.parentElement) if (allowed.has(e)) ok = true; if (!ok && !['SCRIPT', 'STYLE'].includes(el.tagName)) bad.push(n.nodeValue.trim().slice(0, 50)); }
   assert.deepEqual(bad, []);
 });
@@ -101,7 +101,7 @@ test('five contact cards, all live links that open safely', () => {
 });
 for (const s of D.socials) {
   test(`contact ${s.name} renders its exact URL and handle`, () => {
-    const p = page(); const a = [...p.doc.querySelectorAll('#socials a')].find((x) => x.querySelector('h3').textContent === s.name); assert.ok(a); assert.equal(a.href, s.url); assert.equal(a.querySelector('.mono').textContent, s.handle);
+    const p = page(); const a = [...p.doc.querySelectorAll('#socials a')].find((x) => x.querySelector('.n').textContent === s.name); assert.ok(a); assert.equal(a.href, s.url); assert.equal(a.getAttribute('title'), s.handle);
   });
 }
 test('the CV buttons point at the PDF', () => { const p = page(); assert.equal(p.doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf'); assert.equal(p.doc.getElementById('cv-note').textContent, 'PDF · in Bulgarian'); });
@@ -203,13 +203,14 @@ test('ai: with reduced motion the core stays still even on the tab', () => {
 });
 
 /* --- public mind maps --- */
+const vis = (p, sel) => p.doc.querySelectorAll(sel + ' .mm-n:not(.leaving)');
 test('map: the Work tab can switch from the list to a map of the fifteen projects by kind', () => {
   const p = page(); p.click(p.doc.querySelector('#work-view [data-v=map]')); assert.ok(!p.doc.getElementById('work-map').hidden); assert.ok(p.doc.getElementById('projects-grid').hidden);
   p.doc.querySelector('#work-map .mm-b').click();
-  const leaves = [...p.doc.querySelectorAll('#work-map .mm-n.d2 > .mm-row > .mm-node')].map((n) => n.textContent); for (const id of D.projects.map((x) => x.id)) assert.ok(leaves.includes(id), id);
+  const leaves = Array.from(p.doc.querySelectorAll('#work-map .mm-n.d2:not(.leaving) .mm-node'), (n) => n.textContent); for (const id of D.projects.map((x) => x.id)) assert.ok(leaves.includes(id), id);
 });
 test('map: the kind nodes show how many projects each holds', () => {
-  const p = page(); const kinds = Array.from(p.doc.querySelectorAll('#work-map .mm-n.d1 > .mm-row > .mm-node'), (n) => n.textContent);
+  const p = page(); const kinds = Array.from(p.doc.querySelectorAll('#work-map .mm-n.d1:not(.leaving) .mm-node'), (n) => n.textContent);
   assert.deepEqual(kinds, Array.from(D.kinds).filter((k) => k.id !== 'all').map((k) => k.label.en + ' · ' + count(k.id)));
 });
 test('map: choosing a project in the map and pressing Open shows the same dialog as the list', () => {
@@ -222,11 +223,41 @@ test('map: switching back to the list shows the filters and the grid again', () 
   assert.ok(!p.doc.getElementById('projects-grid').hidden); assert.ok(!p.doc.getElementById('filters').hidden); assert.ok(p.doc.getElementById('work-map').hidden);
 });
 test('map: the method map has the five branches and follows the language', () => {
-  const p = page(); assert.equal(p.doc.querySelectorAll('#method-map .mm-root > .mm-n > .mm-kids > .mm-n').length, 5);
+  const p = page(); assert.equal(vis(p, '#method-map').length, 1 + 5);
   p.w.SSCApp.setLang('bg'); assert.match(p.doc.getElementById('method-map').textContent, /Кой какво е правил/);
 });
-test('map: tapping the arrow opens and closes a branch, and Close all collapses to the root', () => {
-  const p = page(); const root = '#method-map'; const tg = p.doc.querySelector(root + ' .mm-tg[data-path="r.0"]'); assert.ok(tg); assert.equal(p.doc.querySelector(root + ' .mm-n.d1').getAttribute('aria-expanded'), 'false');
-  p.click(tg); assert.equal(p.doc.querySelector(root + ' .mm-n.d1').getAttribute('aria-expanded'), 'true');
-  p.doc.querySelectorAll(root + ' .mm-b')[1].click(); assert.equal(p.doc.querySelectorAll(root + ' .mm-kids').length, 1);
+test('map: tapping the arrow opens a branch, and tapping it again closes it with everything inside', () => {
+  const p = page(); const root = '#method-map'; const tg = () => p.doc.querySelector(root + ' .mm-tg[data-path="r.0"]');
+  assert.equal(p.doc.querySelector(root + ' .mm-n[data-path="r.0"]').getAttribute('aria-expanded'), 'false');
+  p.click(tg()); assert.equal(p.doc.querySelector(root + ' .mm-n[data-path="r.0"]').getAttribute('aria-expanded'), 'true'); assert.ok(vis(p, root).length > 6);
+  p.click(p.doc.querySelector(root + ' .mm-tg[data-path="r.0.0"]')); assert.equal(p.doc.querySelector(root + ' .mm-n[data-path="r.0.0"]').getAttribute('aria-expanded'), 'true');
+  p.click(tg()); assert.equal(vis(p, root).length, 6);   // the inner branch is closed too
+  p.click(tg()); assert.equal(p.doc.querySelector(root + ' .mm-n[data-path="r.0.0"]').getAttribute('aria-expanded'), 'false');   // reopening does not bring the old inner state back
+});
+test('map: Close all really closes everything down to the root, and the root can be opened again', () => {
+  const p = page(); const root = '#method-map'; p.doc.querySelectorAll(root + ' .mm-b')[1].click(); assert.equal(vis(p, root).length, 1);
+  p.click(p.doc.querySelector(root + ' .mm-tg[data-path="r"]')); assert.equal(vis(p, root).length, 6);
+});
+test('map: Open all shows every node, and Fit, Zoom in and Zoom out exist as buttons', () => {
+  const p = page(); const root = '#method-map'; p.doc.querySelectorAll(root + ' .mm-b')[0].click(); assert.ok(vis(p, root).length > 25);
+  assert.equal(p.doc.querySelectorAll(root + ' .mm-bar .mm-b').length, 5);
+});
+test('map: zooming with the buttons changes the scale of the canvas, and Fit restores it', () => {
+  const p = page(); const root = '#method-map'; const cv = p.doc.querySelector(root + ' .mm-canvas'); const k = () => +/scale\(([\d.]+)\)/.exec(cv.style.transform)[1];
+  const k0 = k(); p.doc.querySelectorAll(root + ' .mm-bar .mm-b')[4].click(); assert.ok(k() > k0); p.doc.querySelectorAll(root + ' .mm-bar .mm-b')[3].click(); p.doc.querySelectorAll(root + ' .mm-bar .mm-b')[3].click(); assert.ok(k() < k0);
+  p.doc.querySelectorAll(root + ' .mm-bar .mm-b')[2].click(); assert.ok(Math.abs(k() - k0) < 0.4);
+});
+test('map: nodes are placed as soft curves, not boxes inside nested lists', () => {
+  const p = page(); assert.ok(p.doc.querySelector('#method-map svg.mm-links')); assert.equal(p.doc.querySelectorAll('#method-map ul').length, 0); assert.ok(p.doc.querySelectorAll('#method-map path.mm-link').length >= 5);
+});
+test('home: the home page has the site map; choosing a branch and pressing Open goes to that tab', () => {
+  const p = page(); assert.equal(vis(p, '#home-map').length, 1 + 7);
+  const node = [...p.doc.querySelectorAll('#home-map .mm-node')].find((n) => /AI platforms/.test(n.textContent)); node.click(); const open = p.doc.querySelector('#home-map .mm-detail .btn'); assert.ok(open); open.click(); assert.equal(p.w.SSCApp.tab(), 'ai');
+});
+test('home: the three decks are on the home page as cards that open the first slide', () => {
+  const p = page(); const a = [...p.doc.querySelectorAll('#panel-home #decks-home a.deck')]; assert.equal(a.length, 3); for (const x of a) assert.match(x.getAttribute('href'), /^decks\/index\.html#(omniecho|coherence|dream)\/1$/);
+});
+test('footer: the CV and all five profiles sit in the footer, and the About page has no contact grid or oversized name', () => {
+  const p = page(); assert.ok(p.doc.querySelector('footer #cv-link')); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5);
+  assert.equal(p.doc.querySelectorAll('#panel-about #socials, #panel-about #cv-link, #panel-about .owner-both').length, 0);
 });

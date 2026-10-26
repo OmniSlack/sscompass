@@ -218,7 +218,7 @@ const fetchWith = (blob) => (url) => Promise.resolve(/maps\.enc\.json/.test(Stri
 test('maps: after unlocking, the sealed maps file is read with the same passphrase and drawn as a map', async () => {
   const blob = await sealMaps('omnivorous:' + PASS); const p = await openGate({ fetch: fetchWith(blob) }); await createVault(p, SEED);
   await section(p, 'maps'); await until(() => p.doc.querySelector('#pview .mm-node'));
-  assert.match($(p, 'pview').textContent, /Test map/); assert.equal(p.doc.querySelectorAll('#pview .mm-root > .mm-n > .mm-kids > .mm-n').length, 2);
+  assert.match($(p, 'pview').textContent, /Test map/); assert.equal(p.doc.querySelectorAll('#pview .mm-n.d1:not(.leaving)').length, 2);
   p.doc.querySelector('#pview .mm-b').click(); const t = $(p, 'pview').textContent; for (const s of ['Leaf A', 'Leaf B', 'Leaf C']) assert.ok(t.includes(s), s);
 });
 test('maps: a wrong passphrase cannot read the maps file', async () => {

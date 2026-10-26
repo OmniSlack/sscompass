@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var T = function (bg, en) { return { bg: bg, en: en }; };
-  var lang = 'bg', mmWork = null, mmMethod = null, view = 'list';
+  var lang = 'bg', mmHome = null, mmWork = null, mmMethod = null, view = 'list';
   var UI = { list: T('Списък', 'List'), map: T('Карта', 'Map'), view: T('Изглед', 'View') };
   function tx(v) { return typeof v === 'string' ? v : (v[lang] || v.en); }
 
@@ -42,6 +42,29 @@
     }) };
   }
 
+  function homeTree() {
+    var D = window.SSC; if (!D) return { t: '—' };
+    var kinds = D.kinds.filter(function (k) { return k.id !== 'all'; }).map(function (k) {
+      var n = D.projects.filter(function (p) { return p.tags.indexOf(k.id) > -1; }).length; return { t: { bg: k.label.bg + ' · ' + n, en: k.label.en + ' · ' + n }, go: 'work' };
+    });
+    var G = function (bg, en, go) { return { t: T(bg, en), go: go }; };
+    var deck = function (id, name) { return { t: name, href: 'decks/index.html#' + id + '/1', note: T('Презентация. Първият слайд на OmniEcho има чертеж, който можеш да натискаш.', 'A deck. The first OmniEcho slide has a blueprint you can tap.') }; };
+    return { t: D.owner, note: T('Оценка на поведението на AI, контрол на работните процеси на агенти и проверка на правила в софтуера. Всяко число идва с командата, която го произвежда.', 'AI behaviour evaluation, agent workflow controls and software rule checks. Every number comes with the command that produces it.'), c: [
+      { t: T('Проекти · 15', 'Work · 15 projects'), go: 'work', note: T('Петнайсет проекта, всеки с доказателство и пример със стъпки.', 'Fifteen projects, each with proof and a worked example with steps.'), c: kinds },
+      { t: T('Архитектура', 'Architecture'), go: 'architecture', note: T('Мислене, предлагане, разрешаване, изпълнение и проверка са пет различни неща и никое не може да създаде друго.', 'Thinking, proposing, permitting, executing and verifying are five different things, and none can create another.'), c: [
+        G('Човешка цел', 'Human goal', 'architecture'), G('Оценител (построен)', 'Evaluator (built)', 'architecture'), G('Планировчик (само дизайн)', 'Planner (design only)', 'architecture'), G('Плик на предложението', 'Proposal envelope', 'architecture'),
+        G('Двата ключа', 'Two keys', 'architecture'), G('Контрол на изпълнението (построен)', 'Execution control (built)', 'architecture'), G('Бариера пред изпълнение', 'Dispatch barrier', 'architecture'), G('Адаптер (не е построен)', 'Adapter (not built)', 'architecture'), G('Проверяващ (построен)', 'Verifier (built)', 'architecture')] },
+      { t: T('Как работи', 'How it works'), go: 'demo', note: T('Стъпка по стъпка: как едно предложение минава, чака или спира.', 'Step by step: how a proposal passes, holds or stops.'), c: [G('Контролен цикъл', 'Control loop', 'demo'), G('Оценител на предложения', 'Proposal evaluator', 'demo'), G('Проверка на твърдения', 'Claim checker', 'demo')] },
+      { t: T('AI платформи', 'AI platforms'), go: 'ai', note: T('Един работен модел, няколко платформи.', 'One working model, several platforms.'), c: [G('Claude Code', 'Claude Code', 'ai'), G('Codex', 'Codex', 'ai'), G('GPT', 'GPT', 'ai'), G('Gemini', 'Gemini', 'ai')] },
+      { t: T('Метод', 'Method'), go: 'method', note: T('Кой какво е правил и как да го провериш.', 'Who did what, and how to check it.'), c: METHOD.c.map(function (b) { return { t: b.t, go: 'method' }; }) },
+      { t: T('Презентации', 'Decks'), c: D.decks.map(function (d) { return deck(d.url.replace(/^.*#(\w+)\/.*$/, '$1'), d.title); }) },
+      { t: T('CV и контакти', 'CV and contacts'), note: T('В долния десен ъгъл на всяка страница.', 'At the bottom right of every page.') }
+    ] };
+  }
+  function mountHome() {
+    var box = document.getElementById('home-map'); if (!box) return;
+    mmHome = window.SSCMindmap.create(box, homeTree(), { lang: lang, startDepth: 1, onPick: function (n) { if (n.go && window.SSCApp) window.SSCApp.showTab(n.go, { scroll: true, focus: true }); } });
+  }
   function mountWork() {
     var box = document.getElementById('work-map'); if (!box) return;
     mmWork = window.SSCMindmap.create(box, projectsTree(), { lang: lang, startDepth: 1, onPick: function (n) { if (window.SSCApp && window.SSCApp.openProject) window.SSCApp.openProject(n.id); } });
@@ -70,6 +93,7 @@
   window.SSCMaps = {
     render: function (l) {
       lang = l === 'en' ? 'en' : 'bg';
+      if (!mmHome) mountHome(); else mmHome.setLang(lang);
       if (!mmWork) mountWork(); else mmWork.setLang(lang);
       if (!mmMethod) mountMethod(); else mmMethod.setLang(lang);
       apply();

@@ -88,15 +88,16 @@
 
   /* ---------- фонови презентации и контакти ---------- */
   function renderDecks() {
-    $('decks').innerHTML = D.decks.map(function (d) {
+    var html = D.decks.map(function (d) {
       return '<a class="card deck" href="' + esc(safeLink(d.url)) + '"><h3>' + esc(d.title) + '</h3><span class="mono">' + esc(tx(d.note)) + '</span><span class="go">' + esc(tx(UI.deckBtn)) + ' →</span></a>';
     }).join('');
+    $('decks').innerHTML = html; if ($('decks-home')) $('decks-home').innerHTML = html;
   }
   function renderSocials() {
     $('socials').innerHTML = D.socials.map(function (s) {
       var u = safeUrl(s.url);
-      if (u) return '<a class="card soc" target="_blank" rel="noopener noreferrer" href="' + esc(u) + '"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(s.handle || tx(UI.profile)) + '</span><span class="go">' + esc(tx(UI.open)) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></span></a>';
-      return '<div class="card soc off"><h3>' + esc(s.name) + '</h3></div>';
+      if (u) return '<a class="pill" target="_blank" rel="noopener noreferrer" href="' + esc(u) + '" title="' + esc(s.handle || tx(UI.profile)) + '"><span class="n">' + esc(s.name) + '</span><span class="sr"> ' + esc(tx(UI.newTab)) + '</span></a>';
+      return '<span class="pill off"><span class="n">' + esc(s.name) + '</span></span>';
     }).join('');
   }
   $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#'); $('cv-hero').setAttribute('href', safeFile(D.cv.url) || '#');

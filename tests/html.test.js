@@ -85,7 +85,7 @@ test('the about tab shows the CV button, the languages and the contact grid cont
   assert.ok(doc.getElementById('cv-link')); assert.ok(doc.getElementById('socials')); assert.match(doc.getElementById('panel-about').textContent, /Български: роден/);
 });
 test('the owner name appears in both languages in the about tab and the footer', () => {
-  assert.match(doc.querySelector('.owner-both').textContent, /Мартин Урумов.*Martin Urumov/); assert.match(doc.querySelector('footer').textContent, /Мартин Урумов.*Martin Urumov/);
+  assert.ok(!doc.querySelector('.owner-both'), 'no oversized name block'); assert.match(doc.querySelector('footer').textContent, /Мартин Урумов.*Martin Urumov/);
 });
 test('the personal panel is empty markup until unlocked: no data in the HTML', () => {
   assert.equal(doc.getElementById('p-root').innerHTML.trim(), ''); assert.ok(!/NomNom|GapInTheGap|Kompas|Selenium|Snapchat|Twitch|The Game/.test(read('index.html')));
