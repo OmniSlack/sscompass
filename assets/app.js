@@ -1,11 +1,11 @@
-/* SSC Compass — поведение на страницата / page behaviour:
-   език BG/EN, избор на AI, състояния, умения, проекти, контакти. */
+/* Martin Urumov — портфолио: език BG/EN, табове, проекти, контакти.
+   Личният таб е в personal.js и vault.js. */
 (function () {
   'use strict';
-  var D = window.SSC, core = window.SSCCore || null;
+  var D = window.SSC;
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
-  function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+  function safeUrl(u) { return /^https?:\/\/.+/i.test(u || '') ? u : ''; }
   function safeLink(u) { return /^(https?:\/\/.+|decks\/[\w\-.\/]+(#[\w\/-]+)?)$/i.test(u || '') ? u : ''; }
   function safeFile(u) { return /^(https?:\/\/|[\w\-\/.]+\.pdf$)/i.test(u || '') ? u : ''; }
 
@@ -18,138 +18,47 @@
   }
   function tx(v) { return v && typeof v === 'object' ? (v[lang] != null ? v[lang] : v.bg) : (v == null ? '' : v); }
   var UI = {
-    states: [['idle', { bg: 'Покой', en: 'Idle' }], ['listening', { bg: 'Слуша', en: 'Listening' }], ['working', { bg: 'Работи', en: 'Working' }], ['speaking', { bg: 'Говори', en: 'Speaking' }], ['error', { bg: 'Грешка', en: 'Error' }]],
-    auto: { bg: 'Авто', en: 'Auto' }, pause: { bg: 'Пауза на движението', en: 'Pause motion' },
-    mode: { bg: 'Режим', en: 'Mode' }, autoWord: { bg: 'авто', en: 'auto' },
-    filters: [['all', { bg: 'Всички', en: 'All' }], ['system', { bg: 'Системи', en: 'Systems' }], ['deck', { bg: 'Презентации', en: 'Decks' }]],
-    kind: { time: { bg: 'по график', en: 'on a schedule' }, event: { bg: 'при събитие', en: 'when something happens' }, manual: { bg: 'ръчно', en: 'manual' } },
-    task: { bg: 'задача', en: 'task' }, skill: { bg: 'умение', en: 'skill' }, auto2: { bg: 'автоматизация', en: 'automation' },
-    more: { bg: 'Подробности →', en: 'Details →' }, newTab: { bg: '(отваря се в нов таб)', en: '(opens in a new tab)' }, open: { bg: 'Отвори →', en: 'Open →' }, profile: { bg: 'профил', en: 'profile' }, soon: { bg: 'линк скоро', en: 'link soon' },
-    title: { bg: 'SSC Compass · Мартин Урумов', en: 'SSC Compass · Martin Urumov' },
-    desc: { bg: 'SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI. Мартин Урумов / Martin Urumov.', en: 'SSC Compass (Shadow Somiyo Compass): a personal command centre built around my work with AI. Martin Urumov / Мартин Урумов.' },
-    routes: [
-      { q: { bg: 'Покажи ми приоритетите за днес', en: 'Show me my priorities for today' }, p: [94, 5, 1], why: { bg: 'Отговорът вече е записан. Не е нужен модел, затова минава на ниво 1.', en: 'The answer is already saved. No model is needed, so it goes to tier 1.' } },
-      { q: { bg: 'Обобщи новините в AI днес', en: "Summarise today's AI news" }, p: [6, 84, 10], why: { bg: 'Нужно е кратко мислене, но не истинска работа. Малък бърз модел стига.', en: 'It needs a little thinking, but not real work. A small quick model is enough.' } },
-      { q: { bg: 'Направи обяснителен доклад за разликата между два модела', en: 'Write an explainer on the difference between two models' }, p: [2, 8, 90], why: { bg: 'Дълга работа с файлове. Отваря се терминал с Claude, Codex или Gemini.', en: 'Long work with files. A terminal opens with Claude, Codex or Gemini.' } }
-    ],
-    tiers: [{ bg: 'Ниво 1 · правила', en: 'Tier 1 · rules' }, { bg: 'Ниво 2 · малък модел', en: 'Tier 2 · small model' }, { bg: 'Ниво 3 · истинска работа', en: 'Tier 3 · real work' }]
+    title: { bg: 'Мартин Урумов · Портфолио', en: 'Martin Urumov · Portfolio' },
+    desc: { bg: 'Мартин Урумов / Martin Urumov: оценка на поведението на AI, контрол на работните процеси на агенти и проверка на правила в софтуера. Петнайсет проекта с доказателства, които могат да се повторят.', en: 'Martin Urumov / Мартин Урумов: AI behaviour evaluation, agent workflow controls and software rule checks. Fifteen projects with evidence you can re-run.' },
+    proof: { bg: 'Доказателство', en: 'Proof' }, limits: { bg: 'Какво не доказва', en: 'What it does not prove' }, why: { bg: 'Какво прави', en: 'What it does' },
+    points: { bg: 'Ключови неща', en: 'Key points' }, folder: { bg: 'Папка в хранилището', en: 'Folder in the repository' },
+    more: { bg: 'Отвори', en: 'Open' }, open: { bg: 'Отвори →', en: 'Open →' }, profile: { bg: 'профил', en: 'profile' },
+    newTab: { bg: '(отваря се в нов таб)', en: '(opens in a new tab)' },
+    private: { bg: 'Хранилището още не е публично.', en: 'The repository is not public yet.' },
+    deckBtn: { bg: 'Отвори', en: 'Open' }
   };
 
-  /* ---------- избор на AI ---------- */
-  var current = D.ais[0];
-  $('ai-switch').innerHTML = D.ais.map(function (a, i) {
-    return '<button data-ai="' + a.id + '" aria-pressed="' + (i === 0) + '">' + esc(a.name) + '</button>';
-  }).join('');
-  function setAI(id, instant) {
-    var a = D.ais.filter(function (x) { return x.id === id; })[0]; if (!a) return;
-    current = a;
-    var root = document.documentElement.style;
-    root.setProperty('--accent-rgb', a.accent); root.setProperty('--accent2-rgb', a.accent2);
-    $('ai-name').textContent = a.name; $('ai-sub').textContent = a.sub;
-    Array.prototype.forEach.call($('ai-switch').children, function (b) { b.setAttribute('aria-pressed', b.dataset.ai === id); });
-    if (core) core.setAI(id, instant);
-    readout();
-    try { localStorage.setItem('ssc-ai', id); } catch (e) {}
-  }
-  $('ai-switch').addEventListener('click', function (e) { if (e.target.dataset.ai) setAI(e.target.dataset.ai); });
-
-  /* ---------- състояния на ядрото ---------- */
-  var state = 'idle', auto = true, autoTimer = null, autoIdx = 0;
-  function renderStates() {
-    $('states').innerHTML = UI.states.map(function (s) { return '<button data-s="' + s[0] + '" aria-pressed="' + (s[0] === state) + '">' + esc(tx(s[1])) + '</button>'; }).join('') +
-      '<span class="sep"></span><button id="auto" aria-pressed="' + auto + '">' + esc(tx(UI.auto)) + '</button><button id="pause" aria-pressed="' + !!(core && core.isPaused()) + '">' + esc(tx(UI.pause)) + '</button>';
-  }
-  function readout() {
-    var label = tx(UI.states.filter(function (s) { return s[0] === state; })[0][1]);
-    $('readout').textContent = tx(UI.mode) + ' ' + current.name + ' · ' + label.toLowerCase() + (auto ? ' · ' + tx(UI.autoWord) : '');
-  }
-  function setState(s) {
-    state = s; if (core) core.setState(s);
-    var ix = ['idle', 'listening', 'working', 'speaking'].indexOf(s); if (ix > -1) autoIdx = ix;
-    Array.prototype.forEach.call($('states').querySelectorAll('[data-s]'), function (b) { b.setAttribute('aria-pressed', b.dataset.s === s); });
-    readout();
-  }
-  function setAuto(on) {
-    auto = on; var b = $('auto'); if (b) b.setAttribute('aria-pressed', on);
-    clearInterval(autoTimer);
-    if (on) autoTimer = setInterval(function () {
-      var order = ['idle', 'listening', 'working', 'speaking']; autoIdx = (autoIdx + 1) % order.length; setState(order[autoIdx]);
-    }, 4500);
-    readout();
-  }
-  $('states').addEventListener('click', function (e) {
-    var t = e.target;
-    if (t.dataset.s) { setAuto(false); setState(t.dataset.s); }
-    else if (t.id === 'auto') setAuto(!auto);
-    else if (t.id === 'pause') { var p = !(core && core.isPaused()); if (core) core.setPaused(p); t.setAttribute('aria-pressed', p); }
-  });
-
-  /* ---------- рутиране: илюстративен пример ---------- */
-  var routeIdx = 0;
-  function renderPicks() {
-    $('picks').innerHTML = UI.routes.map(function (r, i) { return '<button data-r="' + i + '" aria-pressed="' + (i === routeIdx) + '">' + (lang === 'bg' ? '„' : '“') + esc(tx(r.q)) + (lang === 'bg' ? '“' : '”') + '</button>'; }).join('');
-  }
-  function showRoute(i, rebuild) {
-    routeIdx = i; var r = UI.routes[i], win = r.p.indexOf(Math.max.apply(null, r.p));
-    if (rebuild || !$('picks').children.length) renderPicks();
-    else Array.prototype.forEach.call($('picks').children, function (b, k) { b.setAttribute('aria-pressed', k === i); });
-    $('bars').innerHTML = UI.tiers.map(function (n, k) {
-      return '<div class="bar' + (k === win ? ' win' : '') + '"><span>' + esc(tx(n)) + '</span><span class="tr"><i data-w="' + r.p[k] + '"></i></span><span>' + r.p[k] + '%</span></div>';
-    }).join('');
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
-      Array.prototype.forEach.call($('bars').querySelectorAll('i'), function (el) { el.style.width = el.dataset.w + '%'; });
-    }); });
-    $('verdict').innerHTML = '<b>' + esc(tx(UI.tiers[win])) + '.</b> ' + esc(tx(r.why));
-  }
-  $('picks').addEventListener('click', function (e) { if (e.target.dataset.r !== undefined) showRoute(+e.target.dataset.r); });
-
-  /* ---------- умения ---------- */
-  function renderDomains() {
-    var on = Array.prototype.map.call($('domains').children, function (c) { return c.classList.contains('on'); });
-    $('domains').innerHTML = D.domains.map(function (d) {
-      return '<div class="card dom">' +
-        '<div class="row">' + esc(tx(d.name)) + '</div>' +
-        '<div class="row"><small>' + tx(UI.task) + '</small>' + esc(tx(d.task)) + '</div>' +
-        '<div class="row"><small>' + tx(UI.skill) + '</small><span class="sk">' + esc(d.skill) + '<em>' + esc(tx(d.note)) + '</em></span></div>' +
-        '<div class="row"><small>' + tx(UI.auto2) + ' · ' + tx(UI.kind[d.kind]) + '</small><span class="au ' + d.kind + '">' + esc(tx(d.auto)) + '</span></div></div>';
-    }).join('');
-    on.forEach(function (v, i) { if (v && $('domains').children[i]) $('domains').children[i].classList.add('on'); });
-  }
-  $('domains').addEventListener('click', function (e) {
-    var c = e.target.closest('.dom'); if (!c) return;
-    Array.prototype.forEach.call($('domains').children, function (x) { x.classList.toggle('on', x === c && !x.classList.contains('on')); });
-  });
-
   /* ---------- проекти ---------- */
-  var filter = 'all';
+  var filter = 'all', openProject = null;
   function renderFilters() {
-    $('filters').innerHTML = UI.filters.map(function (f) { return '<button data-f="' + f[0] + '" aria-pressed="' + (f[0] === filter) + '">' + esc(tx(f[1])) + '</button>'; }).join('');
+    $('filters').innerHTML = D.kinds.map(function (k) { return '<button data-f="' + esc(k.id) + '" aria-pressed="' + (k.id === filter) + '">' + esc(tx(k.label)) + '</button>'; }).join('');
   }
+  function chipHtml(c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }
   function renderProjects() {
     $('projects-grid').innerHTML = D.projects.filter(function (p) { return filter === 'all' || p.tags.indexOf(filter) > -1; }).map(function (p) {
-      return '<article class="card proj" data-p="' + esc(p.id) + '"><div class="chips"><span class="chip st">' + esc(tx(p.status)) + '</span></div>' +
-        '<h3>' + esc(p.name) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
-        '<div class="chips">' + p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div>' +
-        '<button class="more" data-p="' + esc(p.id) + '" aria-haspopup="dialog" aria-label="' + esc(tx(UI.more).replace(' →', '') + ': ' + p.name) + '">' + esc(tx(UI.more)) + '</button></article>';
+      return '<article class="card proj" data-p="' + esc(p.id) + '"><div class="chips">' + p.chips.map(chipHtml).join('') + '</div>' +
+        '<h3>' + esc(p.id) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
+        '<div class="pproof">' + esc(tx(p.proof)) + '</div>' +
+        '<button class="more" data-p="' + esc(p.id) + '" aria-haspopup="dialog" aria-label="' + esc(tx(UI.more) + ': ' + p.id) + '">' + esc(tx(UI.more)) + '</button></article>';
     }).join('');
+  }
+  var dlg = $('dlg');
+  function renderDialog() {
+    var p = D.projects.filter(function (x) { return x.id === openProject; })[0]; if (!p) return;
+    var url = safeUrl(D.repo) ? D.repo + '/tree/main/' + encodeURIComponent(p.id) : '';
+    $('dlg-body').innerHTML = '<div class="chips" style="margin-bottom:10px">' + p.chips.map(chipHtml).join('') + '</div>' +
+      '<h3 id="dlg-title">' + esc(p.id) + '</h3>' +
+      '<h4>' + esc(tx(UI.why)) + '</h4><p>' + esc(tx(p.summary)) + '</p>' +
+      '<h4>' + esc(tx(UI.proof)) + '</h4><p>' + esc(tx(p.proof)) + '</p>' +
+      (p.points && p.points.length ? '<h4>' + esc(tx(UI.points)) + '</h4><ul>' + p.points.map(function (x) { return '<li>' + esc(tx(x)) + '</li>'; }).join('') + '</ul>' : '') +
+      '<h4>' + esc(tx(UI.limits)) + '</h4><p>' + esc(tx(p.limits)) + '</p>' +
+      (url ? '<p><a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(url) + '">' + esc(tx(UI.folder)) + ': ' + esc(p.id) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></a></p>' : '');
   }
   $('filters').addEventListener('click', function (e) {
     if (!e.target.dataset.f) return; filter = e.target.dataset.f;
     Array.prototype.forEach.call($('filters').children, function (b) { b.setAttribute('aria-pressed', b.dataset.f === filter); });
     renderProjects();
   });
-  var dlg = $('dlg'), openProject = null;
-  function renderDialog() {
-    var p = D.projects.filter(function (x) { return x.id === openProject; })[0]; if (!p) return;
-    $('dlg-body').innerHTML = '<div class="chips" style="margin-bottom:10px"><span class="chip st">' + esc(tx(p.status)) + '</span>' +
-      p.chips.map(function (c) { return '<span class="chip">' + esc(tx(c)) + '</span>'; }).join('') + '</div>' +
-      '<h3 id="dlg-title">' + esc(p.name) + '</h3><p>' + esc(tx(p.summary)) + '</p>' +
-      (p.details.length ? '<ul>' + p.details.map(function (d) { return '<li>' + esc(tx(d)) + '</li>'; }).join('') + '</ul>' : '') +
-      (p.links ? '<p>' + p.links.filter(function (l) { return safeLink(l.url); }).map(function (l) {
-        var ext = /^https?:/i.test(l.url);
-        return '<a class="btn"' + (ext ? ' target="_blank" rel="noopener noreferrer"' : '') + ' href="' + esc(l.url) + '">' + esc(tx(l.label)) + (ext ? '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span>' : '') + '</a>';
-      }).join(' ') + '</p>' : '');
-  }
   $('projects-grid').addEventListener('click', function (e) {
     var b = e.target.closest('[data-p]'); if (!b) return;
     openProject = b.dataset.p; renderDialog();
@@ -167,15 +76,21 @@
     if (!inside || (r.width === 0 && r.height === 0)) closeDlg();
   });
 
-  /* ---------- контакти ---------- */
+  /* ---------- фонови презентации и контакти ---------- */
+  function renderDecks() {
+    $('decks').innerHTML = D.decks.map(function (d) {
+      return '<a class="card deck" href="' + esc(safeLink(d.url)) + '"><h3>' + esc(d.title) + '</h3><span class="mono">' + esc(tx(d.note)) + '</span><span class="go">' + esc(tx(UI.deckBtn)) + ' →</span></a>';
+    }).join('');
+  }
   function renderSocials() {
     $('socials').innerHTML = D.socials.map(function (s) {
       var u = safeUrl(s.url);
       if (u) return '<a class="card soc" target="_blank" rel="noopener noreferrer" href="' + esc(u) + '"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(s.handle || tx(UI.profile)) + '</span><span class="go">' + esc(tx(UI.open)) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></span></a>';
-      return '<div class="card soc off"><h3>' + esc(s.name) + '</h3><span class="mono">' + esc(tx(UI.soon)) + '</span></div>';
+      return '<div class="card soc off"><h3>' + esc(s.name) + '</h3></div>';
     }).join('');
   }
-  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#'); $('cv-note').textContent = '';
+  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#'); $('cv-hero').setAttribute('href', safeFile(D.cv.url) || '#');
+  $('repo-link').setAttribute('href', safeUrl(D.repo) || '#');
 
   /* ---------- езикът се прилага навсякъде / apply language everywhere ---------- */
   function applyLang(l) {
@@ -192,33 +107,20 @@
     var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', tx(UI.desc));
     Array.prototype.forEach.call($('lang').children, function (b) { b.setAttribute('aria-pressed', b.dataset.lang === l); });
     $('cv-note').textContent = tx(D.cv.note);
-    renderStates(); readout(); renderFilters(); renderProjects(); renderDomains(); renderSocials(); showRoute(routeIdx, true);
-    if (window.SSCPersonal) window.SSCPersonal.render(l);
+    renderFilters(); renderProjects(); renderDecks(); renderSocials();
     if (dlg.hasAttribute('open')) renderDialog();
+    if (window.SSCPersonal) window.SSCPersonal.render(l);
     try { localStorage.setItem('ssc-lang', l); } catch (e) {}
   }
   $('lang').addEventListener('click', function (e) { if (e.target.dataset.lang) applyLang(e.target.dataset.lang); });
-
-  /* ---------- часовник, година, старт ---------- */
-  var clock = $('clock');
-  function two(n) { return (n < 10 ? '0' : '') + n; }
-  function tick() { var d = new Date(); clock.textContent = two(d.getHours()) + ':' + two(d.getMinutes()) + ':' + two(d.getSeconds()); }
-  tick(); setInterval(tick, 1000);
   $('year').textContent = new Date().getFullYear();
-
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var saved = null; try { saved = localStorage.getItem('ssc-ai'); } catch (e) {}
   applyLang(detectLang());
-  if (reduce && core) core.setPaused(true);
-  renderStates();
-  setAI(saved && D.ais.some(function (a) { return a.id === saved; }) ? saved : D.ais[0].id, true);
-  setState('idle'); setAuto(!reduce);
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['architecture', 'skills', 'projects', 'contact', 'personal'];
-  var ALIAS = { memory: 'architecture', top: 'architecture' };
+  var TABS = ['work', 'architecture', 'method', 'about', 'personal'];
+  var ALIAS = { top: 'work', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
-  var current = 'architecture';
+  var current = 'work';
   function parseHash() {
     var h = (location.hash || '').replace('#', '').split('/');
     var id = ALIAS[h[0]] || h[0];
@@ -226,7 +128,7 @@
   }
   function showTab(id, opts) {
     opts = opts || {};
-    if (TABS.indexOf(id) < 0) id = 'architecture';
+    if (TABS.indexOf(id) < 0) id = 'work';
     current = id;
     tabEls.forEach(function (t) {
       var on = t.dataset.tab === id;
@@ -250,13 +152,13 @@
     });
   });
   window.addEventListener('hashchange', function () { var h = parseHash(); if (h.tab && h.tab !== current) showTab(h.tab, { sub: h.sub, keepHash: true, scroll: true }); });
-  // връзките в страницата (бърз достъп, „към съдържанието“) сменят таба
+  // връзките в страницата (бутоните в началото, „към съдържанието“) сменят таба
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
     var h = a.getAttribute('href').slice(1).split('/')[0]; var id = ALIAS[h] || h;
     if (TABS.indexOf(id) > -1) { e.preventDefault(); showTab(id, { scroll: true, focus: true }); }
   });
-  var h0 = parseHash(); showTab(h0.tab || 'architecture', { sub: h0.sub, keepHash: !h0.tab });
+  var h0 = parseHash(); showTab(h0.tab || 'work', { sub: h0.sub, keepHash: !h0.tab });
 
-  window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, setAI: setAI, setState: setState, showTab: showTab, tab: function () { return current; } };
+  window.SSCApp = { setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
 })();

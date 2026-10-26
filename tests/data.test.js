@@ -3,158 +3,90 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
-const { loadData, read, ROOT } = require('./helpers');
+const { loadData, read, exists, ROOT } = require('./helpers');
 
 const D = loadData();
 const bilingual = (v) => v && typeof v.bg === 'string' && typeof v.en === 'string' && v.bg.trim() !== '' && v.en.trim() !== '';
+const FOLDERS = ['agent-execution-control', 'ai-proposal-evaluator', 'agent-action-verifier', 'payload-policy-validator', 'batch-file-gateway', 'status-flow-validator', 'defect-register', 'claim-audit-tools', 'document-claim-checker', 'evidence-retriever', 'agent-threat-model', 'observer-gated-control-sim', 'source-monitoring-pilot-sim', 'keynes-beauty-contest-sim', 'p-vs-np-gap-measurement'];
+const KINDS = ['control', 'evaluation', 'simulation', 'research'];
 
-test('owner name exists in Bulgarian and English', () => {
-  assert.equal(D.owner.bg, 'Мартин Урумов');
-  assert.equal(D.owner.en, 'Martin Urumov');
+test('owner name exists in Bulgarian and English', () => { assert.equal(D.owner.bg, 'Мартин Урумов'); assert.equal(D.owner.en, 'Martin Urumov'); });
+test('CV is referenced, exists and is a PDF', () => {
+  assert.equal(D.cv.url, 'cv/Martin_Urumov_CV.pdf'); const b = fs.readFileSync(path.join(ROOT, D.cv.url));
+  assert.equal(b.slice(0, 5).toString(), '%PDF-'); assert.ok(b.length > 10000); assert.ok(bilingual(D.cv.note));
 });
-
-test('CV file is referenced, exists and is a PDF', () => {
-  assert.equal(D.cv.url, 'cv/Martin_Urumov_CV.pdf');
-  const buf = fs.readFileSync(path.join(ROOT, D.cv.url));
-  assert.equal(buf.slice(0, 5).toString(), '%PDF-');
-  assert.ok(buf.length > 10000);
+test('the portfolio repository link points at the owner GitHub', () => { assert.equal(D.repo, 'https://github.com/OmniSlack/martin-urumov-portfolio'); });
+test('exactly the fifteen project folders of the portfolio repository are listed, in order', () => {
+  assert.deepEqual(Array.from(D.projects, (p) => p.id), FOLDERS);
 });
+test('project ids are unique', () => { const ids = D.projects.map((p) => p.id); assert.equal(new Set(ids).size, ids.length); });
 
-test('CV note is bilingual', () => assert.ok(bilingual(D.cv.note)));
-
-test('exactly four AIs with unique ids', () => {
-  assert.deepEqual(Array.from(D.ais, (a) => a.id), ['claude', 'gpt', 'codex', 'gemini']);
-});
-
-for (const a of ['claude', 'gpt', 'codex', 'gemini']) {
-  test(`AI ${a}: accent colours are three 0-255 integers`, () => {
-    const ai = D.ais.find((x) => x.id === a);
-    for (const key of ['accent', 'accent2']) {
-      const parts = ai[key].split(' ').map(Number);
-      assert.equal(parts.length, 3);
-      parts.forEach((n) => assert.ok(Number.isInteger(n) && n >= 0 && n <= 255, `${a}.${key}`));
-    }
-    assert.ok(ai.name && ai.sub);
-  });
-}
-
-test('Claude and Codex use different accent colours', () => {
-  const g = (id) => D.ais.find((a) => a.id === id).accent;
-  assert.notEqual(g('claude'), g('codex'));
-});
-
-test('project ids are unique', () => {
-  const ids = D.projects.map((p) => p.id);
-  assert.equal(new Set(ids).size, ids.length);
-});
-
-test('there are five finished projects (two systems and three decks) and none is the employer project', () => {
-  assert.equal(D.projects.length, 5);
-  assert.ok(!D.projects.some((p) => /dzjin|dzhin|broadcapp/i.test(p.id + p.name)));
-});
-
-test('JDK and automation tool folders are not listed as projects', () => {
-  assert.ok(!D.projects.some((p) => /jdk/i.test(p.name) || p.name === 'automation'));
-});
-
-const TAGS = ['system', 'deck'];
 for (const p of D.projects) {
-  test(`project ${p.id}: required fields exist and are bilingual`, () => {
-    assert.ok(p.name && p.name.trim());
-    assert.ok(bilingual(p.status), 'status');
-    assert.ok(bilingual(p.summary), 'summary');
-    assert.ok(p.chips.length >= 1 && p.chips.every(bilingual), 'chips');
-    assert.ok(p.details.length >= 1 && p.details.every(bilingual), 'details');
+  test(`project ${p.id}: summary, proof and limits exist in both languages`, () => {
+    for (const k of ['summary', 'proof', 'limits']) assert.ok(bilingual(p[k]), k);
   });
-  test(`project ${p.id}: tags valid and English differs from Bulgarian`, () => {
-    assert.ok(p.tags.length >= 1 && p.tags.every((t) => TAGS.includes(t)));
-    assert.notEqual(p.summary.bg, p.summary.en);
-    assert.ok(!/[\u0400-\u04FF]/.test(p.summary.en), 'English summary has no Cyrillic');
-    p.details.forEach((d) => assert.ok(!/[\u0400-\u04FF]/.test(d.en), 'English detail has no Cyrillic'));
+  test(`project ${p.id}: tags, chips and points are valid`, () => {
+    assert.ok(p.tags.length >= 1 && p.tags.every((t) => KINDS.includes(t)));
+    assert.ok(p.chips.length >= 1 && p.chips.every((c) => (typeof c === 'string' && c.trim()) || bilingual(c)));
+    assert.ok(Array.isArray(p.points) && p.points.every(bilingual));
   });
+  test(`project ${p.id}: English text has no Cyrillic and differs from the Bulgarian`, () => {
+    for (const k of ['summary', 'proof', 'limits']) { assert.ok(!/[\u0400-\u04FF]/.test(p[k].en), k); assert.notEqual(p[k].en, p[k].bg, k); }
+    for (const x of p.points) assert.ok(!/[\u0400-\u04FF]/.test(x.en));
+  });
+  test(`project ${p.id}: proof contains at least one number`, () => { assert.match(p.proof.en, /\d/); assert.match(p.proof.bg, /\d/); });
 }
-
-test('the only outgoing project links are the three decks (relative links inside the site)', () => {
-  const withLinks = D.projects.filter((p) => p.links);
-  assert.deepEqual(Array.from(withLinks, (p) => p.id), ['deck-omniecho', 'deck-coherence', 'deck-dream']);
-  for (const p of withLinks) for (const l of p.links) {
-    assert.ok(bilingual(l.label));
-    assert.ok(/^decks\/index\.html#(omniecho|coherence|dream)\/1$/.test(l.url), l.url);
-  }
+test('every kind used by a project appears as a filter, and "all" comes first', () => {
+  assert.equal(D.kinds[0].id, 'all'); const ids = D.kinds.map((k) => k.id);
+  for (const p of D.projects) for (const t of p.tags) assert.ok(ids.includes(t), t);
+  for (const k of D.kinds) assert.ok(bilingual(k.label));
 });
-
-test('unfinished work is not in the public data (it lives in the personal vault)', () => {
-  const ids = Array.from(D.projects, (p) => p.id);
-  for (const gone of ['gapinthegap', 'kompas', 'response-gap', 'nomnom', 'the-game', 'sk15', 'selenium', 'exercise']) assert.ok(!ids.includes(gone), gone);
+test('every filter other than "all" has at least one project', () => {
+  for (const k of D.kinds.slice(1)) assert.ok(D.projects.some((p) => p.tags.includes(k.id)), k.id);
 });
-test('no placeholder wording ("description will follow", "soon") is left in the public data', () => {
-  const t = JSON.stringify(D.projects) + JSON.stringify(D.socials);
-  assert.ok(!/will follow|ще се допълни|link soon|линк скоро/i.test(t));
+test('there are three background decks and their pages exist', () => {
+  assert.equal(D.decks.length, 3); for (const d of D.decks) { assert.ok(/^decks\/index\.html#(omniecho|coherence|dream)\/1$/.test(d.url)); assert.ok(bilingual(d.note)); }
+  assert.ok(exists('decks/index.html'));
 });
-test('every public project is finished: it has a status, a summary and details', () => {
-  for (const p of D.projects) { assert.ok(bilingual(p.status)); assert.ok(bilingual(p.summary)); assert.ok(p.details.length >= 1); }
+test('five platform entries, all live https links to the right hosts', () => {
+  assert.equal(D.socials.length, 5); const hosts = { GitHub: 'github.com', LinkedIn: 'www.linkedin.com', YouTube: 'www.youtube.com', TikTok: 'www.tiktok.com', Facebook: 'www.facebook.com' };
+  for (const s of D.socials) { const u = new URL(s.url); assert.equal(u.protocol, 'https:'); assert.equal(u.hostname, hosts[s.name], s.name); assert.ok(s.handle); }
 });
-
-test('OmniEcho Core is described without a link (repository is not public)', () => {
-  const p = D.projects.find((x) => x.id === 'omniecho-core');
-  assert.ok(p && !p.links);
-  assert.ok(/STOP > HOLD > CLEAR/.test(p.summary.en));
-});
-
-test('eight skill domains', () => assert.equal(D.domains.length, 8));
-D.domains.forEach((d, i) => {
-  test(`domain #${i + 1} (${d.name.en}): bilingual fields and valid kind`, () => {
-    for (const k of ['name', 'task', 'note', 'auto']) assert.ok(bilingual(d[k]), k);
-    assert.match(d.skill, /^\/[a-z-]+$/);
-    assert.ok(['time', 'event', 'manual'].includes(d.kind));
-  });
-});
-test('domain skill commands are unique', () => {
-  assert.equal(new Set(D.domains.map((d) => d.skill)).size, D.domains.length);
-});
-test('exactly one domain is manual on purpose (Clients)', () => {
-  const m = D.domains.filter((d) => d.kind === 'manual');
-  assert.equal(m.length, 1); assert.equal(m[0].name.en, 'Clients');
-});
-
-test('five public platform entries with unique names', () => {
-  assert.equal(D.socials.length, 5);
-  assert.equal(new Set(D.socials.map((s) => s.name)).size, 5);
-});
-
-const EXPECT = {
-  'GitHub': ['github.com', 'OmniSlack'],
-  'LinkedIn': ['www.linkedin.com', 'martin-urumov'],
-  'YouTube': ['www.youtube.com', 'OmniEcho26'],
-  'TikTok': ['www.tiktok.com', 'omniecho26'],
-  'Facebook': ['www.facebook.com', 'martin.urumov.7']
-};
-for (const [name, [host, slug]] of Object.entries(EXPECT)) {
-  test(`${name}: https link to the right host with the right profile`, () => {
-    const s = D.socials.find((x) => x.name === name);
-    const u = new URL(s.url);
-    assert.equal(u.protocol, 'https:');
-    assert.equal(u.hostname, host);
-    assert.ok(s.url.includes(slug));
-    assert.ok(s.handle.replace(/^@/, '') === slug);
-  });
-}
-test('platforms without a link yet (X, Snapchat, Twitch) are not in the public data', () => {
-  const names = Array.from(D.socials, (x) => x.name);
-  for (const n of ['X / Twitter', 'Snapchat', 'Twitch']) assert.ok(!names.includes(n), n);
-  for (const x of D.socials) assert.ok(x.url.startsWith('https://'));
+test('nothing unfinished, personal or employer-related is in the public data', () => {
+  const t = JSON.stringify(D);
+  for (const bad of ['gapinthegap', 'GapInTheGap', 'Kompas', 'NomNom', 'The Game', 'sk15', 'Selenium', 'Snapchat', 'Twitch', 'Dzjin', 'will follow', 'link soon']) assert.ok(!t.includes(bad), bad);
 });
 
 /* --- privacy: nothing personal or employer-related ships in the public files --- */
-const SHIPPED = ['index.html', 'assets/app.js', 'assets/cores.js', 'assets/data.js', 'assets/style.css'];
+const SHIPPED = ['index.html', 'assets/app.js', 'assets/data.js', 'assets/style.css', 'assets/vault.js', 'assets/personal.js'];
 for (const [label, re] of [
-  ['a phone number', /\+?359[\s-]?8\d/],
-  ['a personal e-mail', /@gmail\.com/i],
-  ['the employer repository host', /visualstudio\.com|iboris/i],
-  ['a home address marker', /\bVarna\b|Варна/],
-  ['local disk paths', /[A-Z]:\\\\|D:\\Users|C:\\Users/]
+  ['a phone number', /\+?359[\s-]?8\d/], ['a personal e-mail', /@gmail\.com/i], ['the employer repository host', /visualstudio\.com|iboris/i],
+  ['a home address marker', /\bVarna\b|Варна/], ['local disk paths', /[A-Z]:\\\\|D:\\Users|C:\\Users/], ['the sealed-vault passphrase', /Omnivorous123/]
 ]) {
-  test(`shipped files contain no ${label}`, () => {
-    for (const f of SHIPPED) assert.ok(!re.test(read(f)), `${f} matches ${re}`);
+  test(`shipped files contain no ${label}`, () => { for (const f of SHIPPED) assert.ok(!re.test(read(f)), `${f} matches ${re}`); });
+}
+
+/* --- accuracy: every number in a project's proof appears in that project's own README or evidence.
+       Runs only when the portfolio repository sits next to this site (it is private, so CI cannot see it). --- */
+const REPO = path.join(ROOT, '..', 'portfolio-repo');
+const HAVE = fs.existsSync(path.join(REPO, 'README.md'));
+const SKIP = HAVE ? false : 'portfolio-repo not found next to the site';
+const numbers = (s) => (s.match(/\d[\d,.]*/g) || []).map((x) => x.replace(/[,.]+$/, '')).filter((x) => x.replace(/[,.]/g, '').length >= 2);
+function corpus(folder) {
+  let t = ''; const walk = (d, depth) => { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, f.name); if (f.isDirectory() && depth < 3 && f.name !== 'node_modules') walk(p, depth + 1); else if (/\.(md|txt)$/i.test(f.name)) t += fs.readFileSync(p, 'utf8') + '\n'; } };
+  walk(path.join(REPO, folder), 0); return t.replace(/(\d),(\d{3})/g, '$1$2');
+}
+const IGNORE = new Set(['2026', '10', '26', '08', '17', '25']);
+for (const p of D.projects) {
+  test(`accuracy: every number in the proof of ${p.id} is found in its README or evidence`, { skip: SKIP }, () => {
+    const c = corpus(p.id).replace(/(\d)\s(\d{3})\b/g, '$1$2'); const missing = [];
+    for (const n of numbers(p.proof.en)) { const plain = n.replace(/,/g, ''); if (IGNORE.has(plain)) continue; if (!c.includes(plain) && !c.includes(n)) missing.push(n); }
+    assert.deepEqual(missing, []);
   });
 }
+test('accuracy: the portfolio repository has all fifteen folders with a README', { skip: SKIP }, () => { for (const f of FOLDERS) assert.ok(fs.existsSync(path.join(REPO, f, 'README.md')), f); });
+test('accuracy: the headline numbers on the page match the repository', { skip: SKIP }, () => {
+  const readme = fs.readFileSync(path.join(REPO, 'README.md'), 'utf8'); assert.ok(/165/.test(corpus('defect-register'))); assert.ok(/16 gates return a refusal/.test(corpus('ai-proposal-evaluator')));
+  assert.ok(/24 \/ 24|24\/24|24 PostgreSQL/.test(corpus('agent-execution-control'))); assert.ok(readme.includes('`ai-proposal-evaluator/`'));
+  const html = read('index.html'); for (const n of ['15', '16', '165', '24']) assert.ok(html.includes('<b>' + n + '</b>'), n);
+});

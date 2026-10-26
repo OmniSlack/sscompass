@@ -67,7 +67,7 @@ test('the right passphrase unlocks and shows the saved data', async () => {
   assert.equal(b.doc.querySelectorAll('#pview .pf').length, 2);
 });
 test('leaving the tab locks it; coming back asks for the passphrase again', async () => {
-  const p = await openApp(); p.click($(p, 'tab-skills')); assert.equal($(p, 'p-root').innerHTML, ''); p.click($(p, 'tab-personal')); await until(() => $(p, 'p-form'));
+  const p = await openApp(); p.click($(p, 'tab-method')); assert.equal($(p, 'p-root').innerHTML, ''); p.click($(p, 'tab-personal')); await until(() => $(p, 'p-form'));
   assert.match(text(p), /Unlock/); assert.ok(!$(p, 'pmenu'));
 });
 test('forgetting the device needs two presses', async () => {
@@ -166,11 +166,11 @@ test('the lock screen and the app follow the language switch', async () => {
 });
 test('personal data never appears on the public tabs, even while the vault is open', async () => {
   const p = await openApp(); await section(p, 'progress'); assert.match(text(p), /NomNom/);
-  for (const t of ['architecture', 'skills', 'projects', 'contact']) { p.click($(p, 'tab-' + t)); assert.ok(!/NomNom/.test($(p, 'panel-' + t).textContent), t); }
+  for (const t of ['work', 'architecture', 'method', 'about']) { p.click($(p, 'tab-' + t)); assert.ok(!/NomNom/.test($(p, 'panel-' + t).textContent), t); }
 });
-test('the public projects tab lists only finished work while the unfinished sits in the vault', async () => {
-  const p = await openApp(); p.click($(p, 'tab-projects')); const names = [...p.doc.querySelectorAll('#panel-projects .proj h3')].map((h) => h.textContent);
-  assert.deepEqual(names, ['OmniMax', 'OmniEcho Core', 'The OmniEcho Architecture', 'The Coherence Protocol', 'Dream Protocol']);
+test('the public Work tab lists the fifteen portfolio projects while the unfinished sits in the vault', async () => {
+  const p = await openApp(); p.click($(p, 'tab-work')); const names = [...p.doc.querySelectorAll('#panel-work .proj h3')].map((h) => h.textContent);
+  assert.equal(names.length, 15); assert.ok(!names.includes('NomNom')); assert.equal(names[0], 'agent-execution-control');
 });
 test('menu sections can be reached by the hash', async () => {
   const p = page({ hash: '#personal/notes' }); await until(() => $(p, 'p-form')); assert.equal(p.w.SSCPersonal.section(), 'notes');

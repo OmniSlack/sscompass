@@ -6,10 +6,10 @@ const path = require('path');
 const vm = require('vm');
 const { read, exists, ROOT } = require('./helpers');
 
-for (const f of ['index.html', 'assets/style.css', 'assets/app.js', 'assets/cores.js', 'assets/data.js', 'cv/Martin_Urumov_CV.pdf', 'package.json', 'LICENSE', 'README.md']) {
+for (const f of ['index.html', 'assets/style.css', 'assets/app.js', 'assets/data.js', 'cv/Martin_Urumov_CV.pdf', 'package.json', 'LICENSE', 'README.md']) {
   test(`file exists: ${f}`, () => assert.ok(exists(f)));
 }
-for (const f of ['assets/app.js', 'assets/cores.js', 'assets/data.js']) {
+for (const f of ['assets/app.js', 'assets/data.js']) {
   test(`${f} compiles as JavaScript`, () => { assert.doesNotThrow(() => new vm.Script(read(f), { filename: f })); });
   test(`${f} has no console.log, debugger or TODO left behind`, () => {
     assert.ok(!/console\.log|debugger|TODO|FIXME/.test(read(f)));
@@ -39,7 +39,7 @@ test('package.json is valid and keeps the site dependency-free', () => {
 test('node_modules is ignored by git', () => assert.match(read('.gitignore'), /^node_modules\/?$/m));
 test('the dependency lock file is committed', () => assert.ok(exists('package-lock.json')));
 test('the scripts do not use eval, document.write or inline HTML from user input', () => {
-  for (const f of ['assets/app.js', 'assets/cores.js', 'assets/data.js']) assert.ok(!/\beval\(|document\.write\(/.test(read(f)), f);
+  for (const f of ['assets/app.js', 'assets/data.js']) assert.ok(!/\beval\(|document\.write\(/.test(read(f)), f);
 });
 test('every dynamic string goes through the escape helper before innerHTML', () => {
   const s = read('assets/app.js');

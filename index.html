@@ -3,235 +3,259 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SSC Compass · Мартин Урумов</title>
-<meta name="description" content="SSC Compass (Shadow Somiyo Compass): личен команден център, изграден около работата ми с AI. Мартин Урумов / Martin Urumov.">
+<title>Мартин Урумов · Портфолио</title>
+<meta name="description" content="Мартин Урумов / Martin Urumov: оценка на поведението на AI, контрол на работните процеси на агенти и проверка на правила в софтуера. Петнайсет проекта с доказателства, които могат да се повторят.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<a class="skip" href="#architecture" data-en="Skip to content">Към съдържанието</a>
-<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+<a class="skip" href="#work" data-en="Skip to content">Към съдържанието</a>
+<noscript><style>.panel[hidden]{display:block}</style></noscript>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#top">SSC<b>/</b>COMPASS</a>
+    <a class="brand" href="#work">MARTIN<b>/</b>URUMOV</a>
     <nav class="tabs" aria-label="Секции" data-en-aria="Sections">
       <div role="tablist" id="tablist" aria-label="Страници" data-en-aria="Pages">
-        <button role="tab" id="tab-architecture" data-tab="architecture" aria-controls="panel-architecture" aria-selected="true" tabindex="0"><span data-en="Architecture">Архитектура</span></button>
-        <button role="tab" id="tab-skills" data-tab="skills" aria-controls="panel-skills" aria-selected="false" tabindex="-1"><span data-en="Skills">Умения</span></button>
-        <button role="tab" id="tab-projects" data-tab="projects" aria-controls="panel-projects" aria-selected="false" tabindex="-1"><span data-en="Projects">Проекти</span></button>
-        <button role="tab" id="tab-contact" data-tab="contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1"><span data-en="Contact">Контакти</span></button>
+        <button role="tab" id="tab-work" data-tab="work" aria-controls="panel-work" aria-selected="true" tabindex="0"><span data-en="Work">Проекти</span></button>
+        <button role="tab" id="tab-architecture" data-tab="architecture" aria-controls="panel-architecture" aria-selected="false" tabindex="-1"><span data-en="Architecture">Архитектура</span></button>
+        <button role="tab" id="tab-method" data-tab="method" aria-controls="panel-method" aria-selected="false" tabindex="-1"><span data-en="Method">Метод</span></button>
+        <button role="tab" id="tab-about" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1"><span data-en="About">За мен</span></button>
         <button role="tab" id="tab-personal" class="tab-personal" data-tab="personal" aria-controls="panel-personal" aria-selected="false" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span data-en="Personal">Личен контрол</span></button>
       </div>
     </nav>
     <div class="lang" role="group" aria-label="Език / Language" id="lang">
       <button data-lang="bg" aria-pressed="true">BG</button><button data-lang="en" aria-pressed="false">EN</button>
     </div>
-    <div id="clock" aria-hidden="true">--:--:--</div>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
     <div class="wrap">
-      <div class="hud mono">
-        <span><i></i><span data-en="Core · online">Core · online</span></span>
-        <span data-en="Interface · public">Интерфейс · публичен</span>
-        <span>Build · v0.3</span>
+      <div class="mono kicker" data-en="AI behaviour evaluation · agent workflow controls · software rule checks">Оценка на поведението на AI · контрол на работните процеси на агенти · проверка на правила в софтуера</div>
+      <h1 class="hname"><span data-en="Martin Urumov">Мартин Урумов</span></h1>
+      <p class="hlead" data-en="I direct AI-assisted engineering projects. Each one ends with evidence you can re-run, and with a list of what it does not prove.">Ръководя инженерни проекти, изградени с помощта на AI. Всеки завършва с доказателство, което можеш да повториш, и със списък на това, което не доказва.</p>
+
+      <div class="stats" role="list">
+        <div role="listitem"><b>15</b><span data-en="projects, each with its evidence">проекта, всеки с доказателствата си</span></div>
+        <div role="listitem"><b>16</b><span data-en="gates that can refuse a proposal">гейта, които могат да откажат предложение</span></div>
+        <div role="listitem"><b>165</b><span data-en="defects kept on record">дефекта, пазени в регистър</span></div>
+        <div role="listitem"><b>24</b><span data-en="tests against a real PostgreSQL">теста срещу реален PostgreSQL</span></div>
       </div>
 
-      <div class="ai-switch" role="group" aria-label="Избор на AI" data-en-aria="Choose an AI" id="ai-switch"></div>
-
-      <div class="stage">
-        <aside class="side l">
-          <div class="mono h" data-en="Layers">Слоеве</div>
-          <div class="layer"><b>01</b><div><span data-en="Interface">Интерфейс</span><small data-en="The public showcase. What you are looking at.">Публичната витрина. Това, което виждаш.</small></div></div>
-          <div class="layer"><b>02</b><div><span data-en="Control">Контрол</span><small data-en="My own tab, sealed with a passphrase. Not public.">Моят таб, запечатан с парола. Не е публичен.</small></div></div>
-          <div class="layer"><b>03</b><div><span data-en="Functional">Функционален</span><small data-en="The engine that feeds the other two layers.">Моторът, който захранва другите два слоя.</small></div></div>
-        </aside>
-
-        <div class="orb"><canvas id="core" aria-label="Анимирано ядро на избрания AI" data-en-aria="Animated core of the chosen AI" role="img"></canvas></div>
-
-        <aside class="side r">
-          <div class="mono h" data-en="Quick access">Бърз достъп</div>
-          <div class="quick">
-            <a href="#architecture"><span data-en="Architecture">Архитектура</span> <span>→</span></a>
-            <a href="#skills"><span data-en="Skills">Умения</span> <span>→</span></a>
-            <a href="#projects"><span data-en="Projects">Проекти</span> <span>→</span></a>
-            <a href="#contact"><span data-en="Contact">Контакти</span> <span>→</span></a>
-          </div>
-        </aside>
+      <div class="cta">
+        <a class="btn primary" href="#work" id="cta-work"><span data-en="See the work">Виж проектите</span></a>
+        <a class="btn" id="cv-hero" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="CV (PDF)">CV (PDF)</span></a>
+        <a class="btn" id="repo-link" href="https://github.com/OmniSlack/martin-urumov-portfolio" target="_blank" rel="noopener noreferrer"><span data-en="Portfolio on GitHub">Портфолио в GitHub</span><span class="sr" data-en="(opens in a new tab)"> (отваря се в нов таб)</span></a>
       </div>
-
-      <div class="ident">
-        <h1 class="sr" data-en="SSC Compass · Martin Urumov">SSC Compass · Мартин Урумов</h1>
-        <div class="ai-title" id="ai-name">CLAUDE</div>
-        <p id="ai-sub">Claude Code · Anthropic</p>
-        <p class="owner">Мартин Урумов · Martin Urumov</p>
-      </div>
-
-      <div class="states" role="group" aria-label="Състояние на ядрото" data-en-aria="State of the core" id="states"></div>
-      <div class="readout mono" id="readout" aria-live="off"></div>
-      <p class="tagline" data-en="A personal command centre that brings together the best of every AI tool and builds it around me and my work.">Личен команден център, който събира най-доброто от всички AI инструменти и го изгражда около мен и моята работа.</p>
+      <p class="honest" data-en="AI-assisted work: the code and automated tests were written by AI coding assistants under my direction. What is mine and what is theirs is on the Method tab.">Работа с помощта на AI: кодът и автоматичните тестове са написани от AI асистенти под мое ръководство. Кое е мое и кое тяхно е в таб „Метод“.</p>
     </div>
   </section>
 
   <div class="wrap panels">
 
-    <section class="s panel" id="panel-architecture" role="tabpanel" aria-labelledby="tab-architecture" tabindex="-1">
-      <div class="mono">// <span data-en="architecture">архитектура</span></div>
-      <h2 data-en="How the system works">Как работи системата</h2>
-      <p class="lead"><span data-en="Two doors, one brain, shared memory.">Две врати, един мозък, обща памет.</span> <span class="badge" data-en="planned architecture">планирана архитектура</span></p>
-
-      <div class="arch card">
-        <svg viewBox="0 0 1100 600" role="img" aria-label="Схема: ти, две врати, мост, рутер, три нива, конектори и обща памет" data-en-aria="Diagram: you, two doors, a bridge, a router, three tiers, connectors and shared memory">
-          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9a93a8"/></marker></defs>
-
-          <ellipse class="node" cx="80" cy="232" rx="64" ry="42"/>
-          <text class="h" x="80" y="230" text-anchor="middle" data-en="YOU">ТИ</text><text class="d" x="80" y="248" text-anchor="middle" data-en="talk or click">говориш или кликаш</text>
-
-          <rect class="node" x="190" y="118" width="200" height="76" rx="14"/>
-          <text class="h" x="290" y="150" text-anchor="middle" data-en="Compass site">Compass сайт</text><text class="d" x="290" y="172" text-anchor="middle" data-en="browser · same buttons">браузър · същите бутони</text>
-          <rect class="node" x="190" y="268" width="200" height="76" rx="14"/>
-          <text class="h" x="290" y="300" text-anchor="middle" data-en="Obsidian plugin">Obsidian плъгин</text><text class="d" x="290" y="322" text-anchor="middle" data-en="lives inside the vault">живее във vault-а</text>
-
-          <rect class="node dash" x="450" y="24" width="190" height="60" rx="12"/>
-          <text class="h" x="545" y="50" text-anchor="middle" data-en="Speech · local">Реч · локално</text><text class="d" x="545" y="70" text-anchor="middle" data-en="Whisper = ears · Kokoro = voice">Whisper = уши · Kokoro = глас</text>
-
-          <rect class="node hub" x="450" y="140" width="190" height="140" rx="14"/>
-          <text class="h" x="545" y="178" text-anchor="middle" data-en="BRIDGE">МОСТ</text>
-          <text class="d" x="545" y="206" text-anchor="middle" data-en="one brain for">един мозък за</text><text class="d" x="545" y="224" text-anchor="middle" data-en="both doors">двете врати</text>
-          <text class="d" x="545" y="256" text-anchor="middle" data-en="takes every request">приема всяка заявка</text>
-
-          <rect class="node hub" x="700" y="150" width="150" height="120" rx="14"/>
-          <text class="h" x="775" y="186" text-anchor="middle" data-en="ROUTER">РУТЕР</text><text class="d" x="775" y="208" text-anchor="middle">OmniMax</text>
-          <text class="d" x="775" y="232" text-anchor="middle" data-en="sends the request">насочва заявката</text><text class="d" x="775" y="250" text-anchor="middle" data-en="to a tier">към ниво</text>
-
-          <rect class="node t1" x="910" y="40" width="170" height="84" rx="12"/>
-          <text class="h" x="995" y="68" text-anchor="middle" data-en="TIER 1">НИВО 1</text><text class="d" x="995" y="90" text-anchor="middle" data-en="rules + saved data">правила + запазени данни</text><text class="d" x="995" y="108" text-anchor="middle" data-en="no AI · instant">без AI · мигновено</text>
-          <rect class="node t2" x="910" y="150" width="170" height="84" rx="12"/>
-          <text class="h" x="995" y="178" text-anchor="middle" data-en="TIER 2">НИВО 2</text><text class="d" x="995" y="200" text-anchor="middle" data-en="quick small model">бърз малък модел</text><text class="d" x="995" y="218" text-anchor="middle" data-en="short answer">кратък отговор</text>
-          <rect class="node t3" x="910" y="262" width="170" height="110" rx="12"/>
-          <text class="h" x="995" y="290" text-anchor="middle" data-en="TIER 3">НИВО 3</text><text class="d" x="995" y="312" text-anchor="middle" data-en="real work in a terminal">истинска работа в терминал</text><text class="d" x="995" y="330" text-anchor="middle" data-en="or a background skill">или умение на заден план</text><text class="d" x="995" y="352" text-anchor="middle">Claude · Codex · Gemini</text>
-
-          <rect class="node dash" x="690" y="300" width="170" height="72" rx="12"/>
-          <text class="h" x="775" y="326" text-anchor="middle" data-en="Connectors">Конектори</text><text class="d" x="775" y="346" text-anchor="middle" data-en="Gmail · Calendar · Drive">Gmail · Календар · Drive</text><text class="d" x="775" y="361" text-anchor="middle">YouTube</text>
-
-          <rect class="node vault" x="190" y="470" width="890" height="96" rx="14"/>
-          <text class="h" x="635" y="504" text-anchor="middle" data-en="VAULT · SHARED MEMORY">VAULT · ОБЩА ПАМЕТ</text>
-          <text class="d" x="635" y="528" text-anchor="middle" data-en="Obsidian (plain markdown files) + NotebookLM (questions over sources)">Obsidian (прости markdown файлове) + NotebookLM (въпроси към източници)</text>
-          <text class="d" x="635" y="548" text-anchor="middle" data-en="daily notes · reports · research · conversations · a record of every request">дневни бележки · отчети · проучвания · разговори · запис на всяка заявка</text>
-
-          <path class="ln" d="M142 215 L188 168"/><path class="ln" d="M142 252 L188 292"/>
-          <path class="ln" d="M390 156 L448 190"/><path class="ln" d="M390 306 L448 232"/>
-          <path class="ln2" d="M545 84 L545 138"/>
-          <path class="ln" d="M640 210 L698 210"/>
-          <path class="ln" d="M850 180 L908 90"/><path class="ln" d="M850 210 L908 192"/><path class="ln" d="M850 240 L908 300"/>
-          <path class="ln" d="M908 336 L862 336"/>
-          <path class="ln2" d="M545 280 L545 468"/><text class="d" x="556" y="380" data-en="reads + records">чете + записва</text>
-          <path class="ln" d="M995 372 L995 468"/><text class="d" x="1005" y="425" data-en="saves reports">запазва отчети</text>
-        </svg>
-
-        <ol class="steps mobile">
-          <li><b data-en="1 · YOU">1 · ТИ</b><span data-en="You talk or click.">Говориш или кликаш.</span></li>
-          <li><b data-en="2 · TWO DOORS">2 · ДВЕ ВРАТИ</b><span data-en="The Compass site in the browser and an Obsidian plugin inside the vault, with the same buttons.">Compass сайт в браузъра и Obsidian плъгин във vault-а, със същите бутони.</span></li>
-          <li><b data-en="3 · SPEECH (local)">3 · РЕЧ (локално)</b><span data-en="Whisper listens, Kokoro speaks.">Whisper слуша, Kokoro говори.</span></li>
-          <li><b data-en="4 · BRIDGE">4 · МОСТ</b><span data-en="One brain for both doors: it takes every request.">Един мозък за двете врати: приема всяка заявка.</span></li>
-          <li><b data-en="5 · ROUTER (OmniMax)">5 · РУТЕР (OmniMax)</b><span data-en="Sends the request to a tier.">Насочва заявката към ниво.</span></li>
-          <li><b data-en="6 · TIER 1">6 · НИВО 1</b><span data-en="Rules and saved data, no AI, instant.">Правила и запазени данни, без AI, мигновено.</span></li>
-          <li><b data-en="7 · TIER 2">7 · НИВО 2</b><span data-en="A quick small model for a short answer.">Бърз малък модел за кратък отговор.</span></li>
-          <li><b data-en="8 · TIER 3">8 · НИВО 3</b><span data-en="Real work: Claude, Codex or Gemini in a terminal, or a skill in the background. Reaches Gmail, Calendar, Drive and YouTube.">Истинска работа: Claude, Codex или Gemini в терминал, или умение на заден план. Достъп до Gmail, Календар, Drive, YouTube.</span></li>
-          <li><b data-en="9 · VAULT">9 · VAULT</b><span data-en="The shared memory. The bridge reads and writes it, and tier 3 saves its reports there.">Общата памет. Мостът я чете и записва, а отчетите от ниво 3 се запазват в нея.</span></li>
-        </ol>
-      </div>
-
-      <div class="card route">
-        <div class="mono">// <span data-en="example">пример</span></div>
-        <h3 style="margin:4px 0 0;font:500 1.2rem var(--display);letter-spacing:.05em" data-en="One message. Three tiers.">Едно съобщение. Три нива.</h3>
-        <p class="note" style="margin-top:6px" data-en="Pick a request and see which tier it would go to. The values are illustrative, not measured.">Избери заявка и виж на кое ниво би отишла. Стойностите са илюстративни, не са измерване.</p>
-        <div class="picks" id="picks"></div>
-        <div class="bars" id="bars"></div>
-        <div class="verdict" id="verdict"></div>
-      </div>
-    <div class="subsection" id="memory">
-      <div class="mono">// <span data-en="memory">памет</span></div>
-      <h2 class="h2b" data-en="Memory: Obsidian and NotebookLM">Памет: Obsidian и NotebookLM</h2>
-      <p class="lead" data-en="The strength of memory is not in the app but in the arrangement. Files and folders must make sense to me and to the AI.">Силата на паметта не е в приложението, а в подредбата. Файловете и папките трябва да имат смисъл и за мен, и за AI.</p>
-
-      <div class="vflow">
-        <div class="vbox raw"><div class="mono" data-en="you write here">ти пишеш тук</div><h3>raw/</h3><p data-en="Drop anything in: articles, notes, PDFs.">Хвърляш каквото и да е: статии, бележки, PDF-и.</p></div>
-        <div class="varrow"><b>→</b>compile</div>
-        <div class="vbox wiki"><div class="mono" data-en="the AI writes here">AI пише тук</div><h3>wiki/</h3><p data-en="The AI arranges it into articles and indexes by topic.">AI го подрежда в статии и индекси по теми.</p></div>
-        <div class="varrow"><b>→</b>ask</div>
-        <div class="vbox out"><div class="mono" data-en="answers land here">отговорите идват тук</div><h3>output/</h3><p data-en="Answers, reports, slide decks.">Отговори, отчети, презентации.</p></div>
-      </div>
-
-      <div class="mem2">
-        <div class="card">
-          <h3>Obsidian</h3>
-          <p data-en="The main memory: plain markdown files in one vault. It does not give the AI a magic memory; it makes the files easy to browse.">Основната памет: прости markdown файлове в един vault. Не дава магическа памет на AI, а прави файловете лесни за разглеждане.</p>
-          <ul><li data-en="One file at the root describes the structure so it does not drift over time.">Един файл в корена описва структурата, за да не се размества с времето.</li><li data-en="Works with Claude, Codex and Gemini because they are ordinary files.">Работи с Claude, Codex и Gemini, защото са обикновени файлове.</li></ul>
-        </div>
-        <div class="card">
-          <h3>NotebookLM</h3>
-          <p data-en="The second memory: I ask questions over chosen sources and get answers with citations.">Втората памет: задавам въпроси към подбрани източници и получавам отговори с цитати.</p>
-          <ul><li data-en="Good for books, articles and documents I want to question.">Добра за книги, статии и документи, които искам да „разпитам“.</li><li data-en="The sources come from the vault.">Източниците идват от vault-а.</li></ul>
-        </div>
-      </div>
-
-    </div>
-    </section>
-
-    <section class="s panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills" tabindex="-1" hidden>
-      <div class="mono">// <span data-en="backbone">гръбнак</span></div>
-      <h2 data-en="From task to automation">От задача до автоматизация</h2>
-      <p class="lead"><span data-en="Every area has tasks. A repeated task becomes a skill, and a reliable skill becomes an automation.">Всяка област има задачи. Повтарящата се задача става умение, а надеждното умение става автоматизация.</span> <span class="badge" data-en="sample backbone">примерен гръбнак</span></p>
-
-      <div class="flow">
-        <div class="st"><b data-en="DOMAIN">ОБЛАСТ</b><small data-en="an area of life or business">част от живота или бизнеса</small></div><span class="ar">→</span>
-        <div class="st"><b data-en="TASK">ЗАДАЧА</b><small data-en="something I do again and again">нещо, което правя отново и отново</small></div><span class="ar">→</span>
-        <div class="st"><b data-en="SKILL">УМЕНИЕ</b><small data-en="the task written down once: AI runs it">задачата, записана веднъж: AI я изпълнява</small></div><span class="ar">→</span>
-        <div class="st"><b data-en="AUTOMATION">АВТОМАТИЗАЦИЯ</b><small data-en="a skill that runs by itself">умение, което върви само</small></div>
-      </div>
-
-      <div class="domains" id="domains"></div>
-      <div class="legend"><span style="color:var(--warn)" data-en="● on a schedule">● по график</span><span style="color:var(--blue)" data-en="● when something happens">● при събитие</span><span data-en="● manual, on purpose">● остава ръчно, нарочно</span></div>
-      <p class="note" data-en="Skills and automations are samples and will be replaced with my own.">Уменията и автоматизациите са примерни и ще бъдат заменени с моите собствени.</p>
-
-      <div class="thumbs">
-        <div data-en="Done by hand twice → make it a skill">Направено на ръка два пъти → става умение</div>
-        <div data-en="The skill works 5 times in a row → automate it">Умението работи 5 пъти поред → автоматизирам го</div>
-        <div data-en="It sends, spends or publishes → keep it manual, on purpose">Праща, харчи или публикува → остава ръчно, нарочно</div>
-      </div>
-    </section>
-
-
-
-    <section class="s panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects" tabindex="-1" hidden>
-      <div class="mono">// <span data-en="work">работа</span></div>
-      <h2 data-en="Projects">Проекти</h2>
-      <p class="lead" data-en="Pick a project to see the details.">Избери проект, за да видиш подробности.</p>
+    <section class="s panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work" tabindex="-1">
+      <div class="mono">// <span data-en="work">проекти</span></div>
+      <h2 data-en="Fifteen projects, each with its evidence">Петнайсет проекта, всеки с доказателствата си</h2>
+      <p class="lead" data-en="One folder in the repository is one project. Every number comes with the command that produces it. Open a project for the proof, what it does not prove, and the link to its folder.">Една папка в хранилището е един проект. Всяко число идва с командата, която го произвежда. Отвори проект за доказателството, за това какво не доказва и за връзката към папката му.</p>
       <div class="filters" id="filters" role="group" aria-label="Филтър на проектите" data-en-aria="Project filter"></div>
       <div class="grid" id="projects-grid"></div>
+      <p class="note" data-en="Counts were recorded on 2026-10-26. Where I re-ran a suite, the project says so.">Броят е записан на 2026-10-26. Където съм повтарял тестовете, проектът го казва.</p>
     </section>
 
-    <section class="s panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" tabindex="-1" hidden>
-      <div class="mono">// <span data-en="contact">контакти</span></div>
+    <section class="s panel" id="panel-architecture" role="tabpanel" aria-labelledby="tab-architecture" tabindex="-1" hidden>
+      <div class="mono">// <span data-en="architecture">архитектура</span></div>
+      <h2 data-en="Authority-separated execution for AI agents">Изпълнение с разделени правомощия за AI агенти</h2>
+      <p class="lead" data-en="Thinking, proposing, permitting, executing and verifying are five different things, and none of them can create another. This is how the projects fit together, and what is not built yet.">Мисленето, предлагането, разрешаването, изпълнението и проверката са пет различни неща и никое от тях не може да създаде друго. Така се свързват проектите и ето какво още не е построено.</p>
+
+      <div class="arch card">
+        <svg viewBox="0 0 1100 520" role="img" aria-label="Схема на цикъла: цел, оценител, планировчик, плик, два ключа, контрол на изпълнението, бариера, адаптер, проверка, доказателство" data-en-aria="Diagram of the loop: goal, evaluator, planner, envelope, two keys, execution control, barrier, adapter, verifier, evidence">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9a93a8"/></marker></defs>
+
+          <rect class="node" x="20" y="30" width="140" height="110" rx="14"/>
+          <text class="h" x="90" y="80" text-anchor="middle" data-en="HUMAN GOAL">ЦЕЛ</text><text class="d" x="90" y="100" text-anchor="middle" data-en="a person decides">човек решава</text>
+
+          <rect class="node hub" x="200" y="30" width="280" height="110" rx="14"/>
+          <text class="h" x="340" y="58" text-anchor="middle" data-en="EVALUATOR">ОЦЕНИТЕЛ</text><text class="d" x="340" y="76" text-anchor="middle">ai-proposal-evaluator</text>
+          <text class="d" x="340" y="98" text-anchor="middle" data-en="observe · classify source · argue for and against">наблюдава · класифицира източника · аргументира за и против</text>
+          <text class="d" x="340" y="116" text-anchor="middle" data-en="counter-model → CLEAR · HOLD · STOP">контра-модел → CLEAR · HOLD · STOP</text>
+
+          <rect class="node dash" x="520" y="30" width="220" height="110" rx="14"/>
+          <text class="h" x="630" y="58" text-anchor="middle" data-en="PLANNER">ПЛАНИРОВЧИК</text><text class="d" x="630" y="78" text-anchor="middle" data-en="design only, not built">само дизайн, не е построен</text>
+          <text class="d" x="630" y="100" text-anchor="middle" data-en="options → compare → rank">варианти → сравнение → ред</text><text class="d" x="630" y="118" text-anchor="middle" data-en="→ smallest testable step">→ най-малката проверима стъпка</text>
+
+          <rect class="node" x="780" y="30" width="300" height="110" rx="14"/>
+          <text class="h" x="930" y="62" text-anchor="middle" data-en="PROPOSAL ENVELOPE">ПЛИК НА ПРЕДЛОЖЕНИЕТО</text><text class="d" x="930" y="84" text-anchor="middle" data-en="exact · immutable · hashed">точен · неизменяем · с хеш</text>
+          <text class="d" x="930" y="106" text-anchor="middle">agent-action-verifier / envelope.js</text>
+
+          <rect class="node t2" x="780" y="210" width="300" height="110" rx="14"/>
+          <text class="h" x="930" y="238" text-anchor="middle" data-en="TWO KEYS MEET">ДВАТА КЛЮЧА СЕ СРЕЩАТ</text>
+          <text class="d" x="930" y="262" text-anchor="middle" data-en="CLEAR for this exact envelope">CLEAR за точно този плик</text><text class="d" x="930" y="280" text-anchor="middle" data-en="AND a human PERMIT for it">И човешко РАЗРЕШЕНИЕ за него</text><text class="d" x="930" y="298" text-anchor="middle" data-en="AND the gate is OPEN">И гейтът е OPEN</text>
+
+          <rect class="node hub" x="420" y="210" width="300" height="110" rx="14"/>
+          <text class="h" x="570" y="240" text-anchor="middle" data-en="EXECUTION CONTROL">КОНТРОЛ НА ИЗПЪЛНЕНИЕТО</text><text class="d" x="570" y="260" text-anchor="middle">agent-execution-control</text>
+          <text class="d" x="570" y="282" text-anchor="middle" data-en="exact validation · single-use claim">точна проверка · еднократно искане</text><text class="d" x="570" y="300" text-anchor="middle" data-en="PostgreSQL-enforced">налагано от PostgreSQL</text>
+
+          <rect class="node t3" x="60" y="210" width="320" height="110" rx="14"/>
+          <text class="h" x="220" y="240" text-anchor="middle" data-en="DISPATCH BARRIER">БАРИЕРА ПРЕД ИЗПЪЛНЕНИЕ</text>
+          <text class="d" x="220" y="266" text-anchor="middle" data-en="re-check: expiry · hold · revoke">повторна проверка: срок · задържане · отмяна</text><text class="d" x="220" y="284" text-anchor="middle" data-en="version · dependencies">версия · зависимости</text>
+
+          <rect class="node dash" x="60" y="380" width="320" height="110" rx="14"/>
+          <text class="h" x="220" y="418" text-anchor="middle" data-en="ADAPTER">АДАПТЕР</text><text class="d" x="220" y="440" text-anchor="middle" data-en="capability only, no authority">само възможност, без правомощие</text><text class="d" x="220" y="458" text-anchor="middle" data-en="not built: no real action was run">не е построен: няма реално действие</text>
+
+          <rect class="node hub" x="420" y="380" width="300" height="110" rx="14"/>
+          <text class="h" x="570" y="414" text-anchor="middle" data-en="VERIFIER">ПРОВЕРЯВАЩ</text><text class="d" x="570" y="436" text-anchor="middle" data-en="independent reading of the result">независимо четене на резултата</text><text class="d" x="570" y="456" text-anchor="middle">agent-action-verifier / verifier.js</text>
+
+          <rect class="node" x="780" y="380" width="300" height="110" rx="14"/>
+          <text class="h" x="930" y="420" text-anchor="middle" data-en="RESULT EVIDENCE">ДОКАЗАТЕЛСТВО ЗА РЕЗУЛТАТА</text><text class="d" x="930" y="442" text-anchor="middle" data-en="returns as evidence only,">връща се само като доказателство,</text><text class="d" x="930" y="460" text-anchor="middle" data-en="never as authority">никога като правомощие</text>
+
+          <path class="ln" d="M160 85 L198 85"/><path class="ln" d="M480 85 L518 85"/><path class="ln" d="M740 85 L778 85"/>
+          <path class="ln" d="M930 140 L930 208"/>
+          <path class="ln" d="M780 265 L722 265"/><path class="ln" d="M420 265 L382 265"/>
+          <path class="ln" d="M220 320 L220 378"/>
+          <path class="ln" d="M380 435 L418 435"/><path class="ln" d="M720 435 L778 435"/>
+        </svg>
+        <ol class="steps mobile">
+          <li><b data-en="1 · HUMAN GOAL">1 · ЦЕЛ</b><span data-en="A person decides what is wanted.">Човек решава какво се иска.</span></li>
+          <li><b data-en="2 · EVALUATOR (built, 247 tests)">2 · ОЦЕНИТЕЛ (построен, 247 теста)</b><span data-en="Observes, classifies the source, argues for and against, builds a counter-model, and returns CLEAR, HOLD or STOP.">Наблюдава, класифицира източника, аргументира за и против, строи контра-модел и връща CLEAR, HOLD или STOP.</span></li>
+          <li><b data-en="3 · PLANNER (design only)">3 · ПЛАНИРОВЧИК (само дизайн)</b><span data-en="Would generate options, compare and rank them, and propose the smallest testable step. Not built.">Би генерирал варианти, би ги сравнявал и подреждал и би предлагал най-малката проверима стъпка. Не е построен.</span></li>
+          <li><b data-en="4 · PROPOSAL ENVELOPE (built, in-process)">4 · ПЛИК НА ПРЕДЛОЖЕНИЕТО (построен, в процес)</b><span data-en="The exact, immutable, hashed description of the action.">Точното, неизменяемо описание на действието, с хеш.</span></li>
+          <li><b data-en="5 · TWO KEYS MEET">5 · ДВАТА КЛЮЧА СЕ СРЕЩАТ</b><span data-en="CLEAR for this exact envelope and a human permit for it, and the gate is open.">CLEAR за точно този плик и човешко разрешение за него, а гейтът е отворен.</span></li>
+          <li><b data-en="6 · EXECUTION CONTROL (built, PostgreSQL-enforced)">6 · КОНТРОЛ НА ИЗПЪЛНЕНИЕТО (построен, налаган от PostgreSQL)</b><span data-en="Exact validation and a single-use claim.">Точна проверка и еднократно искане.</span></li>
+          <li><b data-en="7 · DISPATCH BARRIER">7 · БАРИЕРА ПРЕД ИЗПЪЛНЕНИЕ</b><span data-en="Re-checks expiry, hold, revoke, version and dependencies right before the adapter is called.">Проверява отново срок, задържане, отмяна, версия и зависимости точно преди да се извика адаптерът.</span></li>
+          <li><b data-en="8 · ADAPTER (not built)">8 · АДАПТЕР (не е построен)</b><span data-en="Capability only, no authority. No real external action has been run.">Само възможност, без правомощие. Не е пускано реално външно действие.</span></li>
+          <li><b data-en="9 · VERIFIER (built, no probe of its own)">9 · ПРОВЕРЯВАЩ (построен, без собствена проба)</b><span data-en="Reads the result independently. Evidence goes back to the evaluator and never carries authority.">Чете резултата независимо. Доказателството се връща към оценителя и никога не носи правомощие.</span></li>
+        </ol>
+      </div>
+      <p class="note" data-en="A new action needs a new envelope, a new CLEAR and a new permit. Nothing in the loop re-executes on its own.">Ново действие изисква нов плик, нов CLEAR и ново разрешение. Нищо в цикъла не се изпълнява повторно само.</p>
+
+      <h3 class="sh" data-en="Every way not to act">Всички начини да не се действа</h3>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th data-en="Outcome">Резултат</th><th data-en="Where">Къде</th><th data-en="Meaning">Значение</th></tr></thead>
+        <tbody>
+          <tr><td class="k">NO PERMIT</td><td data-en="permit issue">издаване на разрешение</td><td data-en="the evaluator is not CLEAR, the gate is not OPEN, or any field of the envelope differs">оценителят не е CLEAR, гейтът не е OPEN или някое поле на плика се различава</td></tr>
+          <tr><td class="k">REJECTED</td><td data-en="claim">искане</td><td data-en="the permit is used, expired or revoked; one permit gives exactly one claim">разрешението е използвано, изтекло или отменено; едно разрешение дава точно едно искане</td></tr>
+          <tr><td class="k">CANCELLED</td><td data-en="dispatch barrier">бариера пред изпълнение</td><td data-en="something changed between claim and dispatch; the adapter was not called">нещо се е променило между искането и изпълнението; адаптерът не е извикан</td></tr>
+          <tr><td class="k">UNKNOWN</td><td data-en="after the attempt">след опита</td><td data-en="the outcome cannot be told; it is never retried; a reconciler moves abandoned claims here">резултатът не може да се определи; никога не се повтаря; съгласувател премества тук изоставените искания</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 class="sh" data-en="What the verifier’s answer does">Какво прави отговорът на проверяващия</h3>
+      <p class="plain" data-en="“The adapter says success” is data, not a verdict. An independent probe, which must not be the adapter, feeds the verifier.">„Адаптерът казва успех“ е данни, не присъда. Независима проба, която не трябва да е адаптерът, захранва проверяващия.</p>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th data-en="Verdict">Присъда</th><th data-en="Gate after it">Гейт след нея</th></tr></thead>
+        <tbody>
+          <tr><td class="k">VERIFIED</td><td>OPEN</td></tr>
+          <tr><td class="k">CONTRADICTED</td><td>STOP</td></tr>
+          <tr><td class="k">PARTIAL</td><td>HOLD</td></tr>
+          <tr><td class="k">UNKNOWN</td><td>HOLD</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note" data-en="STOP > HOLD > OPEN, and STOP is terminal. No verdict authorises a retry: a retry is a new action and needs a new permit. The defect where a later HOLD could demote a STOP is recorded in the project’s defect history.">STOP > HOLD > OPEN, а STOP е окончателен. Никоя присъда не разрешава повторен опит: той е ново действие и иска ново разрешение. Дефектът, при който по-късен HOLD можеше да смали STOP, е записан в историята на дефектите на проекта.</p>
+
+      <h3 class="sh" data-en="What is and is not built">Какво е и какво не е построено</h3>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th data-en="Part">Част</th><th data-en="Status">Състояние</th><th data-en="Folder">Папка</th></tr></thead>
+        <tbody>
+          <tr><td data-en="Evaluator">Оценител</td><td data-en="implemented, 247 tests">построен, 247 теста</td><td class="k">ai-proposal-evaluator</td></tr>
+          <tr><td data-en="Planner">Планировчик</td><td class="warn" data-en="design only">само дизайн</td><td>—</td></tr>
+          <tr><td data-en="Proposal envelope check">Проверка на плика</td><td data-en="implemented, in-process">построена, в процес</td><td class="k">agent-action-verifier</td></tr>
+          <tr><td data-en="Permit, claim, dispatch barrier, gate states, reconciler">Разрешение, искане, бариера, състояния на гейта, съгласувател</td><td data-en="implemented, PostgreSQL-enforced">построени, налагани от PostgreSQL</td><td class="k">agent-execution-control</td></tr>
+          <tr><td data-en="Verifier logic">Логика на проверяващия</td><td data-en="implemented, in-process; has no probe of its own">построена, в процес; няма собствена проба</td><td class="k">agent-action-verifier</td></tr>
+          <tr><td data-en="Adapter">Адаптер</td><td class="warn" data-en="not implemented; no real external action has been run">не е построен; не е пускано реално външно действие</td><td>—</td></tr>
+          <tr><td data-en="The two implemented halves wired together">Двете построени половини, свързани заедно</td><td class="warn" data-en="not done">не е направено</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note" data-en="Small gates in front of single actions: payload-policy-validator (is this payload safe to run), batch-file-gateway (isolate, scan, write once) and status-flow-validator (did the request walk its status chain in order).">Малки гейтове пред отделни действия: payload-policy-validator (безопасен ли е този товар), batch-file-gateway (изолирай, сканирай, запиши веднъж) и status-flow-validator (минала ли е заявката през статусите си в ред).</p>
+    </section>
+
+    <section class="s panel" id="panel-method" role="tabpanel" aria-labelledby="tab-method" tabindex="-1" hidden>
+      <div class="mono">// <span data-en="method">метод</span></div>
+      <h2 data-en="How I work with AI assistants, and how you can check it">Как работя с AI асистенти и как можеш да го провериш</h2>
+      <p class="lead" data-en="This is AI-assisted work, and it says so. A number is published only with the command that produces it.">Това е работа с помощта на AI и го казва. Число се публикува само с командата, която го произвежда.</p>
+
+      <h3 class="sh" data-en="Who did what">Кой какво е правил</h3>
+      <div class="tablewrap"><table class="tbl who">
+        <thead><tr><th data-en="Part">Част</th><th>Martin Urumov</th><th data-en="AI coding assistants (Claude Code, Codex, GitHub Copilot)">AI асистенти (Claude Code, Codex, GitHub Copilot)</th></tr></thead>
+        <tbody>
+          <tr><td data-en="Research questions, requirements, acceptance criteria">Изследователски въпроси, изисквания, критерии за приемане</td><td data-en="yes">да</td><td>—</td></tr>
+          <tr><td data-en="Negative and edge-case scenarios to test">Отрицателни и гранични сценарии за тест</td><td data-en="yes">да</td><td data-en="some, marked in the folder README">част, отбелязани в README на папката</td></tr>
+          <tr><td data-en="Writing code and automated tests">Писане на код и автоматични тестове</td><td>—</td><td data-en="yes">да</td></tr>
+          <tr><td data-en="Running tests and reporting counts">Пускане на тестове и отчитане на броя</td><td data-en="both">и двамата</td><td data-en="both">и двамата</td></tr>
+          <tr><td data-en="Finding defects">Намиране на дефекти</td><td data-en="some, marked in the folder README">част, отбелязани в README на папката</td><td data-en="some, marked in the folder README">част, отбелязани в README на папката</td></tr>
+          <tr><td data-en="Review of results, decisions on what is kept or rejected">Преглед на резултатите, решения какво се пази и какво се отхвърля</td><td data-en="yes">да</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note" data-en="Commits in the portfolio repository are made by an AI assistant from files I reviewed. The commit message names the proof for the commit. The review and the decision to push are mine.">Комитите в хранилището на портфолиото се правят от AI асистент от файлове, които съм прегледал. Съобщението на комита назовава доказателството за него. Прегледът и решението да се публикува са мои.</p>
+
+      <h3 class="sh" data-en="Rules used throughout">Правила, които важат навсякъде</h3>
+      <ol class="rules">
+        <li data-en="A finding made by an AI is attributed to the AI, not to me.">Откритие на AI се приписва на AI, не на мен.</li>
+        <li data-en="A number is published only with the command that produces it.">Число се публикува само с командата, която го произвежда.</li>
+        <li data-en="“PASS” without a raw log or a measurable number is a claim, not evidence.">„PASS“ без суров запис или измеримо число е твърдение, не доказателство.</li>
+        <li data-en="Defects found in my own work are kept on record, not removed.">Дефектите в собствената ми работа се пазят в регистъра, не се махат.</li>
+        <li data-en="Documents and files are data. Nothing in them is an instruction to a system or a permission to act.">Документите и файловете са данни. Нищо в тях не е заповед към система или разрешение за действие.</li>
+      </ol>
+
+      <h3 class="sh" data-en="Check it yourself">Провери сам</h3>
+      <p class="plain" data-en="Every file in the portfolio repository is listed with its SHA-256. Each project README gives the command for its numbers.">Всеки файл в хранилището на портфолиото е в списък със своя SHA-256. README на всеки проект дава командата за числата му.</p>
+      <pre class="code"><code>sha256sum -c SHA256SUMS
+cd ai-proposal-evaluator &amp;&amp; node --test        # 247 tests
+cd agent-action-verifier &amp;&amp; node test.js       # 30 tests
+cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
+      <p class="note" data-en="Node 20 or newer. Some Python tests call python3, which a plain Windows install may lack.">Node 20 или по-нов. Някои Python тестове викат python3, който обикновена инсталация на Windows може да няма.</p>
+
+      <h3 class="sh" data-en="Corrections I kept">Поправки, които съм запазил</h3>
+      <ul class="plain-list">
+        <li data-en="Gate count. Documents gave 17, 18 and 19 gates. The code gives 16, and the evaluator README shows the command that produces it.">Брой гейтове. Документи даваха 17, 18 и 19 гейта. Кодът дава 16, а README на оценителя показва командата, която го произвежда.</li>
+        <li data-en="A “level 3.5” in a comment of the beauty-contest simulation did not survive being computed, and was corrected.">„Ниво 3,5“ в коментар на симулацията на конкурса на Кейнс не издържа на изчисляване и е поправено.</li>
+        <li data-en="The source-monitoring pipeline passed 45 of 45 checks on one day and 43 of 45 the next, on the same environment. Both runs are on record.">Процесът за наблюдение на източника мина 45 от 45 проверки в един ден и 43 от 45 на следващия, на същата среда. И двата прогона са записани.</li>
+        <li data-en="The defect register says its own limit: who found each defect is self-reported, and no entry has been classified independently from outside.">Регистърът на дефектите казва собствената си граница: кой е намерил всеки дефект е самоотчетено и никой запис не е класифициран независимо отвън.</li>
+      </ul>
+
+      <h3 class="sh" data-en="The framework behind the work">Рамката зад работата</h3>
+      <p class="plain" data-en="The projects grew from one working model: leave room between a reaction and an action, separate evidence from interpretation, keep counterexamples visible. It is a working model, not an established psychological mechanism, and software checks do not validate claims about human cognition. The decks below are background reading.">Проектите растат от един работен модел: оставяй място между реакцията и действието, отделяй доказателството от тълкуването, дръж контрапримерите видими. Това е работен модел, не установен психологически механизъм, а проверките в софтуера не потвърждават твърдения за човешкото познание. Презентациите по-долу са фоново четиво.</p>
+      <div class="deckrow" id="decks"></div>
+
+      <h3 class="sh" data-en="Limitations">Ограничения</h3>
+      <p class="plain" data-en="These are prototypes and documented experiments, not production systems. Nothing here claims a deployment, a client, or a security assessment of a live system. Each project README lists its own limits.">Това са прототипи и документирани експерименти, не продукционни системи. Нищо тук не твърди внедряване, клиент или оценка на сигурността на жива система. README на всеки проект изброява собствените си граници.</p>
+    </section>
+
+    <section class="s panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1" hidden>
+      <div class="mono">// <span data-en="about">за мен</span></div>
       <h2><span data-en="Martin Urumov">Мартин Урумов</span></h2>
-      <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен за отдалечена международна работа.</p>
+      <p class="lead" data-en="AI workflow and agent reliability · QA automation · technical support. Open to remote and international roles.">AI работни процеси и надеждност на агенти · QA автоматизация · техническа поддръжка. Отворен към отдалечена и международна работа.</p>
+
+      <div class="aboutgrid">
+        <div class="card">
+          <h3 data-en="What I look for">Какво търся</h3>
+          <p data-en="Roles in AI evaluation and assurance, agent reliability, technical AI governance, QA automation or technical support. Places where a claim has to come with its evidence.">Роли в оценка и проверка на AI, надеждност на агенти, техническо управление на AI, QA автоматизация или техническа поддръжка. Места, където твърдението трябва да идва с доказателството си.</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Background">Опит</h3>
+          <p data-en="Aviation maintenance technician since June 2026, where procedure, documentation and verification are daily practice. Earlier work in sales, customer support and operations. Marine navigation studies; software QA courses in progress.">Техник по поддръжка на авиационна техника от юни 2026, където процедурата, документацията и проверката са всекидневие. По-рано работа в продажби, клиентска поддръжка и операции. Морска навигация; курсове по софтуерно QA в процес.</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Languages">Езици</h3>
+          <p data-en="Bulgarian: native. English: professional working proficiency.">Български: роден. Английски: професионално работно ниво.</p>
+        </div>
+      </div>
+
       <div class="cvrow">
-        <a class="btn" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="Download CV">Изтегли CV</span> <small id="cv-note">PDF · EN</small></a>
+        <a class="btn primary" id="cv-link" href="cv/Martin_Urumov_CV.pdf" target="_blank" rel="noopener noreferrer"><span data-en="Download CV">Изтегли CV</span> <small id="cv-note">PDF · EN</small></a>
         <span class="owner-both">Мартин Урумов · Martin Urumov</span>
       </div>
+      <h3 class="sh" data-en="Find me">Къде да ме намериш</h3>
       <div class="socials" id="socials"></div>
     </section>
 
     <section class="s panel" id="panel-personal" role="tabpanel" aria-labelledby="tab-personal" tabindex="-1" hidden>
       <div class="mono">// <span data-en="personal">лично</span></div>
       <h2 data-en="Personal control">Личен контрол</h2>
-      <p class="lead" data-en="Platforms, news, notes and my unfinished work. Sealed with a passphrase in this browser. Nothing here is public.">Платформи, новини, бележки и недовършеното ми. Запечатано с парола в този браузър. Нищо тук не е публично.</p>
+      <p class="lead" data-en="Platforms, news, notes and my unfinished work. Sealed with a name and a passphrase in this browser. Nothing here is public.">Платформи, новини, бележки и недовършеното ми. Запечатано с име и парола в този браузър. Нищо тук не е публично.</p>
       <div id="p-root"></div>
     </section>
 
@@ -244,11 +268,10 @@
 </dialog>
 
 <footer>
-  <div class="wrap">SSC Compass · Shadow Somiyo Compass · Мартин Урумов · Martin Urumov · <span id="year"></span></div>
+  <div class="wrap">Мартин Урумов · Martin Urumov · <span id="year"></span></div>
 </footer>
 
 <script src="assets/data.js"></script>
-<script src="assets/cores.js"></script>
 <script src="assets/vault.js"></script>
 <script src="assets/personal.js"></script>
 <script src="assets/app.js"></script>
