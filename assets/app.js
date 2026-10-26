@@ -49,10 +49,16 @@
     $('dlg-body').innerHTML = '<div class="chips" style="margin-bottom:10px">' + p.chips.map(chipHtml).join('') + '</div>' +
       '<h3 id="dlg-title">' + esc(p.id) + '</h3>' +
       '<h4>' + esc(tx(UI.why)) + '</h4><p>' + esc(tx(p.summary)) + '</p>' +
+      '<div class="ex-host" id="ex-host"></div>' +
       '<h4>' + esc(tx(UI.proof)) + '</h4><p>' + esc(tx(p.proof)) + '</p>' +
       (p.points && p.points.length ? '<h4>' + esc(tx(UI.points)) + '</h4><ul>' + p.points.map(function (x) { return '<li>' + esc(tx(x)) + '</li>'; }).join('') + '</ul>' : '') +
       '<h4>' + esc(tx(UI.limits)) + '</h4><p>' + esc(tx(p.limits)) + '</p>' +
       (url ? '<p><a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(url) + '">' + esc(tx(UI.folder)) + ': ' + esc(p.id) + '<span class="sr"> ' + esc(tx(UI.newTab)) + '</span></a></p>' : '');
+    mountExample();
+  }
+  function mountExample() {
+    var h = $('ex-host'); if (!h || !window.SSCExample) return;
+    window.SSCExample.mount(h, window.SSC_EX && window.SSC_EX[openProject], lang);
   }
   $('filters').addEventListener('click', function (e) {
     if (!e.target.dataset.f) return; filter = e.target.dataset.f;
@@ -68,6 +74,7 @@
     openProj(b.dataset.p);
   });
   function closeDlg() {
+    if (window.SSCExample) window.SSCExample.stop();
     if (dlg.close) dlg.close(); else dlg.removeAttribute('open');
     var b = openProject && document.querySelector('.more[data-p="' + openProject + '"]'); if (b) b.focus();
   }
