@@ -30,8 +30,8 @@
       while (s.acc >= SIZE) { s.acc -= SIZE; s.ch.unshift(glyph()); if (s.ch.length > s.n) s.ch.pop(); }
       if (!s.ch.length) s.ch.push(glyph());
       for (var k = 0; k < s.ch.length; k++) {
-        var a = (1 - k / s.n) * (k === 0 ? .55 : .34);
-        ctx.fillStyle = 'rgba(52,50,150,' + a.toFixed(3) + ')';
+        var a = (1 - k / s.n) * (k === 0 ? .7 : .4);
+        ctx.fillStyle = 'rgba(70,255,140,' + a.toFixed(3) + ')';
         ctx.fillText(s.ch[k], s.x, s.y - k * SIZE);
       }
       if (s.y - s.n * SIZE > H) streams.splice(i, 1);
