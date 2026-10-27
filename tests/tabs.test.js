@@ -75,9 +75,9 @@ test('leaving the Personal tab empties it, so nothing stays in the page', async 
 test('switching tabs raises no script errors', () => { const p = page(); for (const t of TABS.concat(TABS)) p.click(p.doc.getElementById('tab-' + t)); assert.deepEqual(p.errors, []); });
 test('Home holds the hero and a tile for every other public tab', () => {
   const p = page(); assert.ok(p.doc.querySelector('#panel-home h1')); assert.equal(p.doc.querySelectorAll('#panel-home .stats b').length, 4);
-  assert.deepEqual([...p.doc.querySelectorAll('#panel-home a.tile')].map((a) => a.getAttribute('href')), ['#work', '#architecture', '#demo', '#method', '#about']);
+  assert.equal(p.doc.querySelectorAll('#panel-home .hflow li').length, 4);
   assert.ok(!p.doc.querySelector('#panel-work h1, #panel-work .stats'), 'the numbers no longer sit above every tab');
 });
-test('clicking a Home tile opens that tab', () => { const p = page(); p.click(p.doc.querySelector('#panel-home a.tile[href="#method"]')); assert.equal(p.w.SSCApp.tab(), 'method'); });
+test('the Watch it run button on Home opens How it works', () => { const p = page(); p.click(p.doc.getElementById('cta-demo')); assert.equal(p.w.SSCApp.tab(), 'demo'); });
 test('every tab button carries an icon', () => { const p = page(); for (const t of TABS) assert.ok(p.doc.querySelector('#tab-' + t + ' svg'), t); });
 test('clicking a button gives it the pop animation class', () => { const p = page(); const b = p.doc.getElementById('tab-about'); p.click(b); assert.ok(b.classList.contains('pop')); });

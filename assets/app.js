@@ -100,8 +100,7 @@
       return '<span class="pill off"><span class="n">' + esc(s.name) + '</span></span>';
     }).join('');
   }
-  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#'); $('cv-hero').setAttribute('href', safeFile(D.cv.url) || '#');
-  $('repo-link').setAttribute('href', safeUrl(D.repo) || '#');
+  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#');  $('repo-link').setAttribute('href', safeUrl(D.repo) || '#');
 
   /* ---------- езикът се прилага навсякъде / apply language everywhere ---------- */
   function applyLang(l) {
