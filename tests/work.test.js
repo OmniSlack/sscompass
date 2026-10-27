@@ -72,9 +72,9 @@ test('Bulgarian browsers get Bulgarian, others English, and a stored choice wins
 });
 test('the language switch updates the page language, title, description, buttons and storage', () => {
   const p = page({ lang: 'bg-BG' }); p.click(p.doc.querySelector('#lang [data-lang=en]')); assert.equal(p.doc.documentElement.lang, 'en');
-  assert.equal(p.doc.title, 'Martin Urumov · Portfolio'); assert.match(p.doc.querySelector('meta[name=description]').content, /Fifteen projects/);
+  assert.equal(p.doc.title, 'SS Compass · OmniEcho · Martin Urumov'); assert.match(p.doc.querySelector('meta[name=description]').content, /Fifteen projects/);
   assert.equal(p.w.localStorage.getItem('ssc-lang'), 'en'); assert.equal(p.doc.querySelector('#lang [data-lang=en]').getAttribute('aria-pressed'), 'true');
-  p.w.SSCApp.setLang('bg'); assert.equal(p.doc.title, 'Мартин Урумов · Портфолио');
+  p.w.SSCApp.setLang('bg'); assert.equal(p.doc.title, 'SS Compass · OmniEcho · Мартин Урумов');
 });
 test('English: every translatable element shows its English text; back to Bulgarian restores it exactly', () => {
   const p = page({ lang: 'bg-BG' }); const before = [...p.doc.querySelectorAll('[data-en]')].map((e) => e.textContent);
@@ -254,8 +254,8 @@ test('home: the home page has the site map; choosing a branch and pressing Open 
   const p = page(); assert.equal(vis(p, '#home-map').length, 1 + 7);
   const node = [...p.doc.querySelectorAll('#home-map .mm-node')].find((n) => /AI platforms/.test(n.textContent)); node.click(); const open = p.doc.querySelector('#home-map .mm-detail .btn'); assert.ok(open); open.click(); assert.equal(p.w.SSCApp.tab(), 'ai');
 });
-test('home: the three decks are on the home page as cards that open the first slide', () => {
-  const p = page(); const a = [...p.doc.querySelectorAll('#panel-home #decks-home a.deck')]; assert.equal(a.length, 3); for (const x of a) assert.match(x.getAttribute('href'), /^decks\/index\.html#(omniecho|coherence|dream)\/1$/);
+test('creative: the three decks are on the Creative tab as cards that open the first slide', () => {
+  const p = page(); const a = [...p.doc.querySelectorAll('#panel-creative #decks-home a.deck')]; assert.equal(a.length, 3); for (const x of a) assert.match(x.getAttribute('href'), /^decks\/index\.html#(omniecho|coherence|dream)\/1$/);
 });
 test('footer: the CV and all five profiles sit in the footer, and the About page has no contact grid or oversized name', () => {
   const p = page(); assert.ok(p.doc.querySelector('footer #cv-link')); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5);

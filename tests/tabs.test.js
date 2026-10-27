@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 
-const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'creative', 'about', 'personal'];
 const page = (o) => load(Object.assign({ lang: 'en-US' }, o));
 const visible = (p) => TABS.filter((t) => !p.doc.getElementById('panel-' + t).hasAttribute('hidden'));
 const wait = (ms = 20) => new Promise((r) => setTimeout(r, ms));
@@ -54,8 +54,8 @@ test('the active tab survives a language change', () => {
   const p = page(); p.click(p.doc.getElementById('tab-method')); p.w.SSCApp.setLang('bg'); assert.equal(p.w.SSCApp.tab(), 'method'); assert.deepEqual(visible(p), ['method']);
 });
 test('tab labels are translated', () => {
-  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'About', 'Personal']);
-  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'За мен', 'Личен контрол']);
+  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'Creative', 'About', 'Personal']);
+  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'Творчество', 'За мен', 'Личен контрол']);
 });
 test('every public tab has real content', () => {
   const p = page(); for (const t of ['home', 'work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);
@@ -74,10 +74,21 @@ test('leaving the Personal tab empties it, so nothing stays in the page', async 
 });
 test('switching tabs raises no script errors', () => { const p = page(); for (const t of TABS.concat(TABS)) p.click(p.doc.getElementById('tab-' + t)); assert.deepEqual(p.errors, []); });
 test('Home holds the hero and a tile for every other public tab', () => {
-  const p = page(); assert.ok(p.doc.querySelector('#panel-home h1')); assert.equal(p.doc.querySelectorAll('#panel-home .stats b').length, 4);
+  const p = page(); assert.ok(p.doc.querySelector('#panel-home h1')); 
   assert.equal(p.doc.querySelectorAll('#panel-home .hflow li').length, 4);
   assert.ok(!p.doc.querySelector('#panel-work h1, #panel-work .stats'), 'the numbers no longer sit above every tab');
 });
 test('the Watch it run button on Home opens How it works', () => { const p = page(); p.click(p.doc.getElementById('cta-demo')); assert.equal(p.w.SSCApp.tab(), 'demo'); });
 test('every tab button carries an icon', () => { const p = page(); for (const t of TABS) assert.ok(p.doc.querySelector('#tab-' + t + ' svg'), t); });
 test('clicking a button gives it the pop animation class', () => { const p = page(); const b = p.doc.getElementById('tab-about'); p.click(b); assert.ok(b.classList.contains('pop')); });
+
+test('every tab change is a history step, so the browser back button returns to the previous tab', () => {
+  const p = page(); const steps = []; const orig = p.w.history.pushState.bind(p.w.history); p.w.history.pushState = (s, t, u) => { steps.push(u); return orig(s, t, u); };
+  p.w.SSCApp.showTab('work'); p.w.SSCApp.showTab('method'); assert.deepEqual(steps, ['#work', '#method']);
+  p.w.location.hash = '#work'; p.w.dispatchEvent(new p.w.HashChangeEvent('hashchange')); assert.equal(p.w.SSCApp.tab(), 'work');
+  p.w.location.hash = ''; p.w.dispatchEvent(new p.w.HashChangeEvent('hashchange')); assert.equal(p.w.SSCApp.tab(), 'home');
+});
+test('the Creative tab opens from the tab bar and from the decks alias', () => {
+  const p = page(); p.click(p.doc.getElementById('tab-creative')); assert.equal(p.w.SSCApp.tab(), 'creative'); assert.ok(!p.doc.getElementById('panel-creative').hidden);
+  const q = page({ hash: '#decks' }); assert.equal(q.w.SSCApp.tab(), 'creative');
+});

@@ -120,7 +120,7 @@
   function render(focus) {
     var d = DECKS[deckId], u = UI[lang], s = d.slides[idx];
     document.documentElement.lang = lang;
-    document.title = d.title + ' · ' + (lang === 'bg' ? 'Мартин Урумов' : 'Martin Urumov');
+    document.title = d.title + ' · ' + 'SS Compass · OmniEcho';
     $('dtitle').textContent = d.title; $('dsub').textContent = d.sub;
     $('decknav').innerHTML = ORDER.map(function (k) { return '<a href="#' + k + '/1" data-d="' + k + '"' + (k === deckId ? ' aria-current="page"' : '') + '>' + esc(DECKS[k].title) + '</a>'; }).join('');
     $('stage').innerHTML = slideHtml(s);

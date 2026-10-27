@@ -197,7 +197,7 @@ test('the stage is announced politely and can receive focus after a move', () =>
   p.click(p.doc.getElementById('next')); assert.equal(p.doc.activeElement, p.doc.getElementById('stage'));
 });
 test('the page title names the deck and the owner', () => {
-  const p = loadDeck('#coherence/1'); assert.match(p.doc.title, /The Coherence Protocol · Martin Urumov/);
+  const p = loadDeck('#coherence/1'); assert.match(p.doc.title, /The Coherence Protocol · SS Compass · OmniEcho/);
 });
 test('slide text is escaped (markup in deck data cannot run)', () => {
   const p = loadDeck('#omniecho/1'); p.w.DECKS.omniecho.slides[1].title = '<img src=x onerror=window.__x=1>';
@@ -266,5 +266,5 @@ test('blueprint: honest about what the source does not say (unnamed nodes, conce
   assert.match(loadDecks().omniecho.slides[0].note, /not a certified standard/);
 });
 test('decks: the viewer carries the portfolio name, not the old project name', () => {
-  const p = loadDeck('#omniecho/1'); assert.match(p.doc.querySelector('.brand').textContent, /MARTIN\/URUMOV/); assert.ok(!/SSC/.test(p.doc.body.textContent));
+  const p = loadDeck('#omniecho/1'); assert.match(p.doc.querySelector('.brand').textContent, /SS\/COMPASS/); assert.ok(!/SSC/.test(p.doc.body.textContent));
 });

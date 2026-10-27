@@ -6,7 +6,7 @@ const { loadStatic, read, exists } = require('./helpers');
 const dom = loadStatic();
 const doc = dom.window.document;
 test.after(() => dom.window.close());
-const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'creative', 'about', 'personal'];
 
 test('document declares HTML5, Bulgarian language, charset and viewport', () => {
   assert.match(read('index.html'), /^<!doctype html>/i); assert.equal(doc.documentElement.lang, 'bg');
@@ -29,17 +29,15 @@ test('Home is the selected, focusable tab at the start; the other panels start h
   for (const id of TABS.slice(1)) assert.ok(doc.getElementById('panel-' + id).hasAttribute('hidden'), id);
 });
 test('the Personal tab comes last and is marked apart', () => {
-  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[7].classList.contains('tab-personal'));
+  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[8].classList.contains('tab-personal'));
 });
 test('the old command-centre concept is gone from the page', () => {
   const h = read('index.html');
   for (const bad of ['SSC/COMPASS', 'Somiyo', 'NotebookLM', 'Obsidian', 'ai-switch', 'Skills', 'Умения']) assert.ok(!h.includes(bad), bad);
 });
-test('one h1 says what the site is about, not the owner name', () => { assert.equal(doc.querySelectorAll('h1').length, 1); assert.match(doc.querySelector('h1').textContent, /AI Governance/); assert.ok(!/Урумов/.test(doc.querySelector('h1').textContent)); assert.match(doc.querySelector('a.brand').textContent, /SS\/COMPASS/); assert.equal(doc.querySelector('a.brand').title, 'Somio Shadow Compass'); });
-test('the home page has a four-step flow diagram and the About block is its last section', () => { assert.equal(doc.querySelectorAll('#panel-home .hflow li').length, 4); const kids = [...doc.getElementById('panel-home').children]; assert.equal(kids[kids.length - 1].id, 'home-about'); assert.ok(kids.indexOf(doc.getElementById('decks-home')) < kids.length - 1); });
-test('the hero states the four headline numbers', () => {
-  assert.deepEqual([...doc.querySelectorAll('.stats b')].map((b) => b.textContent), ['15', '16', '165', '24']);
-});
+test('one h1 says what the site is about, not the owner name', () => { assert.equal(doc.querySelectorAll('h1').length, 1); assert.match(doc.querySelector('h1').textContent, /AI Governance/); assert.ok(!/Урумов/.test(doc.querySelector('h1').textContent)); assert.match(doc.querySelector('a.brand').textContent, /SS\/COMPASS/); assert.match(doc.querySelector('a.brand').textContent, /OmniEcho/); assert.match(doc.querySelector('a.brand').title, /Somio Shadow Compass/); });
+test('the home page has a four-step flow diagram and the About block is its last section', () => { assert.equal(doc.querySelectorAll('#panel-home .hflow li').length, 4); const kids = [...doc.getElementById('panel-home').children]; assert.equal(kids[kids.length - 1].id, 'home-about'); assert.equal(kids[kids.length - 1].tagName, 'DETAILS'); assert.ok(!kids[kids.length - 1].open); assert.ok(!doc.querySelector('#panel-home #decks-home, #panel-home #home-map, #panel-home .stats'), 'decks, site map and big numbers are not on Home'); assert.ok(doc.querySelector('#panel-creative #decks-home')); assert.ok(doc.querySelector('#panel-method #home-map')); });
+test('the hero uses no jargon numbers: no gates, no big statistics', () => { const t = doc.getElementById('panel-home').textContent; assert.ok(!/gate|гейт/i.test(t)); });
 test('the hero has three calls to action: work, CV and the repository', () => {
   assert.ok(doc.getElementById('cta-work')); assert.ok(!doc.getElementById('cv-hero')); assert.equal(doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf');
   const r = doc.getElementById('repo-link'); assert.equal(r.getAttribute('href'), 'https://github.com/OmniSlack/martin-urumov-portfolio'); assert.match(r.rel, /noopener/); assert.equal(r.target, '_blank');

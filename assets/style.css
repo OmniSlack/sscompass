@@ -551,3 +551,11 @@ footer { text-align: left; }
 .pill:hover { background: none; transform: none; color: var(--accent2); text-decoration-color: var(--accent2); }
 .pill.cv { background: none; border: 0; font-weight: 600; }
 @media (max-width: 640px) { .foot-name { width: auto; } }
+
+.brand small { margin-left: 10px; font: 400 .66rem var(--mono); letter-spacing: .14em; color: var(--accent2); text-transform: none; }
+.home-about { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 10px; }
+.home-about summary { cursor: pointer; font: 600 .95rem var(--display); letter-spacing: .06em; padding: 6px 0; }
+.hflow { gap: 14px; max-width: 980px; }
+.hflow li { padding: 16px 16px 18px; gap: 8px; min-height: 150px; }
+.hflow b { font-size: 1.02rem; }
+.hflow li > span { font-size: .86rem; }

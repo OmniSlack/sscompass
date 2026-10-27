@@ -189,7 +189,7 @@
       var h = safeHref(n.href); if (h) { var a = el('a', 'btn', tx(UI.link)); a.href = h; detail.appendChild(a); }
       if ((n.id != null || n.go) && opts.onPick) { var o = el('button', 'btn', tx(UI.link)); o.type = 'button'; o.addEventListener('click', function () { opts.onPick(n); }); detail.appendChild(o); }
     }
-    function labels() { bOpen.textContent = tx(UI.open); bClose.textContent = tx(UI.close); bFit.textContent = tx(UI.fit); bIn.setAttribute('aria-label', tx(UI.zin)); bOut.setAttribute('aria-label', tx(UI.zout)); hint.textContent = tx(UI.hint); }
+    function labels() { bOpen.textContent = tx(UI.open); bClose.textContent = tx(UI.close); bFit.textContent = tx(UI.fit); bIn.setAttribute('aria-label', tx(UI.zin)); bOut.setAttribute('aria-label', tx(UI.zout)); hint.textContent = ''; }
     function retext() { Object.keys(nodes).forEach(function (id) { var o = nodes[id], n = find(tree, 'r', id); if (n) { o.btn.textContent = tx(n.t); o.btn.title = tx(n.t); } }); }
 
     labels(); relayout(null, true); fit(false); showDetail();

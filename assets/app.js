@@ -18,7 +18,7 @@
   }
   function tx(v) { return v && typeof v === 'object' ? (v[lang] != null ? v[lang] : v.bg) : (v == null ? '' : v); }
   var UI = {
-    title: { bg: 'Мартин Урумов · Портфолио', en: 'Martin Urumov · Portfolio' },
+    title: { bg: 'SS Compass · OmniEcho · Мартин Урумов', en: 'SS Compass · OmniEcho · Martin Urumov' },
     desc: { bg: 'Мартин Урумов / Martin Urumov: оценка на поведението на AI, контрол на работните процеси на агенти и проверка на правила в софтуера. Петнайсет проекта с доказателства, които могат да се повторят.', en: 'Martin Urumov / Мартин Урумов: AI behaviour evaluation, agent workflow controls and software rule checks. Fifteen projects with evidence you can re-run.' },
     proof: { bg: 'Доказателство', en: 'Proof' }, limits: { bg: 'Какво не доказва', en: 'What it does not prove' }, why: { bg: 'Какво прави', en: 'What it does' },
     points: { bg: 'Ключови неща', en: 'Key points' }, folder: { bg: 'Папка в хранилището', en: 'Folder in the repository' },
@@ -131,8 +131,8 @@
   applyLang(detectLang());
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
-  var ALIAS = { top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo', platforms: 'ai', tools: 'ai', models: 'ai' };
+  var TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'creative', 'about', 'personal'];
+  var ALIAS = { decks: 'creative', art: 'creative', top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo', platforms: 'ai', tools: 'ai', models: 'ai' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
   var current = 'home';
   function parseHash() {
@@ -155,7 +155,7 @@
     document.body.setAttribute('data-view', id === 'personal' ? 'personal' : 'public');
     if (id === 'personal' && window.SSCPersonal) window.SSCPersonal.onShow(opts.sub);
     else if (window.SSCPersonal) window.SSCPersonal.lockNow();          // личното се заключва, когато го напуснеш
-    if (!opts.keepHash) { try { history.replaceState(null, '', '#' + id + (opts.sub ? '/' + opts.sub : '')); } catch (e) {} }
+    if (!opts.keepHash) { try { var nh = '#' + id + (opts.sub ? '/' + opts.sub : ''); if (location.hash !== nh) history.pushState(null, '', nh); } catch (e) {} }   // всеки таб е стъпка в историята, за да работи бутонът назад
     if (opts.focus) { var p = $('panel-' + id); if (p) p.focus({ preventScroll: false }); }
     if (opts.scroll) { var top = $('tablist'); if (top && top.scrollIntoView) top.scrollIntoView({ block: 'start' }); }
   }
@@ -168,7 +168,7 @@
       if (n !== null) { e.preventDefault(); showTab(tabEls[n].dataset.tab, {}); tabEls[n].focus(); }
     });
   });
-  window.addEventListener('hashchange', function () { var h = parseHash(); if (h.tab && h.tab !== current) showTab(h.tab, { sub: h.sub, keepHash: true, scroll: true }); });
+  window.addEventListener('hashchange', function () { var h = parseHash(); var t = h.tab || 'home'; if (t !== current) showTab(t, { sub: h.sub, keepHash: true, scroll: true }); });
   // връзките в страницата (бутоните в началото, „към съдържанието“) сменят таба
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;

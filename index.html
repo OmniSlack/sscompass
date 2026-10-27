@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Мартин Урумов · Портфолио</title>
+<title>SS Compass · OmniEcho · Мартин Урумов</title>
 <meta name="description" content="Мартин Урумов / Martin Urumov: оценка на поведението на AI, контрол на работните процеси на агенти и проверка на правила в софтуера. Петнайсет проекта с доказателства, които могат да се повторят.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -16,7 +16,7 @@
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#home" title="Somio Shadow Compass">SS<b>/</b>COMPASS</a>
+    <a class="brand" href="#home" title="Somio Shadow Compass · OmniEcho">SS<b>/</b>COMPASS<small>OmniEcho</small></a>
     <nav class="tabs" aria-label="Секции" data-en-aria="Sections">
       <div role="tablist" id="tablist" aria-label="Страници" data-en-aria="Pages">
         <button role="tab" id="tab-home" data-tab="home" aria-controls="panel-home" aria-selected="true" tabindex="0"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg><span data-en="Home">Начало</span></button>
@@ -25,6 +25,7 @@
         <button role="tab" id="tab-demo" data-tab="demo" aria-controls="panel-demo" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg><span data-en="How it works">Как работи</span></button>
         <button role="tab" id="tab-ai" data-tab="ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><span data-en="AI platforms">AI платформи</span></button>
         <button role="tab" id="tab-method" data-tab="method" aria-controls="panel-method" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 0-14-5.3M4 12a8 8 0 0 0 14 5.3"/><path d="M6 3v4h4M18 21v-4h-4"/></svg><span data-en="Method">Метод</span></button>
+        <button role="tab" id="tab-creative" data-tab="creative" aria-controls="panel-creative" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.4 5.6L20 9.5l-4.3 3.9L17 19l-5-3-5 3 1.3-5.6L4 9.5l5.6-.9z"/></svg><span data-en="Creative">Творчество</span></button>
         <button role="tab" id="tab-about" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span data-en="About">За мен</span></button>
         <button role="tab" id="tab-personal" class="tab-personal" data-tab="personal" aria-controls="panel-personal" aria-selected="false" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span data-en="Personal">Личен контрол</span></button>
       </div>
@@ -44,38 +45,24 @@
       <p class="hlead" data-en="Fifteen projects that check what AI agents do before their work is accepted. Each one ends with evidence you can re-run, and with a list of what it does not prove.">Петнайсет проекта, които проверяват какво правят AI агентите, преди работата им да бъде приета. Всеки завършва с доказателство, което можеш да повториш, и със списък на това, което не доказва.</p>
 
       <ol class="hflow" aria-label="Как минава една работа на AI агент" data-en-aria="How a piece of AI agent work passes through">
-        <li><i>1</i><b data-en="Agent proposes">Агентът предлага</b><span data-en="code, a claim, a change">код, твърдение, промяна</span></li>
-        <li><i>2</i><b data-en="Gates check">Гейтове проверяват</b><span data-en="10 gates · 16 rules">10 гейта · 16 правила</span></li>
-        <li class="hv"><i>3</i><b data-en="Verdict">Решение</b><span class="vs"><em class="v-ok">PASS</em><em class="v-hold">HOLD</em><em class="v-stop">STOP</em></span></li>
-        <li><i>4</i><b data-en="Evidence kept">Доказателство остава</b><span data-en="re-runnable proof · defect register">повторимо доказателство · регистър на дефектите</span></li>
+        <li><i>1</i><b data-en="An AI agent proposes">AI агент предлага</b><span data-en="It wants to do something: write code, state a fact, change a file.">Иска да направи нещо: да напише код, да твърди факт, да промени файл.</span></li>
+        <li><i>2</i><b data-en="Written rules check it">Писани правила я проверяват</b><span data-en="Where does it come from? Is there proof? Is it allowed here?">Откъде идва? Има ли доказателство? Разрешено ли е тук?</span></li>
+        <li class="hv"><i>3</i><b data-en="A verdict">Присъда</b><span class="vs"><em class="v-ok">CLEAR</em><em class="v-hold">HOLD</em><em class="v-stop">STOP</em></span><span data-en="Go on, a person must look, or refused.">Продължава, човек трябва да погледне, или отказ.</span></li>
+        <li><i>4</i><b data-en="A record is kept">Остава запис</b><span data-en="Each decision and each defect is written down, so anyone can run the check again.">Всяко решение и всеки дефект се записват, така че всеки може да повтори проверката.</span></li>
       </ol>
       <p class="hback" data-en="HOLD and STOP go back to the agent with the reason. Nothing is accepted on trust.">HOLD и STOP се връщат към агента с причината. Нищо не се приема на доверие.</p>
 
       <div class="cta">
         <a class="btn primary" href="#work" id="cta-work"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span data-en="See the work">Виж проектите</span></a>
-        <a class="btn" id="cta-demo" href="#demo"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg><span data-en="Watch it run">Гледай как работи</span></a>
+        <a class="btn" id="cta-demo" href="#demo"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span data-en="Step through an example">Мини през един пример</span></a>
         <a class="btn" id="repo-link" href="https://github.com/OmniSlack/martin-urumov-portfolio" target="_blank" rel="noopener noreferrer"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/></svg><span data-en="Portfolio on GitHub">Портфолио в GitHub</span><span class="sr" data-en="(opens in a new tab)"> (отваря се в нов таб)</span></a>
       </div>
       <p class="honest" data-en="AI-assisted work: the code and automated tests were written by AI coding assistants under my direction. What is mine and what is theirs is on the Method tab.">Работа с помощта на AI: кодът и автоматичните тестове са написани от AI асистенти под мое ръководство. Кое е мое и кое тяхно е в таб „Метод“.</p>
-      <div class="stats" role="list">
-        <div role="listitem"><b>15</b><span data-en="projects, each with its evidence">проекта, всеки с доказателствата си</span></div>
-        <div role="listitem"><b>16</b><span data-en="gates that can refuse a proposal">гейта, които могат да откажат предложение</span></div>
-        <div role="listitem"><b>165</b><span data-en="defects kept on record">дефекта, пазени в регистър</span></div>
-        <div role="listitem"><b>24</b><span data-en="tests against a real PostgreSQL">теста срещу реален PostgreSQL</span></div>
-      </div>
 
-      <h3 class="sh" data-en="What you are looking at">Какво гледаш</h3>
-      <p class="plain" data-en="This is the whole site as one map. Drag to move, pinch to zoom, tap › to open a branch, tap a box and press Open to go there.">Това е целият сайт като една карта. Влачи за движение, щипни за мащаб, натисни › за да отвориш клон, натисни кутия и „Отвори“, за да отидеш там.</p>
-      <div id="home-map"></div>
-
-      <h3 class="sh" data-en="Decks">Презентации</h3>
-      <p class="plain" data-en="Three architecture decks. The first slide of The OmniEcho Architecture has a blueprint you can tap: 16 rules, 10 gates, 8 nodes, 5 axes and 4 questions, each with its specifics.">Три презентации за архитектурата. Първият слайд на The OmniEcho Architecture има чертеж, който можеш да натискаш: 16 правила, 10 гейта, 8 възела, 5 оси и 4 въпроса, всяко с подробностите си.</p>
-      <div class="deckrow" id="decks-home"></div>
-
-      <div class="home-about" id="home-about">
-        <h3 class="sh" data-en="About me">За мен</h3>
-        <p class="plain"><b data-en="Martin Urumov">Мартин Урумов</b> — <span data-en="I direct AI-assisted engineering projects. Aviation maintenance technician since June 2026; earlier sales, customer support and operations. Bulgarian native, English professional. The CV and all my profiles are in the footer, below.">ръководя инженерни проекти с помощта на AI. Техник по поддръжка на авиационна техника от юни 2026; по-рано продажби, клиентска поддръжка и операции. Български роден, английски професионален. CV и всички профили са в долния десен ъгъл, под този текст.</span> <a href="#about" data-en="More about me">Повече за мен</a></p>
-      </div>
+      <details class="home-about" id="home-about">
+        <summary data-en="About me">За мен</summary>
+        <p class="plain"><b data-en="Martin Urumov">Мартин Урумов</b> — <span data-en="I direct AI-assisted engineering projects. Aviation maintenance technician since June 2026; earlier sales, customer support and operations. Bulgarian native, English professional. The CV and all my profiles are in the footer, below.">ръководя инженерни проекти с помощта на AI. Техник по поддръжка на авиационна техника от юни 2026; по-рано продажби, клиентска поддръжка и операции. Български роден, английски професионален. CV и всички профили са в долния десен ъгъл, под този текст.</span> <a href="#about" data-en="Full page">Цялата страница</a></p>
+      </details>
     </section>
 
     <section class="s panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work" tabindex="-1" hidden>
@@ -198,7 +185,7 @@
 
     <section class="s panel" id="panel-demo" role="tabpanel" aria-labelledby="tab-demo" tabindex="-1" hidden>
       <div class="mono">// <span data-en="how it works">как работи</span></div>
-      <h2 data-en="Watch the projects work">Гледай как работят проектите</h2>
+      <h2 data-en="Step through the projects">Мини през проектите стъпка по стъпка</h2>
       <p class="lead" data-en="Pick a project and a scenario, then press Play or step through it. Each scenario shows where a proposal passes, holds or stops, and why.">Избери проект и сценарий, после натисни Пусни или мини стъпка по стъпка. Всеки сценарий показва къде едно предложение минава, задържа се или спира, и защо.</p>
       <div id="demo-root" class="demo"></div>
     </section>
@@ -262,6 +249,8 @@
 
       <h3 class="sh" data-en="The method as a map">Методът като карта</h3>
       <div id="method-map"></div>
+      <h3 class="sh" data-en="Map of the whole site">Карта на целия сайт</h3>
+      <div id="home-map"></div>
 
       <h3 class="sh" data-en="Who did what">Кой какво е правил</h3>
       <div class="tablewrap"><table class="tbl who">
@@ -308,6 +297,15 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 
       <h3 class="sh" data-en="Limitations">Ограничения</h3>
       <p class="plain" data-en="These are prototypes and documented experiments, not production systems. Nothing here claims a deployment, a client, or a security assessment of a live system. Each project README lists its own limits.">Това са прототипи и документирани експерименти, не продукционни системи. Нищо тук не твърди внедряване, клиент или оценка на сигурността на жива система. README на всеки проект изброява собствените си граници.</p>
+    </section>
+
+    <section class="s panel" id="panel-creative" role="tabpanel" aria-labelledby="tab-creative" tabindex="-1" hidden>
+      <div class="mono">// <span data-en="creative">творчество</span></div>
+      <h2 data-en="Creative work">Творчески работи</h2>
+      <p class="lead" data-en="Presentations and other pieces made around the OmniEcho architecture. They are kept apart from the evidence on the other pages.">Презентации и други творби около архитектурата OmniEcho. Държат се отделно от доказателствата в другите страници.</p>
+      <h3 class="sh" data-en="Presentations">Презентации</h3>
+      <p class="plain" data-en="Three decks. The first slide of The OmniEcho Architecture has a blueprint you can tap to see what each part means.">Три презентации. Първият слайд на The OmniEcho Architecture има чертеж, който можеш да натискаш, за да видиш какво значи всяка част.</p>
+      <div class="deckrow" id="decks-home"></div>
     </section>
 
     <section class="s panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1" hidden>
