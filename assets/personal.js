@@ -24,7 +24,7 @@
     mismatch: { bg: 'Двете пароли не съвпадат.', en: 'The two passphrases do not match.' }, badSeed: { bg: 'Файлът не е валиден JSON.', en: 'The file is not valid JSON.' },
     novault: { bg: 'Няма vault на това устройство.', en: 'There is no vault on this device.' },
     saved: { bg: 'Запазено.', en: 'Saved.' }, saveFail: { bg: 'Не успях да запиша. Мястото в браузъра може да е пълно.', en: 'Could not save. Browser storage may be full or blocked.' },
-    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини', en: 'News' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, maps: { bg: 'Карти', en: 'Maps' }, vault: { bg: 'Vault', en: 'Vault' } },
+    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини', en: 'News' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, creative: { bg: 'Творчество', en: 'Creative' }, maps: { bg: 'Карти', en: 'Maps' }, vault: { bg: 'Vault', en: 'Vault' } },
     menuLabel: { bg: 'Личен контрол', en: 'Personal control' },
     pfHint: { bg: 'Полетата се попълват на ръка. Нищо не се тегли автоматично от платформите.', en: 'Fields are filled in by hand. Nothing is pulled automatically from the platforms.' },
     status: { bg: 'Състояние', en: 'Status' }, live: { bg: 'има линк', en: 'live' }, soon: { bg: 'скоро', en: 'soon' },
@@ -96,7 +96,7 @@
 
   /* ---------- приложение ---------- */
   function menuHtml() {
-    return ['platforms', 'news', 'notes', 'progress', 'maps', 'vault'].map(function (k) {
+    return ['platforms', 'news', 'notes', 'progress', 'creative', 'maps', 'vault'].map(function (k) {
       return '<button data-s="' + k + '" aria-current="' + (k === section) + '">' + esc(tx(T.menu[k])) + '</button>';
     }).join('');
   }
@@ -117,8 +117,14 @@
     else if (section === 'news') v.innerHTML = newsHtml(s);
     else if (section === 'notes') v.innerHTML = notesHtml(s);
     else if (section === 'progress') v.innerHTML = progressHtml(s);
+    else if (section === 'creative') { v.innerHTML = creativeHtml(); var dh = $('p-decks'); if (dh && window.SSCApp) dh.innerHTML = window.SSCApp.decks(); }
     else if (section === 'maps') { v.innerHTML = mapsHtml(); mountMaps(); }
     else v.innerHTML = vaultHtml();
+  }
+
+  function creativeHtml() {
+    var hint = { bg: 'Творчески работи около архитектурата OmniEcho. Презентациите са тук, в личното пространство, а не на публичните страници.', en: 'Creative work around the OmniEcho architecture. The presentations live here, in the personal space, not on the public pages.' };
+    return '<p class="note">' + esc(tx(hint)) + '</p><div class="deckrow" id="p-decks"></div>';
   }
 
   function mapsHtml() {

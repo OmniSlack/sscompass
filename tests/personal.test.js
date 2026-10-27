@@ -44,9 +44,9 @@ test('two different passphrases are refused', async () => {
   const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS + 'x'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /do not match/); assert.ok(!$(p, 'pmenu'));
 });
-test('creating a vault opens the six-section personal menu', async () => {
+test('creating a vault opens the seven-section personal menu', async () => {
   const p = await openApp(null); const names = [...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent);
-  assert.deepEqual(names, ['Platforms', 'News', 'Notes', 'In progress', 'Maps', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
+  assert.deepEqual(names, ['Platforms', 'News', 'Notes', 'In progress', 'Creative', 'Maps', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
 });
 test('loading vault.json while creating fills the platforms and the unfinished work', async () => {
   const p = await openApp(); assert.equal(p.doc.querySelectorAll('#pview .pf').length, 2); await section(p, 'progress'); assert.match(text(p), /NomNom/);
@@ -162,7 +162,7 @@ test('an empty In progress says so', async () => {
 test('the lock screen and the app follow the language switch', async () => {
   const p = await openGate(); p.w.SSCApp.setLang('bg'); await until(() => /Създай личния/.test(text(p)));
   setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
-  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Карти', 'Vault']);
+  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Творчество', 'Карти', 'Vault']);
 });
 test('personal data never appears on the public tabs, even while the vault is open', async () => {
   const p = await openApp(); await section(p, 'progress'); assert.match(text(p), /NomNom/);

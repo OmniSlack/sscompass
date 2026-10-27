@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 
-const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'creative', 'about', 'personal'];
+const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
 const page = (o) => load(Object.assign({ lang: 'en-US' }, o));
 const visible = (p) => TABS.filter((t) => !p.doc.getElementById('panel-' + t).hasAttribute('hidden'));
 const wait = (ms = 20) => new Promise((r) => setTimeout(r, ms));
@@ -54,8 +54,8 @@ test('the active tab survives a language change', () => {
   const p = page(); p.click(p.doc.getElementById('tab-method')); p.w.SSCApp.setLang('bg'); assert.equal(p.w.SSCApp.tab(), 'method'); assert.deepEqual(visible(p), ['method']);
 });
 test('tab labels are translated', () => {
-  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'Creative', 'About', 'Personal']);
-  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'Творчество', 'За мен', 'Личен контрол']);
+  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'About', 'Personal']);
+  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'За мен', 'Личен контрол']);
 });
 test('every public tab has real content', () => {
   const p = page(); for (const t of ['home', 'work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);
@@ -88,7 +88,14 @@ test('every tab change is a history step, so the browser back button returns to 
   p.w.location.hash = '#work'; p.w.dispatchEvent(new p.w.HashChangeEvent('hashchange')); assert.equal(p.w.SSCApp.tab(), 'work');
   p.w.location.hash = ''; p.w.dispatchEvent(new p.w.HashChangeEvent('hashchange')); assert.equal(p.w.SSCApp.tab(), 'home');
 });
-test('the Creative tab opens from the tab bar and from the decks alias', () => {
-  const p = page(); p.click(p.doc.getElementById('tab-creative')); assert.equal(p.w.SSCApp.tab(), 'creative'); assert.ok(!p.doc.getElementById('panel-creative').hidden);
-  const q = page({ hash: '#decks' }); assert.equal(q.w.SSCApp.tab(), 'creative');
+test('the permit check on How it works refuses a drifted request and grants a clean one, in both languages', () => {
+  const p = page({ hash: '#demo' }); const g = p.doc.getElementById('gate-root');
+  assert.match(g.querySelector('.g-verdict').textContent, /PERMIT GRANTED/); assert.equal(g.querySelectorAll('.g-step.pass').length, 8);
+  p.click([...g.querySelectorAll('.g-pre')].find((b) => /Drift/.test(b.textContent))); assert.match(g.querySelector('.g-verdict').textContent, /DENIED/); assert.ok(g.querySelectorAll('.g-step.skip').length >= 2);
+  p.w.SSCApp.setLang('bg'); assert.match(g.querySelector('.g-verdict').textContent, /ОТКАЗАНО/); assert.match(g.textContent, /Опитай проверката/);
 });
+test('executed is not verified: ATTEMPTED never reaches VERIFIED, COMPLETED needs an independent check', () => {
+  const p = page({ hash: '#demo' }); const g = p.doc.getElementById('gate-root'); const out = g.querySelector('#g-outcome'), ind = g.querySelector('#g-indep'), r = () => g.querySelector('.g-evr').textContent;
+  assert.match(r(), /STAYS ATTEMPTED/); out.value = 'COMPLETED'; out.dispatchEvent(new p.w.Event('change')); assert.match(r(), /STAYS COMPLETED/); ind.checked = true; ind.dispatchEvent(new p.w.Event('change')); assert.equal(r(), 'VERIFIED');
+});
+test('the decks live in the Personal space, not on a public tab', () => { const p = page(); assert.ok(!p.doc.getElementById('tab-creative')); assert.ok(p.w.SSCApp.decks().includes('decks/index.html')); });

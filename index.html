@@ -25,7 +25,6 @@
         <button role="tab" id="tab-demo" data-tab="demo" aria-controls="panel-demo" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg><span data-en="How it works">Как работи</span></button>
         <button role="tab" id="tab-ai" data-tab="ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><span data-en="AI platforms">AI платформи</span></button>
         <button role="tab" id="tab-method" data-tab="method" aria-controls="panel-method" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 0-14-5.3M4 12a8 8 0 0 0 14 5.3"/><path d="M6 3v4h4M18 21v-4h-4"/></svg><span data-en="Method">Метод</span></button>
-        <button role="tab" id="tab-creative" data-tab="creative" aria-controls="panel-creative" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.4 5.6L20 9.5l-4.3 3.9L17 19l-5-3-5 3 1.3-5.6L4 9.5l5.6-.9z"/></svg><span data-en="Creative">Творчество</span></button>
         <button role="tab" id="tab-about" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span data-en="About">За мен</span></button>
         <button role="tab" id="tab-personal" class="tab-personal" data-tab="personal" aria-controls="panel-personal" aria-selected="false" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span data-en="Personal">Личен контрол</span></button>
       </div>
@@ -188,6 +187,7 @@
       <h2 data-en="Step through the projects">Мини през проектите стъпка по стъпка</h2>
       <p class="lead" data-en="Pick a project and a scenario, then press Play or step through it. Each scenario shows where a proposal passes, holds or stops, and why.">Избери проект и сценарий, после натисни Пусни или мини стъпка по стъпка. Всеки сценарий показва къде едно предложение минава, задържа се или спира, и защо.</p>
       <div id="demo-root" class="demo"></div>
+      <div id="gate-root"></div>
     </section>
 
     <section class="s panel" id="panel-ai" role="tabpanel" aria-labelledby="tab-ai" tabindex="-1" hidden>
@@ -299,15 +299,6 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
       <p class="plain" data-en="These are prototypes and documented experiments, not production systems. Nothing here claims a deployment, a client, or a security assessment of a live system. Each project README lists its own limits.">Това са прототипи и документирани експерименти, не продукционни системи. Нищо тук не твърди внедряване, клиент или оценка на сигурността на жива система. README на всеки проект изброява собствените си граници.</p>
     </section>
 
-    <section class="s panel" id="panel-creative" role="tabpanel" aria-labelledby="tab-creative" tabindex="-1" hidden>
-      <div class="mono">// <span data-en="creative">творчество</span></div>
-      <h2 data-en="Creative work">Творчески работи</h2>
-      <p class="lead" data-en="Presentations and other pieces made around the OmniEcho architecture. They are kept apart from the evidence on the other pages.">Презентации и други творби около архитектурата OmniEcho. Държат се отделно от доказателствата в другите страници.</p>
-      <h3 class="sh" data-en="Presentations">Презентации</h3>
-      <p class="plain" data-en="Three decks. The first slide of The OmniEcho Architecture has a blueprint you can tap to see what each part means.">Три презентации. Първият слайд на The OmniEcho Architecture има чертеж, който можеш да натискаш, за да видиш какво значи всяка част.</p>
-      <div class="deckrow" id="decks-home"></div>
-    </section>
-
     <section class="s panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1" hidden>
       <div class="mono">// <span data-en="about">за мен</span></div>
       <h2 data-en="Who I am">Кой съм аз</h2>
@@ -363,6 +354,7 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 <script src="assets/vault.js"></script>
 <script src="assets/personal.js"></script>
 <script src="assets/demo.js"></script>
+<script src="assets/gate.js"></script>
 <script src="assets/diagrams.js"></script>
 <script src="assets/cores.js"></script>
 <script src="assets/ai.js"></script>

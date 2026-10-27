@@ -87,11 +87,12 @@
   });
 
   /* ---------- фонови презентации и контакти ---------- */
+  var decksHtml = '';
   function renderDecks() {
     var html = D.decks.map(function (d) {
       return '<a class="card deck" href="' + esc(safeLink(d.url)) + '"><h3>' + esc(d.title) + '</h3><span class="mono">' + esc(tx(d.note)) + '</span><span class="go">' + esc(tx(UI.deckBtn)) + ' →</span></a>';
     }).join('');
-    $('decks').innerHTML = html; if ($('decks-home')) $('decks-home').innerHTML = html;
+    $('decks').innerHTML = html; decksHtml = html;
   }
   function renderSocials() {
     $('socials').innerHTML = D.socials.map(function (s) {
@@ -121,6 +122,7 @@
     if (dlg.hasAttribute('open')) renderDialog();
     if (window.SSCPersonal) window.SSCPersonal.render(l);
     if (window.SSCDemo) window.SSCDemo.render(l);
+    if (window.SSCGate) window.SSCGate.render(l);
     if (window.SSCDiagrams) window.SSCDiagrams.render(l);
     if (window.SSCAI) window.SSCAI.render(l);
     if (window.SSCMaps) window.SSCMaps.render(l);
@@ -131,8 +133,8 @@
   applyLang(detectLang());
 
   /* ---------- табове: публична част и личен контрол ---------- */
-  var TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'creative', 'about', 'personal'];
-  var ALIAS = { decks: 'creative', art: 'creative', top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo', platforms: 'ai', tools: 'ai', models: 'ai' };
+  var TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+  var ALIAS = { top: 'home', start: 'home', projects: 'work', contact: 'about', memory: 'architecture', skills: 'method', animation: 'demo', animations: 'demo', live: 'demo', platforms: 'ai', tools: 'ai', models: 'ai' };
   var tabEls = Array.prototype.slice.call(document.querySelectorAll('#tablist [role="tab"]'));
   var current = 'home';
   function parseHash() {
@@ -184,5 +186,5 @@
     setTimeout(function () { b.classList.remove('pop'); }, 520);
   });
 
-  window.SSCApp = { openProject: openProj, setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
+  window.SSCApp = { decks: function () { return decksHtml; }, openProject: openProj, setLang: applyLang, getLang: function () { return lang; }, showTab: showTab, tab: function () { return current; } };
 })();

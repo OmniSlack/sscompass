@@ -254,9 +254,6 @@ test('home: the home page has the site map; choosing a branch and pressing Open 
   const p = page(); assert.equal(vis(p, '#home-map').length, 1 + 7);
   const node = [...p.doc.querySelectorAll('#home-map .mm-node')].find((n) => /AI platforms/.test(n.textContent)); node.click(); const open = p.doc.querySelector('#home-map .mm-detail .btn'); assert.ok(open); open.click(); assert.equal(p.w.SSCApp.tab(), 'ai');
 });
-test('creative: the three decks are on the Creative tab as cards that open the first slide', () => {
-  const p = page(); const a = [...p.doc.querySelectorAll('#panel-creative #decks-home a.deck')]; assert.equal(a.length, 3); for (const x of a) assert.match(x.getAttribute('href'), /^decks\/index\.html#(omniecho|coherence|dream)\/1$/);
-});
 test('footer: the CV and all five profiles sit in the footer, and the About page has no contact grid or oversized name', () => {
   const p = page(); assert.ok(p.doc.querySelector('footer #cv-link')); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5);
   assert.equal(p.doc.querySelectorAll('#panel-about #socials, #panel-about #cv-link, #panel-about .owner-both').length, 0);
