@@ -20,11 +20,13 @@
     <nav class="tabs" aria-label="Секции" data-en-aria="Sections">
       <div role="tablist" id="tablist" aria-label="Страници" data-en-aria="Pages">
         <button role="tab" id="tab-home" data-tab="home" aria-controls="panel-home" aria-selected="true" tabindex="0"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg><span data-en="Home">Начало</span></button>
+        <button role="tab" id="tab-review" data-tab="review" aria-controls="panel-review" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span data-en="Portfolio">Портфолио</span></button>
         <button role="tab" id="tab-work" data-tab="work" aria-controls="panel-work" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span data-en="Work">Проекти</span></button>
         <button role="tab" id="tab-architecture" data-tab="architecture" aria-controls="panel-architecture" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.5 6h9M6.5 8l4 8M17.5 8l-4 8"/></svg><span data-en="Architecture">Архитектура</span></button>
         <button role="tab" id="tab-demo" data-tab="demo" aria-controls="panel-demo" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg><span data-en="How it works">Как работи</span></button>
         <button role="tab" id="tab-ai" data-tab="ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><span data-en="AI platforms">AI платформи</span></button>
         <button role="tab" id="tab-method" data-tab="method" aria-controls="panel-method" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 0-14-5.3M4 12a8 8 0 0 0 14 5.3"/><path d="M6 3v4h4M18 21v-4h-4"/></svg><span data-en="Method">Метод</span></button>
+        <button role="tab" id="tab-patch" data-tab="patch" aria-controls="panel-patch" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg><span data-en="Future patch">Future patch</span></button>
         <button role="tab" id="tab-about" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span data-en="About">За мен</span></button>
         <button role="tab" id="tab-personal" class="tab-personal" data-tab="personal" aria-controls="panel-personal" aria-selected="false" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span data-en="Personal">Личен контрол</span></button>
       </div>
@@ -56,11 +58,11 @@
         <a class="btn" id="cta-demo" href="#demo"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span data-en="Step through an example">Мини през един пример</span></a>
         <a class="btn" id="repo-link" href="https://github.com/OmniSlack/martin-urumov-portfolio" target="_blank" rel="noopener noreferrer"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/></svg><span data-en="Portfolio on GitHub">Портфолио в GitHub</span><span class="sr" data-en="(opens in a new tab)"> (отваря се в нов таб)</span></a>
       </div>
-      <p class="honest" data-en="AI-assisted work: the code and automated tests were written by AI coding assistants under my direction. What is mine and what is theirs is on the Method tab.">Работа с помощта на AI: кодът и автоматичните тестове са написани от AI асистенти под мое ръководство. Кое е мое и кое тяхно е в таб „Метод“.</p>
+      <p class="honest" data-en="AI-assisted work: the code and automated tests were written by AI coding assistants under my direction. What is mine and what is theirs is on the Method tab. The projects are separate prototypes, not yet joined into one system, with no real external adapter. The public CI runs a selected test set; the PostgreSQL tests (24 passed, run locally 26 Oct) and the R analysis (partial runs, the full planned run not done) are documented separately.">Работа с помощта на AI: кодът и автоматичните тестове са написани от AI асистенти под мое ръководство. Кое е мое и кое тяхно е в таб „Метод“. Проектите са отделни прототипи, още несвързани в една система, без реален външен адаптер. Публичната автоматична проверка пуска избран набор тестове; тестовете с PostgreSQL (24 преминали, пуснати локално на 26.10) и R анализът (частични изпълнения, пълният планиран прогон не е направен) са описани отделно.</p>
 
       <details class="home-about" id="home-about">
         <summary data-en="About me">За мен</summary>
-        <p class="plain"><b data-en="Martin Urumov">Мартин Урумов</b> — <span data-en="I direct AI-assisted engineering projects. Aviation maintenance technician since June 2026; earlier sales, customer support and operations. Bulgarian native, English professional. The CV and all my profiles are in the footer, below.">ръководя инженерни проекти с помощта на AI. Техник по поддръжка на авиационна техника от юни 2026; по-рано продажби, клиентска поддръжка и операции. Български роден, английски професионален. CV и всички профили са в долния десен ъгъл, под този текст.</span> <a href="#about" data-en="Full page">Цялата страница</a></p>
+        <p class="plain"><b data-en="Martin Urumov">Мартин Урумов</b> — <span data-en="I direct AI-assisted engineering projects. Aviation maintenance technician, June to September 2026; earlier sales, customer support and operations. Bulgarian native, English C1. The CV and all my profiles are in the footer, below.">ръководя инженерни проекти с помощта на AI. Техник по поддръжка на авиационна техника, юни – септември 2026; по-рано продажби, клиентска поддръжка и операции. Български роден, английски C1. CV и всички профили са в долния десен ъгъл, под този текст.</span> <a href="#about" data-en="Full page">Цялата страница</a></p>
       </details>
     </section>
 
@@ -130,7 +132,7 @@
         </svg>
         <ol class="steps mobile">
           <li><b data-en="1 · HUMAN GOAL">1 · ЦЕЛ</b><span data-en="A person decides what is wanted.">Човек решава какво се иска.</span></li>
-          <li><b data-en="2 · EVALUATOR (built, 247 tests)">2 · ОЦЕНИТЕЛ (построен, 247 теста)</b><span data-en="Observes, classifies the source, argues for and against, builds a counter-model, and returns CLEAR, HOLD or STOP.">Наблюдава, класифицира източника, аргументира за и против, строи контра-модел и връща CLEAR, HOLD или STOP.</span></li>
+          <li><b data-en="2 · EVALUATOR (built, 247 tests)">2 · ОЦЕНИТЕЛ (построен, 247 теста)</b><span data-en="Checks submitted evidence, labels and conditions against set rules, and returns CLEAR, HOLD or STOP. It judges the form of what is submitted, not whether it is true.">Проверява подадени доказателства, обозначения и условия по зададени правила и връща CLEAR, HOLD или STOP. Оценява формата на подаденото, не истинността му.</span></li>
           <li><b data-en="3 · PLANNER (design only)">3 · ПЛАНИРОВЧИК (само дизайн)</b><span data-en="Would generate options, compare and rank them, and propose the smallest testable step. Not built.">Би генерирал варианти, би ги сравнявал и подреждал и би предлагал най-малката проверима стъпка. Не е построен.</span></li>
           <li><b data-en="4 · PROPOSAL ENVELOPE (built, in-process)">4 · ПЛИК НА ПРЕДЛОЖЕНИЕТО (построен, в процес)</b><span data-en="The exact, immutable, hashed description of the action.">Точното, неизменяемо описание на действието, с хеш.</span></li>
           <li><b data-en="5 · TWO KEYS MEET">5 · ДВАТА КЛЮЧА СЕ СРЕЩАТ</b><span data-en="CLEAR for this exact envelope and a human permit for it, and the gate is open.">CLEAR за точно този плик и човешко разрешение за него, а гейтът е отворен.</span></li>
@@ -207,31 +209,31 @@
       <div class="arch card mdg">
         <svg viewBox="0 0 1100 400" role="img" aria-label="Работен цикъл: изисквания от Мартин, код и тестове от AI, проверки, преглед от Мартин, запис; отхвърленото се връща към изискванията" data-en-aria="Working loop: requirements from Martin, code and tests by AI, checks, review by Martin, record; what is rejected returns to the requirements">
           <defs>
-          <pattern id="chk" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#2e7d5b"/><rect width="8" height="8" fill="#16201b"/><rect x="8" y="8" width="8" height="8" fill="#16201b"/></pattern>
-          <pattern id="uro" width="18" height="12" patternUnits="userSpaceOnUse"><rect width="18" height="12" fill="#f6c744"/><path d="M0 12 L9 1 L18 12z" fill="#e2761b"/></pattern>
-          <pattern id="sea" width="40" height="20" patternUnits="userSpaceOnUse"><g fill="none" stroke="#b9bdff" stroke-opacity=".16" stroke-width="1.2"><circle cx="20" cy="20" r="6"/><circle cx="20" cy="20" r="12"/><circle cx="20" cy="20" r="18"/><circle cx="0" cy="10" r="6"/><circle cx="0" cy="10" r="12"/><circle cx="0" cy="10" r="18"/><circle cx="40" cy="10" r="6"/><circle cx="40" cy="10" r="12"/><circle cx="40" cy="10" r="18"/></g></pattern>
+          
+          
+          
         </defs>
-        <rect class="lane m" x="10" y="36" width="1080" height="140" rx="14"/><rect x="10" y="36" width="1080" height="140" rx="14" fill="url(#sea)"/><rect class="lane a" x="10" y="216" width="1080" height="140" rx="14"/><rect x="10" y="216" width="1080" height="140" rx="14" fill="url(#sea)"/>
+        <rect class="lane m" x="10" y="36" width="1080" height="140" rx="14"/><rect class="lane a" x="10" y="216" width="1080" height="140" rx="14"/>
         <text class="d" x="22" y="47" text-anchor="start" data-en="MARTIN URUMOV">МАРТИН УРУМОВ</text>
         <text class="d" x="22" y="227" text-anchor="start" data-en="AI ASSISTANTS">AI АСИСТЕНТИ</text>
-        <rect class="node hub" x="30" y="56" width="176" height="100" rx="12"/><rect class="band" x="44" y="52" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="190" cy="58" r="14"/><text x="190" y="64" text-anchor="middle">壱</text></g>
+        <rect class="node hub" x="30" y="56" width="176" height="100" rx="12"/>
         <text class="h" x="118" y="84" text-anchor="middle" data-en="1 · REQUIREMENTS">1 · ИЗИСКВАНИЯ</text>
         <text class="d" x="118" y="106" text-anchor="middle" data-en="questions, acceptance criteria,">въпроси, критерии за приемане,</text>
         <text class="d" x="118" y="124" text-anchor="middle" data-en="edge-case scenarios">гранични сценарии</text>
-        <rect class="node t2" x="246" y="236" width="176" height="100" rx="12"/><rect class="band" x="260" y="232" width="148" height="9" rx="2" fill="url(#uro)"/><g class="hanko" aria-hidden="true"><circle cx="406" cy="238" r="14"/><text x="406" y="244" text-anchor="middle">弐</text></g>
+        <rect class="node t2" x="246" y="236" width="176" height="100" rx="12"/>
         <text class="h" x="334" y="264" text-anchor="middle" data-en="2 · AI WRITES">2 · AI ПИШЕ</text>
         <text class="d" x="334" y="286" text-anchor="middle" data-en="code and automated tests">код и автоматични тестове</text>
         <text class="d" x="334" y="304" text-anchor="middle" data-en="Claude Code, Codex, Copilot">Claude Code, Codex, Copilot</text>
-        <rect class="node t3" x="462" y="146" width="176" height="100" rx="12"/><rect class="band" x="476" y="142" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="622" cy="148" r="14"/><text x="622" y="154" text-anchor="middle">参</text></g>
+        <rect class="node t3" x="462" y="146" width="176" height="100" rx="12"/>
         <text class="h" x="550" y="174" text-anchor="middle" data-en="3 · CHECKS">3 · ПРОВЕРКИ</text>
         <text class="d" x="550" y="196" text-anchor="middle" data-en="both of us run them">и двамата ги пускат</text>
         <text class="d" x="550" y="214" text-anchor="middle" data-en="raw log + counts">суров запис + брой</text>
         <text class="d" x="550" y="232" text-anchor="middle" data-en="node --test · sha256sum -c">node --test · sha256sum -c</text>
-        <rect class="node hub" x="678" y="56" width="176" height="100" rx="12"/><rect class="band" x="692" y="52" width="148" height="9" rx="2" fill="url(#chk)"/><g class="hanko" aria-hidden="true"><circle cx="838" cy="58" r="14"/><text x="838" y="64" text-anchor="middle">肆</text></g>
+        <rect class="node hub" x="678" y="56" width="176" height="100" rx="12"/>
         <text class="h" x="766" y="84" text-anchor="middle" data-en="4 · REVIEW">4 · ПРЕГЛЕД</text>
         <text class="d" x="766" y="106" text-anchor="middle" data-en="keep or reject">пазя или отхвърлям</text>
         <text class="d" x="766" y="124" text-anchor="middle" data-en="defects stay on record">дефектите се пазят</text>
-        <rect class="node t2" x="894" y="236" width="176" height="100" rx="12"/><rect class="band" x="908" y="232" width="148" height="9" rx="2" fill="url(#uro)"/><g class="hanko" aria-hidden="true"><circle cx="1054" cy="238" r="14"/><text x="1054" y="244" text-anchor="middle">伍</text></g>
+        <rect class="node t2" x="894" y="236" width="176" height="100" rx="12"/>
         <text class="h" x="982" y="264" text-anchor="middle" data-en="5 · RECORD">5 · ЗАПИС</text>
         <text class="d" x="982" y="286" text-anchor="middle" data-en="AI commits files">AI комитва файлове,</text>
         <text class="d" x="982" y="304" text-anchor="middle" data-en="I have reviewed">които съм прегледал</text>
@@ -299,6 +301,14 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
       <p class="plain" data-en="These are prototypes and documented experiments, not production systems. Nothing here claims a deployment, a client, or a security assessment of a live system. Each project README lists its own limits.">Това са прототипи и документирани експерименти, не продукционни системи. Нищо тук не твърди внедряване, клиент или оценка на сигурността на жива система. README на всеки проект изброява собствените си граници.</p>
     </section>
 
+    <section class="s panel" id="panel-review" role="tabpanel" aria-labelledby="tab-review" tabindex="-1" hidden>
+      <div id="review-root"></div>
+    </section>
+
+    <section class="s panel" id="panel-patch" role="tabpanel" aria-labelledby="tab-patch" tabindex="-1" hidden>
+      <div id="patch-root"></div>
+    </section>
+
     <section class="s panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1" hidden>
       <div class="mono">// <span data-en="about">за мен</span></div>
       <h2 data-en="Who I am">Кой съм аз</h2>
@@ -311,11 +321,11 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
         </div>
         <div class="card">
           <h3 data-en="Background">Опит</h3>
-          <p data-en="Aviation maintenance technician since June 2026, where procedure, documentation and verification are daily practice. Earlier work in sales, customer support and operations. Marine navigation studies; software QA courses in progress.">Техник по поддръжка на авиационна техника от юни 2026, където процедурата, документацията и проверката са всекидневие. По-рано работа в продажби, клиентска поддръжка и операции. Морска навигация; курсове по софтуерно QA в процес.</p>
+          <p data-en="Aviation maintenance technician, June to September 2026, where procedure, documentation and verification are daily practice. Earlier work in sales, customer support and operations. Marine navigation studies; software QA courses in progress.">Техник по поддръжка на авиационна техника, юни – септември 2026, където процедурата, документацията и проверката са всекидневие. По-рано работа в продажби, клиентска поддръжка и операции. Морска навигация; курсове по софтуерно QA в процес.</p>
         </div>
         <div class="card">
           <h3 data-en="Languages">Езици</h3>
-          <p data-en="Bulgarian: native. English: professional working proficiency.">Български: роден. Английски: професионално работно ниво.</p>
+          <p data-en="Bulgarian: native. English: C1 (self-declared, as in the CV).">Български: роден. Английски: C1 (по моя преценка, както в CV).</p>
         </div>
       </div>
 
@@ -355,6 +365,7 @@ cd defect-register       &amp;&amp; node --test        # 21 tests</code></pre>
 <script src="assets/personal.js"></script>
 <script src="assets/demo.js"></script>
 <script src="assets/gate.js"></script>
+<script src="assets/review.js"></script>
 <script src="assets/diagrams.js"></script>
 <script src="assets/cores.js"></script>
 <script src="assets/ai.js"></script>

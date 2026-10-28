@@ -151,7 +151,7 @@
     ready: T('Натисни ▶ или › или избери стъпка по-горе.', 'Press ▶ or ›, or pick a step above.'),
     stepOf: T('Стъпка', 'Step'), of: T('от', 'of'),
     legend: T('Зелено: премина · Жълто: задържа · Червено: спира · Пунктир: не е построено', 'Green: passed · Amber: holds · Red: stops · Dashed: not built'),
-    note: T('Прилепът е пакетът: пътува по етапите и сменя цвят според решението. Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'The bat is the packet: it travels through the stages and changes colour with the verdict. This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
+    note: T('Знакът с острието е заявката: пътува по етапите и сменя цвят според решението. Това е илюстрация на дизайна по README-тата на проектите, не запис на реално изпълнение.', 'The blade mark is the request: it travels through the stages and changes colour with the verdict. This illustrates the design described in the project READMEs. It is not a recording of a real run.'),
     skipped: T('не се достига', 'not reached'), jump: T('Към стъпка', 'Go to step')
   };
   function tx(v) { return typeof v === 'string' ? v : (v[lang] || v.en); }
@@ -228,7 +228,7 @@
   }
   function makeToken(label) {
     var d = el('div', 'dm-tok t-idle'); d.setAttribute('aria-hidden', 'true'); d.title = label;
-    d.innerHTML = '<svg viewBox="0 0 30 18" fill="currentColor"><path d="M15 1.5 13.3 5C11.6 3.8 9 3.5 6.5 4.6 4.5 5.5 2.6 7.5 1 11c2.4-1.4 4-1.2 5.3.4.9-1.8 2.7-2 4.3-.6 1.1 1.4 2.3 4 4.4 6.2 2.1-2.2 3.3-4.8 4.4-6.2 1.6-1.4 3.4-1.2 4.3.6 1.3-1.6 2.9-1.8 5.3-.4-1.6-3.5-3.5-5.5-5.5-6.4C21 3.5 18.4 3.8 16.7 5z"/></svg>';
+    d.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1 23 12 12 23 1 12z" opacity=".28"/><path d="M12 1 17.5 6.5 12 12 6.5 6.5zM12 12 17.5 17.5 12 23 6.5 17.5z"/><path d="M21 3 3 21" stroke="#fff" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg>';
     d.appendChild(el('span', 'dm-tok-l', label)); return d;
   }
   function update() {

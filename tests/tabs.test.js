@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 
-const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+const TABS = ['home', 'review', 'work', 'architecture', 'demo', 'ai', 'method', 'patch', 'about', 'personal'];
 const page = (o) => load(Object.assign({ lang: 'en-US' }, o));
 const visible = (p) => TABS.filter((t) => !p.doc.getElementById('panel-' + t).hasAttribute('hidden'));
 const wait = (ms = 20) => new Promise((r) => setTimeout(r, ms));
@@ -23,14 +23,14 @@ for (const t of TABS) {
 }
 test('ArrowRight and ArrowLeft move between tabs and wrap around', () => {
   const p = page(); const t0 = p.doc.getElementById('tab-home');
-  key(p, t0, 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'work'); key(p, p.doc.getElementById('tab-work'), 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'home');
+  key(p, t0, 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'review'); key(p, p.doc.getElementById('tab-review'), 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'home');
   key(p, t0, 'ArrowLeft'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'ArrowRight'); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('Home and End jump to the first and last tab', () => {
   const p = page(); key(p, p.doc.getElementById('tab-home'), 'End'); assert.equal(p.w.SSCApp.tab(), 'personal'); key(p, p.doc.getElementById('tab-personal'), 'Home'); assert.equal(p.w.SSCApp.tab(), 'home');
 });
 test('keyboard navigation moves focus to the new tab', () => {
-  const p = page(); p.doc.getElementById('tab-home').focus(); key(p, p.doc.getElementById('tab-home'), 'ArrowRight'); assert.equal(p.doc.activeElement, p.doc.getElementById('tab-work'));
+  const p = page(); p.doc.getElementById('tab-home').focus(); key(p, p.doc.getElementById('tab-home'), 'ArrowRight'); assert.equal(p.doc.activeElement, p.doc.getElementById('tab-review'));
 });
 for (const [hash, want] of [['#work', 'work'], ['#architecture', 'architecture'], ['#demo', 'demo'], ['#ai', 'ai'], ['#platforms', 'ai'], ['#live', 'demo'], ['#animation', 'demo'], ['#method', 'method'], ['#about', 'about'], ['#projects', 'work'], ['#contact', 'about'], ['#skills', 'method'], ['#memory', 'architecture'], ['#personal', 'personal'], ['#personal/news', 'personal'], ['#nonsense', 'home'], ['', 'home'], ['#home', 'home'], ['#top', 'home']]) {
   test(`opening the site at "${hash}" shows the ${want} tab`, () => { const p = page({ hash }); assert.equal(p.w.SSCApp.tab(), want); assert.deepEqual(visible(p), [want]); });
@@ -54,8 +54,8 @@ test('the active tab survives a language change', () => {
   const p = page(); p.click(p.doc.getElementById('tab-method')); p.w.SSCApp.setLang('bg'); assert.equal(p.w.SSCApp.tab(), 'method'); assert.deepEqual(visible(p), ['method']);
 });
 test('tab labels are translated', () => {
-  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'About', 'Personal']);
-  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'За мен', 'Личен контрол']);
+  const p = page(); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Home', 'Portfolio', 'Work', 'Architecture', 'How it works', 'AI platforms', 'Method', 'Future patch', 'About', 'Personal']);
+  p.w.SSCApp.setLang('bg'); assert.deepEqual(TABS.map((t) => p.doc.getElementById('tab-' + t).textContent.trim()), ['Начало', 'Портфолио', 'Проекти', 'Архитектура', 'Как работи', 'AI платформи', 'Метод', 'Future patch', 'За мен', 'Личен контрол']);
 });
 test('every public tab has real content', () => {
   const p = page(); for (const t of ['home', 'work', 'architecture', 'method', 'about']) assert.ok(p.doc.getElementById('panel-' + t).textContent.trim().length > 300, t);

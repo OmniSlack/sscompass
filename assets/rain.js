@@ -1,15 +1,19 @@
-/* A faint, sparse "digital rain" behind the page. Decorative only: off for reduced motion, paused when the tab is hidden. */
+/* A faint, sparse "digital rain" behind the page. Decorative only. A button at the top left turns it on or off;
+   the choice is remembered. Off by default when the system asks for reduced motion; the button still lets the visitor turn it on. Paused when the tab is hidden. */
 (function () {
   'use strict';
   if (!window.matchMedia || !document.body) return;
   var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (mq.matches) return;
   var cv = document.createElement('canvas');
   cv.className = 'rain'; cv.setAttribute('aria-hidden', 'true');
   var ctx = cv.getContext && cv.getContext('2d');
   if (!ctx) return;
   document.body.insertBefore(cv, document.body.firstChild);
-  var W = 0, H = 0, dpr = 1, streams = [], SIZE = 16, last = 0, raf = 0;
+  var W = 0, H = 0, dpr = 1, streams = [], SIZE = 16, last = 0, raf = 0, on = false, lang = 'bg';
+
+  function saved() { try { var s = localStorage.getItem('ssc-rain'); return s === 'on' || s === 'off' ? s : null; } catch (e) { return null; } }
+  function save(v) { try { localStorage.setItem('ssc-rain', v); } catch (e) {} }
+
   function fit() {
     dpr = Math.min(window.devicePixelRatio || 1, 2); W = window.innerWidth; H = window.innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = SIZE + 'px "IBM Plex Mono", ui-monospace, Consolas, monospace';
@@ -31,17 +35,39 @@
       while (s.acc >= SIZE) { s.acc -= SIZE; s.ch.unshift(glyph()); if (s.ch.length > s.n) s.ch.pop(); }
       while (s.ch.length < Math.min(s.n, 1 + Math.floor((s.y + SIZE) / SIZE))) s.ch.push(glyph());
       for (var k = 0; k < s.ch.length; k++) {
-        var a = (1 - k / s.n) * (k === 0 ? .62 : .34);
+        var a = (1 - k / s.n) * (k === 0 ? .34 : .17);
         ctx.fillStyle = 'rgba(60,255,120,' + a.toFixed(3) + ')';
         ctx.fillText(s.ch[k], s.x, s.y - k * SIZE);
       }
       if (s.y - s.n * SIZE > H) streams.splice(i, 1);
     }
   }
-  function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  function start() { if (on && !raf && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } }
   function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
-  window.addEventListener('resize', fit);
+
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'rain-btn';
+  var wrap = document.querySelector('.top .wrap');
+  if (wrap) wrap.insertBefore(btn, wrap.firstChild); else document.body.insertBefore(btn, document.body.firstChild);
+
+  function label() {
+    var t = lang === 'en' ? 'Rain' : 'Дъжд';
+    btn.textContent = t + ' ' + (on ? '●' : '○');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', lang === 'en' ? (on ? 'Turn the falling digits off' : 'Turn the falling digits on') : (on ? 'Спри падащите цифри' : 'Пусни падащите цифри'));
+  }
+  function set(v, remember) {
+    on = v; cv.style.display = on ? '' : 'none';
+    if (on) { fit(); if (!streams.length) seed(); start(); } else { stop(); ctx.clearRect(0, 0, W, H); }
+    if (remember) save(on ? 'on' : 'off');
+    label();
+  }
+  btn.addEventListener('click', function () { set(!on, true); });
+  window.addEventListener('resize', function () { if (on) fit(); });
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
-  if (mq.addEventListener) mq.addEventListener('change', function (e) { if (e.matches) { stop(); cv.style.display = 'none'; } else { cv.style.display = ''; start(); } });
-  fit(); seed(); start();
+  window.SSCRain = { setLang: function (l) { lang = l === 'en' ? 'en' : 'bg'; label(); } };
+
+  var s0 = saved();
+  if (window.SSCApp && SSCApp.getLang) lang = SSCApp.getLang();
+  set(s0 ? s0 === 'on' : !mq.matches, false);
 })();

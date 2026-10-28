@@ -6,7 +6,7 @@ const { loadStatic, read, exists } = require('./helpers');
 const dom = loadStatic();
 const doc = dom.window.document;
 test.after(() => dom.window.close());
-const TABS = ['home', 'work', 'architecture', 'demo', 'ai', 'method', 'about', 'personal'];
+const TABS = ['home', 'review', 'work', 'architecture', 'demo', 'ai', 'method', 'patch', 'about', 'personal'];
 
 test('document declares HTML5, Bulgarian language, charset and viewport', () => {
   assert.match(read('index.html'), /^<!doctype html>/i); assert.equal(doc.documentElement.lang, 'bg');
@@ -29,7 +29,7 @@ test('Home is the selected, focusable tab at the start; the other panels start h
   for (const id of TABS.slice(1)) assert.ok(doc.getElementById('panel-' + id).hasAttribute('hidden'), id);
 });
 test('the Personal tab comes last and is marked apart', () => {
-  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[7].classList.contains('tab-personal'));
+  const tabs = [...doc.querySelectorAll('#tablist [role=tab]')]; assert.deepEqual(tabs.map((t) => t.dataset.tab), TABS); assert.ok(tabs[9].classList.contains('tab-personal'));
 });
 test('the old command-centre concept is gone from the page', () => {
   const h = read('index.html');
@@ -93,7 +93,7 @@ test('public panels contain no form controls', () => { for (const id of ['work',
 test('the dialog has a labelled close button', () => { assert.ok(doc.querySelector('dialog#dlg #dlg-close[aria-label]')); });
 
 test('the page loads exactly fifteen local scripts in the right order, no inline scripts or handlers', () => {
-  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/examples.js', 'assets/examples-ai.js', 'assets/example.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/gate.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js', 'assets/rain.js']);
+  const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/examples.js', 'assets/examples-ai.js', 'assets/example.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/gate.js', 'assets/review.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js', 'assets/rain.js']);
   for (const s of srcs) assert.ok(exists(s), s); assert.equal(doc.querySelectorAll('script:not([src])').length, 0); assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
 test('the page makes no third-party requests (fonts are self-hosted)', () => { assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], ['https://github.com/OmniSlack/martin-urumov-portfolio']); });
