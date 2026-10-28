@@ -694,3 +694,10 @@ footer { text-align: left; }
 
 .rv-pc i { opacity: .5; }
 .rv-st b { position: relative; z-index: 1; text-shadow: 0 0 5px #000, 0 0 2px #000; }
+
+/* all tabs stay reachable: the row wraps instead of being cut off at the right edge (the Personal tab used to hide there) */
+.top .wrap { flex-wrap: wrap; height: auto; min-height: 58px; padding-block: 6px; gap: 6px 14px; }
+.tabs { order: 3; flex: 1 1 100%; margin-left: 0; overflow: visible; }
+.tabs [role="tablist"] { flex-wrap: wrap; }
+.tabs [role="tab"] { padding: 8px 12px; }
+.lang { margin-left: auto; }
