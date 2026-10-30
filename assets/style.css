@@ -701,3 +701,12 @@ footer { text-align: left; }
 .tabs [role="tablist"] { flex-wrap: wrap; }
 .tabs [role="tab"] { padding: 8px 12px; }
 .lang { margin-left: auto; }
+
+/* Home: the intended loop (status by outline: solid green = tested on its own, dashed amber = a design or not built yet) */
+.home-loop { margin: 26px 0 10px; max-width: 1100px; }
+.mdg .node.ok { stroke: #5ebe96; }
+.mdg .node.dash { stroke: #f0a03c; stroke-dasharray: 8 6; animation: none; }
+.loop-leg { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 8px 0 0; font: .74rem var(--mono); color: var(--dim); }
+.loop-leg i { display: inline-block; width: 24px; height: 0; border-top: 3px solid; margin-right: 8px; vertical-align: middle; }
+.loop-leg .lg-ok { border-color: #5ebe96; } .loop-leg .lg-dash { border-top-style: dashed; border-color: #f0a03c; }
+.loop-honest { max-width: 70ch; margin: 10px 0 0; color: var(--dim); font-size: .92rem; }
