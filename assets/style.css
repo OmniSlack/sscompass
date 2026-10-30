@@ -710,3 +710,5 @@ footer { text-align: left; }
 .loop-leg i { display: inline-block; width: 24px; height: 0; border-top: 3px solid; margin-right: 8px; vertical-align: middle; }
 .loop-leg .lg-ok { border-color: #5ebe96; } .loop-leg .lg-dash { border-top-style: dashed; border-color: #f0a03c; }
 .loop-honest { max-width: 70ch; margin: 10px 0 0; color: var(--dim); font-size: .92rem; }
+.loop-now { max-width: 75ch; margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--accent); background: rgb(var(--accent-rgb) / .07); border-radius: 0 8px 8px 0; }
+.loop-now b { color: var(--accent2); }

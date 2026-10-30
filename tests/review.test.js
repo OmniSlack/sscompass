@@ -87,7 +87,7 @@ test('Home: the intended loop has 7 boxes, 7 steps, an honest status line, and n
   const p = page(); const h = p.doc.getElementById('home-loop'); assert.ok(h);
   assert.equal(h.querySelectorAll('svg rect.node').length, 7); assert.equal(h.querySelectorAll('ol.steps li').length, 7);
   assert.ok(h.querySelectorAll('svg rect.node.dash').length >= 3 && h.querySelectorAll('svg rect.node.ok').length === 2, 'status by outline');
-  assert.match(h.querySelector('.loop-honest').textContent, /not wired together/); assert.ok(!CYR.test(h.textContent));
+  assert.match(h.querySelector('.loop-honest').textContent, /not wired together/); assert.match(h.querySelector('.loop-now').textContent, /working on now[\s\S]*not finished/); assert.ok(!CYR.test(h.textContent));
   assert.ok(!/\b\d{2,}\b/.test(h.querySelector('svg').textContent), 'no numbers in the loop');
   p.w.SSCApp.setLang('bg'); assert.ok(CYR.test(h.textContent)); assert.match(h.querySelector('.loop-honest').textContent, /не са свързани/);
 });
