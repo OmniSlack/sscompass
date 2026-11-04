@@ -55,7 +55,15 @@ test('aria-labels that have a translation have an English version', () => { for 
 
 test('the architecture diagram is an accessible image with a text alternative', () => {
   const svg = doc.querySelector('#panel-architecture .arch svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label'));
-  assert.equal(doc.querySelectorAll('#panel-architecture .arch ol.steps li').length, 9); assert.equal(doc.querySelectorAll('#panel-architecture .arch svg rect.node').length, 10);
+  assert.equal(doc.querySelectorAll('#panel-architecture .arch:not(.sysmap) ol.steps li').length, 9); assert.equal(doc.querySelectorAll('#panel-architecture .arch:not(.sysmap) svg rect.node').length, 10);
+});
+test('the system map has one list step for every box, and keeps the boxes and links of the original sketch', () => {
+  const m = doc.querySelector('#panel-architecture .sysmap'), svg = m.querySelector('svg'); assert.equal(svg.getAttribute('role'), 'img'); assert.ok(svg.getAttribute('aria-label'));
+  assert.equal(m.querySelectorAll('svg rect.node').length, 14); assert.equal(m.querySelectorAll('ol.steps li').length, 14); assert.equal(m.querySelectorAll('svg rect.lane').length, 5);
+  const t = svg.textContent; for (const s of ['Мартин говори', 'Вратата', 'Клонове върху данни', 'Опасната врата', 'CLEAR / HOLD / STOP', 'Заключване', 'едно ДА = едно действие', 'Дневник', 'Master Base', 'Ollama', 'само моите устройства', 'OneDrive · главният', 'GitHub', 'Slack', 'Имейл · публикуване', 'избрано, без лични данни', 'копие']) assert.ok(t.includes(s), s);
+  assert.match(m.nextElementSibling.textContent, /не кое от тях е построено/);
+  // No machine names, drive paths or device counts on the public page (patterns only, so the test itself names nothing).
+  const page = read('index.html'); for (const re of [/\bdesktop-[a-z0-9]{5,}/i, /\b[A-Z]:\\[\w-]/, /\d+\s*(устройства|devices)/i]) assert.ok(!re.test(page), 'private detail on the public page: ' + re);
 });
 test('the diagram names the folders that implement each box', () => {
   const t = doc.querySelector('#panel-architecture .arch svg').textContent; for (const f of ['ai-proposal-evaluator', 'agent-execution-control', 'agent-action-verifier / envelope.js', 'agent-action-verifier / verifier.js']) assert.ok(t.includes(f), f);
@@ -116,8 +124,9 @@ const { load, closeAll } = require('./helpers');
 test.after(closeAll);
 const dpage = () => load({ lang: 'en-US' });
 test('diagrams: every box of the architecture and method diagrams is a focusable button', () => {
-  const p = dpage(); assert.equal(p.doc.querySelectorAll('#panel-architecture .nd').length, 10); assert.equal(p.doc.querySelectorAll('#panel-method .nd').length, 5);
+  const p = dpage(); assert.equal(p.doc.querySelectorAll('#panel-architecture .arch:not(.sysmap) .nd').length, 10); assert.equal(p.doc.querySelectorAll('#panel-method .nd').length, 5);
   for (const g of p.doc.querySelectorAll('.nd')) { assert.equal(g.getAttribute('role'), 'button'); assert.equal(g.getAttribute('tabindex'), '0'); }
+  assert.equal(p.doc.querySelectorAll('#panel-architecture .sysmap .nd').length, 14);
 });
 test('diagrams: clicking a box selects it and shows what it does; clicking again clears', () => {
   const p = dpage(); const g = p.doc.querySelectorAll('#panel-architecture .nd')[1]; p.click(g);

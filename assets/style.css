@@ -756,3 +756,9 @@ footer { text-align: left; }
 .mm-detail.on { border-color: rgb(60 255 120 / .5); background: linear-gradient(180deg, rgb(2 18 8 / .94), rgb(1 8 4 / .94)); }
 .mm-detail b { color: #3cff78; } .mm-detail p { color: #b8e6c6; }
 .mm-n.d0 .mm-node.sel { color: #021006; }
+/* System map in Architecture: lanes with titles, its own arrow marker, plain links and a dotted link. */
+.sysmap path.ln { marker-end: url(#sm); }
+.sysmap path.nm { marker-end: none; }
+.sysmap path.dot { stroke-dasharray: 2 6; }
+.sysmap text.lt { fill: var(--accent2); font: 600 10.5px var(--mono); letter-spacing: .05em; }
+.sysmap text.el { fill: var(--accent2); font: 11px var(--mono); }

@@ -209,6 +209,97 @@
         </tbody>
       </table></div>
       <p class="note" data-en="Small gates in front of single actions: payload-policy-validator (is this payload safe to run), batch-file-gateway (isolate, scan, write once) and status-flow-validator (did the request walk its status chain in order).">Малки гейтове пред отделни действия: payload-policy-validator (безопасен ли е този товар), batch-file-gateway (изолирай, сканирай, запиши веднъж) и status-flow-validator (минала ли е заявката през статусите си в ред).</p>
+
+      <h3 class="sh" data-en="How the whole system connects">Как е свързана цялата система</h3>
+      <div class="arch card sysmap">
+        <svg viewBox="0 0 1100 1030" role="img" aria-label="Схема на системата: как се свързват частите" data-en-aria="System diagram: how the parts connect">
+          <defs><marker id="sm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f1eae9"/></marker></defs>
+
+          <rect class="lane" x="20" y="20" width="300" height="105" rx="14"/><text class="lt" x="36" y="40" data-en="Private line">Частна линия</text>
+          <rect class="lane" x="350" y="125" width="360" height="520" rx="16"/><text class="lt" x="366" y="147">OmniMax / Navigator</text><text class="lt" x="366" y="165" data-en="The Observer is a layer over everything">Наблюдателят е слой над всичко</text>
+          <rect class="lane" x="780" y="500" width="310" height="170" rx="14"/><text class="lt" x="796" y="522" data-en="Out · only with YES">Навън · само с ДА</text>
+          <rect class="lane" x="20" y="790" width="690" height="150" rx="14"/><text class="lt" x="694" y="812" text-anchor="end" data-en="Secure offline · the desktop computer">Сигурно офлайн · настолният компютър</text>
+          <rect class="lane" x="780" y="700" width="310" height="270" rx="14"/><text class="lt" x="796" y="722" data-en="Clouds · copy only, no keys">Облаци · само копие, без ключове</text>
+
+          <rect class="node hub" x="380" y="20" width="300" height="72" rx="36"/>
+          <text class="h" x="530" y="50" text-anchor="middle" data-en="Martin speaks">Мартин говори</text><text class="d" x="530" y="73" text-anchor="middle" data-en="iPhone gives YES · Android watches">iPhone дава ДА · Android гледа</text>
+
+          <rect class="node" x="380" y="192" width="300" height="62" rx="14"/>
+          <text class="h" x="530" y="218" text-anchor="middle" data-en="The Gate">Вратата</text><text class="d" x="530" y="240" text-anchor="middle" data-en="everything from outside = data, not a command">всичко отвън = данни, не заповед</text>
+
+          <rect class="node" x="380" y="282" width="300" height="78" rx="14"/>
+          <text class="h" x="530" y="306" text-anchor="middle" data-en="Branches over data">Клонове върху данни</text><text class="d" x="530" y="328" text-anchor="middle">Research · Deep Dive · Clock</text><text class="d" x="530" y="346" text-anchor="middle">Futurama · Shadow</text>
+
+          <rect class="node t3" x="380" y="389" width="300" height="92" rx="14"/>
+          <text class="h" x="530" y="415" text-anchor="middle" data-en="The dangerous gate">Опасната врата</text><text class="d" x="530" y="439" text-anchor="middle" data-en="result · environment · threat">резултат · среда · заплаха</text><text class="d" x="530" y="461" text-anchor="middle">CLEAR / HOLD / STOP</text>
+
+          <rect class="node t1" x="380" y="531" width="300" height="72" rx="14"/>
+          <text class="h" x="530" y="560" text-anchor="middle" data-en="Lock">Заключване</text><text class="d" x="530" y="584" text-anchor="middle" data-en="one YES = one action">едно ДА = едно действие</text>
+
+          <rect class="node" x="795" y="535" width="280" height="50" rx="12"/>
+          <text class="h" x="935" y="566" text-anchor="middle">Slack</text>
+
+          <rect class="node" x="795" y="603" width="280" height="50" rx="12"/>
+          <text class="h" x="935" y="634" text-anchor="middle" data-en="Email · publishing">Имейл · публикуване</text>
+
+          <rect class="node" x="400" y="690" width="260" height="50" rx="12"/>
+          <text class="h" x="530" y="721" text-anchor="middle" data-en="Log">Дневник</text>
+
+          <rect class="node vault" x="36" y="826" width="330" height="96" rx="18"/>
+          <text class="h" x="201" y="862" text-anchor="middle">Master Base</text><text class="d" x="201" y="888" text-anchor="middle" data-en="input · canon · register · log">вход · канон · регистър · дневник</text>
+
+          <rect class="node dash" x="420" y="826" width="274" height="96" rx="14"/>
+          <text class="h" x="557" y="862" text-anchor="middle" data-en="Ollama · only on this computer">Ollama · само на този компютър</text><text class="d" x="557" y="888" text-anchor="middle" data-en="a second observer with no rights">втори наблюдател без права</text>
+
+          <rect class="node" x="36" y="50" width="268" height="62" rx="14"/>
+          <text class="h" x="170" y="87" text-anchor="middle" data-en="only my devices">само моите устройства</text>
+
+          <rect class="node" x="795" y="736" width="280" height="50" rx="12"/>
+          <text class="h" x="935" y="767" text-anchor="middle" data-en="OneDrive · the main one">OneDrive · главният</text>
+
+          <rect class="node" x="795" y="802" width="280" height="66" rx="12"/>
+          <text class="h" x="935" y="828" text-anchor="middle">Google Drive · Dropbox · iCloud</text><text class="d" x="935" y="852" text-anchor="middle" data-en="online only">само онлайн</text>
+
+          <rect class="node" x="795" y="884" width="280" height="66" rx="12"/>
+          <text class="h" x="935" y="910" text-anchor="middle">GitHub</text><text class="d" x="935" y="934" text-anchor="middle" data-en="public showcase only">само публичната витрина</text>
+
+          <path class="ln" d="M650 92 L650 190"/>
+          <path class="ln" d="M530 254 L530 280"/><path class="ln" d="M530 360 L530 387"/><path class="ln" d="M530 481 L530 529"/>
+          <path class="ln" d="M680 420 L725 420 L725 62 L682 62"/>
+          <path class="ln" d="M680 40 L755 40 L755 550 L682 550"/>
+          <path class="ln" d="M680 570 L793 570"/><path class="ln" d="M680 592 L765 592 L765 628 L793 628"/>
+          <path class="ln" d="M530 603 L530 688"/>
+          <path class="ln" d="M400 715 L385 715 L385 850 L368 850"/>
+          <path class="ln" d="M300 826 L300 218 L378 218"/>
+          <path class="ln dot" d="M420 874 L368 874"/>
+          <path class="ln nm" d="M304 70 L380 70"/><path class="ln nm" d="M36 90 L10 90 L10 874 L36 874"/>
+          <path class="ln" d="M250 922 L250 980 L760 980 L760 761 L793 761"/>
+          <path class="ln" d="M120 922 L120 1000 L770 1000 L770 917 L793 917"/>
+          <text class="el" x="540" y="510">CLEAR</text>
+          <text class="el" transform="translate(740 245) rotate(-90)" text-anchor="middle">HOLD / STOP</text>
+          <text class="el" x="764" y="300" data-en="YES">ДА</text>
+          <text class="el" x="500" y="972" text-anchor="middle" data-en="copy">копие</text>
+          <text class="el" x="450" y="1020" text-anchor="middle" data-en="selected, no personal data">избрано, без лични данни</text>
+          <circle class="pkt" r="6"><animateMotion dur="9s" repeatCount="indefinite" path="M650 92 L650 254 L530 254 L530 603 L530 715 L385 715 L385 850 L300 850 L300 218 L378 218"/></circle>
+        </svg>
+        <ol class="steps mobile">
+          <li><b data-en="1 · Martin speaks">1 · Мартин говори</b><span data-en="iPhone gives YES · Android watches. He speaks to the Gate, and his YES goes straight to the Lock.">iPhone дава ДА · Android гледа. Говори към Вратата, а неговото ДА отива направо в Заключването.</span></li>
+          <li><b data-en="2 · The Gate">2 · Вратата</b><span data-en="Everything from outside = data, not a command. What returns from Master Base comes in here too.">Всичко отвън = данни, не заповед. Тук влиза и това, което се връща от Master Base.</span></li>
+          <li><b data-en="3 · Branches over data">3 · Клонове върху данни</b><span>Research · Deep Dive · Clock · Futurama · Shadow</span></li>
+          <li><b data-en="4 · The dangerous gate">4 · Опасната врата</b><span data-en="Result · environment · threat → CLEAR / HOLD / STOP. CLEAR goes to the Lock; HOLD and STOP go back to Martin.">Резултат · среда · заплаха → CLEAR / HOLD / STOP. CLEAR отива към Заключването; HOLD и STOP се връщат при Мартин.</span></li>
+          <li><b data-en="5 · Lock">5 · Заключване</b><span data-en="One YES = one action. From here to Slack, email and the Log.">Едно ДА = едно действие. Оттук към Slack, имейл и Дневника.</span></li>
+          <li><b>6 · Slack</b><span data-en="Out · only with YES.">Навън · само с ДА.</span></li>
+          <li><b data-en="7 · Email · publishing">7 · Имейл · публикуване</b><span data-en="Out · only with YES.">Навън · само с ДА.</span></li>
+          <li><b data-en="8 · Log">8 · Дневник</b><span data-en="Every action is written down and goes to Master Base.">Всяко действие се записва и отива в Master Base.</span></li>
+          <li><b>9 · Master Base</b><span data-en="Input · canon · register · log. Secure offline on the desktop computer. Returns to the Gate; a copy goes to OneDrive, and a selection with no personal data to GitHub.">Вход · канон · регистър · дневник. Сигурно офлайн на настолния компютър. Връща се към Вратата; копие отива в OneDrive, а избрано, без лични данни — в GitHub.</span></li>
+          <li><b data-en="10 · Ollama · only on this computer">10 · Ollama · само на този компютър</b><span data-en="A second observer with no rights, linked to Master Base by a dotted line.">Втори наблюдател без права, свързан с Master Base с пунктир.</span></li>
+          <li><b data-en="11 · Private line">11 · Частна линия</b><span data-en="Only my devices. It links Martin and Master Base.">Само моите устройства. Свързва Мартин и Master Base.</span></li>
+          <li><b data-en="12 · OneDrive · the main one">12 · OneDrive · главният</b><span data-en="Clouds · copy only, no keys. It receives a copy from Master Base.">Облаци · само копие, без ключове. Получава копие от Master Base.</span></li>
+          <li><b>13 · Google Drive · Dropbox · iCloud</b><span data-en="Online only.">Само онлайн.</span></li>
+          <li><b>14 · GitHub</b><span data-en="Public showcase only. It receives a selection with no personal data.">Само публичната витрина. Получава избрано, без лични данни.</span></li>
+        </ol>
+      </div>
+      <p class="note" data-en="The diagram shows how the parts connect, not which of them are built and tested.">Схемата показва как се свързват частите, не кое от тях е построено и тествано.</p>
     </section>
 
     <section class="s panel" id="panel-demo" role="tabpanel" aria-labelledby="tab-demo" tabindex="-1" hidden>
