@@ -183,6 +183,7 @@
     if (!root) return;
     var f = flow(), sc = scen(), keep = root.offsetHeight;
     if (keep) root.style.minHeight = keep + 'px';
+    if (E && E.ro) E.ro.disconnect();
     root.textContent = ''; E = {};
     var tabs = el('div', 'dm-flows'); tabs.setAttribute('role', 'group'); tabs.setAttribute('aria-label', tx(UI.title));
     FLOWS.forEach(function (x, k) { var b = btn('dm-flow', tx(x.name), null, function () { halt(); S.f = k; S.sc = 0; S.i = 0; build(); }); b.setAttribute('aria-pressed', String(k === S.f)); tabs.appendChild(b); });
@@ -217,6 +218,11 @@
     });
     E.tok = makeToken(tx(f.tok)); E.tok.classList.add('hidden'); ol.appendChild(E.tok);
     stick.appendChild(ol);
+    /* Box sizes change with the pane width and once the web fonts arrive; place the mark again then. */
+    if (window.ResizeObserver) {
+      E.ro = new ResizeObserver(function () { if (E && E.pipe === ol && root.offsetParent && S.i > 0) { E.placed = false; update(); } });
+      E.stages.forEach(function (o) { E.ro.observe(o.li); });
+    }
     E.cur = el('div', 'dm-cur'); E.cur.setAttribute('role', 'status'); E.cur.setAttribute('aria-live', 'polite'); stick.appendChild(E.cur);
     root.appendChild(stick);
 
@@ -246,7 +252,12 @@
     if (S.i === 0) { E.tok.classList.add('hidden'); E.placed = false; }
     else {
       var last = sc.steps[S.i - 1].st, li = E.stages[current].li;
-      var x = li.offsetLeft + li.offsetWidth - E.tok.offsetWidth - 6, y = li.offsetTop + li.offsetHeight - E.tok.offsetHeight - 6;
+      /* The mark sits on the top edge of the box, so it never covers the box's text. */
+      var x = li.offsetLeft + li.offsetWidth - E.tok.offsetWidth - 6, y = li.offsetTop - Math.round(E.tok.offsetHeight / 2);
+      /* On a phone the stages are one row you can swipe; keep the current one in view. */
+      if (E.pipe.scrollWidth > E.pipe.clientWidth && typeof E.pipe.scrollTo === 'function') {
+        try { E.pipe.scrollTo({ left: Math.max(0, li.offsetLeft - (E.pipe.clientWidth - li.offsetWidth) / 2), behavior: 'smooth' }); } catch (e) { /* older browsers */ }
+      }
       E.tok.className = 'dm-tok t-' + (last === 'pass' && done ? 'pass' : last);
       if (!E.placed) { E.tok.style.transition = 'none'; E.tok.style.transform = 'translate(' + x + 'px,' + y + 'px)'; void E.tok.offsetWidth; E.tok.style.transition = ''; E.placed = true; }
       else { E.tok.classList.add('fly'); E.tok.style.transform = 'translate(' + x + 'px,' + y + 'px)'; }
@@ -265,8 +276,7 @@
     }
   }
 
-  window.addEventListener('resize', function () { setHdr(); if (E && root && root.offsetParent) { E.placed = false; update(); } });
-  window.SSCDemo = {
+  window.addEventListener('resize', function () { setHdr(); if (E && root && root.offsetParent) { E.placed = false; update(); } });  window.SSCDemo = {
     render: function (l) { lang = l === 'en' ? 'en' : 'bg'; root = root || document.getElementById('demo-root'); build(); },
     stop: function () { halt(); if (E) update(); },
     flows: FLOWS
