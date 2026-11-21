@@ -4,7 +4,6 @@
 window.SSC = {
 
   owner: { bg: 'Мартин Урумов', en: 'Martin Urumov' },
-  cv: { url: 'cv/Martin_Urumov_CV.pdf', note: { bg: 'PDF · на английски', en: 'PDF · in English' } },
   repo: 'https://github.com/OmniSlack/martin-urumov-portfolio',
 
   /* Проекти: една папка в хранилището = един проект. */

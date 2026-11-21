@@ -104,7 +104,7 @@ for (const s of D.socials) {
     const p = page(); const a = [...p.doc.querySelectorAll('#socials a')].find((x) => x.querySelector('.n').textContent === s.name); assert.ok(a); assert.equal(a.href, s.url); assert.equal(a.getAttribute('title'), s.handle);
   });
 }
-test('the CV buttons point at the PDF', () => { const p = page(); assert.equal(p.doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf'); assert.equal(p.doc.getElementById('cv-note').textContent, 'PDF · in English'); });
+test('the public page has no CV button', () => { const p = page(); assert.equal(p.doc.getElementById('cv-link'), null); assert.equal(p.doc.getElementById('cv-note'), null); });
 test('the three background decks are linked inside the site', () => {
   const p = page(); const links = [...p.doc.querySelectorAll('#decks a')]; assert.deepEqual(links.map((a) => a.getAttribute('href')), Array.from(D.decks, (d) => d.url)); for (const a of links) assert.equal(a.getAttribute('target'), null);
 });
@@ -254,7 +254,7 @@ test('home: the home page has the site map; choosing a branch and pressing Open 
   const p = page(); assert.equal(vis(p, '#home-map').length, 1 + 7);
   const node = [...p.doc.querySelectorAll('#home-map .mm-node')].find((n) => /AI platforms/.test(n.textContent)); node.click(); const open = p.doc.querySelector('#home-map .mm-detail .btn'); assert.ok(open); open.click(); assert.equal(p.w.SSCApp.tab(), 'ai');
 });
-test('footer: the CV and all five profiles sit in the footer, and the About page has no contact grid or oversized name', () => {
-  const p = page(); assert.ok(p.doc.querySelector('footer #cv-link')); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5);
+test('footer: all five profiles sit in the footer, there is no CV button, and the About page has no contact grid or oversized name', () => {
+  const p = page(); assert.ok(!p.doc.querySelector('#cv-link')); assert.equal(p.doc.querySelectorAll('footer #socials a').length, 5);
   assert.equal(p.doc.querySelectorAll('#panel-about #socials, #panel-about #cv-link, #panel-about .owner-both').length, 0);
 });
