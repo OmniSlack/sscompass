@@ -4,6 +4,7 @@
   'use strict';
   var V = window.SSCVault, root = document.getElementById('p-root');
   var MAPS = [], lang = 'bg', section = 'platforms', msgTimer = null, forgetArmed = false;
+  var SKILL_STAGES = ['idea', 'crafting', 'testing', 'ready'];
   function $(id) { return document.getElementById(id); }
   function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function safeUrl(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u || '') ? u : ''; }
@@ -24,12 +25,22 @@
     mismatch: { bg: 'Двете пароли не съвпадат.', en: 'The two passphrases do not match.' }, badSeed: { bg: 'Файлът не е валиден JSON.', en: 'The file is not valid JSON.' },
     novault: { bg: 'Няма vault на това устройство.', en: 'There is no vault on this device.' },
     saved: { bg: 'Запазено.', en: 'Saved.' }, saveFail: { bg: 'Не успях да запиша. Мястото в браузъра може да е пълно.', en: 'Could not save. Browser storage may be full or blocked.' },
-    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини', en: 'News' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, creative: { bg: 'Творчество', en: 'Creative' }, maps: { bg: 'Карти', en: 'Maps' }, vault: { bg: 'Vault', en: 'Vault' } },
+    menu: { platforms: { bg: 'Платформи', en: 'Platforms' }, news: { bg: 'Новини и отчети', en: 'News & updates' }, notes: { bg: 'Бележки', en: 'Notes' }, progress: { bg: 'Недовършено', en: 'In progress' }, skills: { bg: 'Работилница за умения', en: 'Skill crafting' }, creative: { bg: 'Творчество', en: 'Creative' }, maps: { bg: 'Карти', en: 'Maps' }, vault: { bg: 'Vault', en: 'Vault' } },
     menuLabel: { bg: 'Личен контрол', en: 'Personal control' },
     pfHint: { bg: 'Полетата се попълват на ръка. Нищо не се тегли автоматично от платформите.', en: 'Fields are filled in by hand. Nothing is pulled automatically from the platforms.' },
     status: { bg: 'Състояние', en: 'Status' }, live: { bg: 'има линк', en: 'live' }, soon: { bg: 'скоро', en: 'soon' },
     handle: { bg: 'Профил', en: 'Handle' }, url: { bg: 'Линк (https://…)', en: 'Link (https://…)' }, metric: { bg: 'Число на ръка', en: 'Number by hand' }, note: { bg: 'Бележка', en: 'Note' },
-    newsHint: { bg: 'Резюмета и новини, които записвам на ръка. Най-новото е най-горе.', en: 'Summaries and news I write down by hand. Newest first.' },
+    newsHint: { bg: 'Тук добавяш новини и отчети. Записите се пазят в този браузър. Най-новото е най-горе.', en: 'Add news and updates here. Entries are saved in this browser. Newest first.' },
+    newsKind: { bg: 'Вид', en: 'Type' },
+    newsKinds: { news: { bg: 'Новина', en: 'News' }, update: { bg: 'Отчет', en: 'Update' } },
+    newsFilter: { bg: 'Покажи', en: 'Show' },
+    allNews: { bg: 'Всички записи', en: 'All entries' },
+    shared: { bg: 'Общите отчети в KOMPAS + Navigator', en: 'Shared updates in KOMPAS + Navigator' },
+    skillName: { bg: 'Умение', en: 'Skill' },
+    skillStage: { bg: 'Етап', en: 'Stage' },
+    skillEvidence: { bg: 'Бележка за тест или доказателство', en: 'Test or evidence note' },
+    noSkills: { bg: 'Още няма умения в работилницата.', en: 'No skills in the workshop yet.' },
+    skillStages: { idea: { bg: 'Идея', en: 'Idea' }, crafting: { bg: 'Изработка', en: 'Crafting' }, testing: { bg: 'Проверка', en: 'Testing' }, ready: { bg: 'Готово', en: 'Ready' } },
     title: { bg: 'Заглавие', en: 'Title' }, source: { bg: 'Източник (GPT, Claude, Gemini…)', en: 'Source (GPT, Claude, Gemini…)' }, text: { bg: 'Текст', en: 'Text' },
     add: { bg: 'Добави', en: 'Add' }, del: { bg: 'Изтрий', en: 'Delete' }, open: { bg: 'Отвори', en: 'Open' },
     noNews: { bg: 'Още няма новини.', en: 'No news yet.' }, noNotes: { bg: 'Още няма бележки.', en: 'No notes yet.' }, noProgress: { bg: 'Нищо недовършено.', en: 'Nothing in progress.' },
@@ -96,7 +107,7 @@
 
   /* ---------- приложение ---------- */
   function menuHtml() {
-    return ['platforms', 'news', 'notes', 'progress', 'creative', 'maps', 'vault'].map(function (k) {
+    return Object.keys(T.menu).map(function (k) {
       return '<button data-s="' + k + '" aria-current="' + (k === section) + '">' + esc(tx(T.menu[k])) + '</button>';
     }).join('');
   }
@@ -117,6 +128,7 @@
     else if (section === 'news') v.innerHTML = newsHtml(s);
     else if (section === 'notes') v.innerHTML = notesHtml(s);
     else if (section === 'progress') v.innerHTML = progressHtml(s);
+    else if (section === 'skills') v.innerHTML = skillsHtml(s);
     else if (section === 'creative') { v.innerHTML = creativeHtml(); var dh = $('p-decks'); if (dh && window.SSCApp) dh.innerHTML = window.SSCApp.decks(); }
     else if (section === 'maps') { v.innerHTML = mapsHtml(); mountMaps(); }
     else v.innerHTML = vaultHtml();
@@ -147,15 +159,36 @@
   function newsHtml(s) {
     var rows = s.news.slice().sort(function (a, b) { return (b.at || 0) - (a.at || 0); });
     return '<p class="note">' + esc(tx(T.newsHint)) + '</p>' +
+      '<p><a class="pill" id="shared-news" href="https://chatgpt.com/space/page_962ea63b216c81919a23abec848d9003" target="_blank" rel="noopener noreferrer">' + esc(tx(T.shared)) + ' →</a></p>' +
       '<form class="card pform" id="w-form" autocomplete="off"><label for="w-title">' + esc(tx(T.title)) + '</label><input id="w-title">' +
+      '<label for="w-kind">' + esc(tx(T.newsKind)) + '</label><select id="w-kind">' + optionList(T.newsKinds, Object.keys(T.newsKinds), 'news') + '</select>' +
       '<label for="w-source">' + esc(tx(T.source)) + '</label><input id="w-source"><label for="w-url">' + esc(tx(T.url)) + '</label><input id="w-url">' +
       '<label for="w-text">' + esc(tx(T.text)) + '</label><textarea id="w-text"></textarea><div class="prow"><button class="btn" id="w-add" type="submit">' + esc(tx(T.add)) + '</button></div></form>' +
+      (rows.length ? '<div class="pform"><label for="w-filter">' + esc(tx(T.newsFilter)) + '</label><select id="w-filter"><option value="all">' + esc(tx(T.allNews)) + '</option>' + optionList(T.newsKinds, Object.keys(T.newsKinds)) + '</select></div>' : '') +
       (rows.length ? rows.map(function (n) {
         var u = safeUrl(n.url);
-        return '<article class="card pitem"><h3>' + esc(n.title) + '</h3><div class="mono">' + esc(n.source || '') + ' · ' + esc(when(n.at)) + '</div><p>' + esc(n.text) + '</p>' +
+        var kind = n.kind === 'update' ? 'update' : 'news';
+        return '<article class="card pitem" data-news-kind="' + kind + '"><h3>' + esc(n.title) + '</h3><div class="mono">' + esc(tx(T.newsKinds[kind])) + ' · ' + esc(n.source || '') + ' · ' + esc(when(n.at)) + '</div><p>' + esc(n.text) + '</p>' +
           (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(tx(T.open)) + ' →</a> ' : '') +
           '<button class="x" data-wdel="' + esc(n.id) + '" aria-label="' + esc(tx(T.del)) + '">×</button></article>';
       }).join('') : '<div class="empty">' + esc(tx(T.noNews)) + '</div>');
+  }
+  function optionList(labels, values, selected) {
+    return values.map(function (value) {
+      return '<option value="' + value + '"' + (value === selected ? ' selected' : '') + '>' + esc(tx(labels[value])) + '</option>';
+    }).join('');
+  }
+  function skillsHtml(s) {
+    return '<form class="card pform" id="skill-form"><label for="skill-name">' + esc(tx(T.skillName)) + '</label><input id="skill-name" required>' +
+      '<label for="skill-evidence">' + esc(tx(T.skillEvidence)) + '</label><textarea id="skill-evidence"></textarea>' +
+      '<div class="prow"><button class="btn" type="submit">' + esc(tx(T.add)) + '</button></div></form>' +
+      (s.skills.length ? '<div class="pgrid">' + s.skills.map(function (skill) {
+        var stage = SKILL_STAGES.indexOf(skill.stage) === -1 ? 'idea' : skill.stage;
+        var statusId = 'skill-stage-' + esc(skill.id);
+        return '<article class="card pitem skill-card"><div class="chips"><span class="chip st" data-stage-label>' + esc(tx(T.skillStages[stage])) + '</span></div><h3>' + esc(skill.name) + '</h3>' +
+          (skill.evidence ? '<p>' + esc(skill.evidence) + '</p>' : '') +
+          '<label for="' + statusId + '">' + esc(tx(T.skillStage)) + '</label><select id="' + statusId + '" data-skill-stage="' + esc(skill.id) + '">' + optionList(T.skillStages, SKILL_STAGES, stage) + '</select></article>';
+      }).join('') + '</div>' : '<div class="empty">' + esc(tx(T.noSkills)) + '</div>');
   }
   function notesHtml(s) {
     var rows = s.notes.slice().sort(function (a, b) { return (a.done ? 1 : 0) - (b.done ? 1 : 0) || (b.at || 0) - (a.at || 0); });
@@ -194,7 +227,11 @@
     } else if (id === 'w-form') {
       var title = $('w-title').value.trim(); if (!title) return;
       var url = $('w-url').value.trim();
-      s.news.push({ id: uid(), title: title, source: $('w-source').value.trim(), url: safeUrl(url), text: $('w-text').value.trim(), at: Date.now() }); persist().then(renderSection);
+      var kind = $('w-kind').value === 'update' ? 'update' : 'news';
+      s.news.push({ id: uid(), title: title, kind: kind, source: $('w-source').value.trim(), url: safeUrl(url), text: $('w-text').value.trim(), at: Date.now() }); persist().then(renderSection);
+    } else if (id === 'skill-form') {
+      var name = $('skill-name').value.trim(); if (!name) return;
+      s.skills.push({ id: uid(), name: name, stage: 'idea', evidence: $('skill-evidence').value.trim() }); persist().then(renderSection);
     }
   });
   document.addEventListener('click', function (e) {
@@ -222,6 +259,18 @@
   document.addEventListener('change', function (e) {
     if (!root || !root.contains(e.target) || !V || !V.isOpen()) return;
     var t = e.target, s = V.get();
+    if (t.id === 'w-filter') {
+      root.querySelectorAll('[data-news-kind]').forEach(function (entry) { entry.hidden = t.value !== 'all' && entry.dataset.newsKind !== t.value; });
+      return;
+    }
+    if (t.dataset.skillStage && SKILL_STAGES.indexOf(t.value) !== -1) {
+      var skill = s.skills.find(function (item) { return item.id === t.dataset.skillStage; });
+      if (!skill) return;
+      skill.stage = t.value;
+      t.closest('.skill-card').querySelector('[data-stage-label]').textContent = tx(T.skillStages[skill.stage]);
+      persist();
+      return;
+    }
     if (t.dataset.ndone) { s.notes.forEach(function (n) { if (n.id === t.dataset.ndone) n.done = t.checked; }); persist().then(renderSection); }
     if (t.dataset.pf !== undefined && s.platforms[+t.dataset.pf]) {
       var v = t.value; if (t.dataset.f === 'url') v = safeUrl(v.trim()) ? v.trim() : '';

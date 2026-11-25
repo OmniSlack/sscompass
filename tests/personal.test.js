@@ -44,9 +44,34 @@ test('two different passphrases are refused', async () => {
   const p = await openGate(); setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS + 'x'); submit(p, 'p-form'); await until(() => $(p, 'p-msg').textContent);
   assert.match($(p, 'p-msg').textContent, /do not match/); assert.ok(!$(p, 'pmenu'));
 });
-test('creating a vault opens the seven-section personal menu', async () => {
+test('creating a vault opens the personal menu with news, updates and skill crafting', async () => {
   const p = await openApp(null); const names = [...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent);
-  assert.deepEqual(names, ['Platforms', 'News', 'Notes', 'In progress', 'Creative', 'Maps', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
+  assert.deepEqual(names, ['Platforms', 'News & updates', 'Notes', 'In progress', 'Skill crafting', 'Creative', 'Maps', 'Vault']); assert.equal(p.doc.querySelector('#pmenu [aria-current=true]').dataset.s, 'platforms');
+});
+test('news filters keep old entries and group new updates separately', async () => {
+  const legacy = { id: 'old', title: 'Earlier news', at: 1 };
+  const p = await openApp({ news: [legacy] }); await section(p, 'news');
+  setv(p, 'w-title', 'Compass update'); setv(p, 'w-kind', 'update'); submit(p, 'w-form');
+  await until(() => p.doc.querySelector('[data-news-kind="update"]'));
+  const old = p.doc.querySelector('[data-news-kind="news"]');
+  assert.match(old.textContent, /Earlier news/);
+  setv(p, 'w-filter', 'update'); $(p, 'w-filter').dispatchEvent(new p.w.Event('change', { bubbles: true }));
+  assert.equal(old.hidden, true); assert.equal(p.doc.querySelector('[data-news-kind="update"]').hidden, false);
+  assert.equal(p.w.SSCVault.get().news.find(entry => entry.title === 'Compass update').kind, 'update');
+});
+test('skill crafting keeps the chosen stage in the sealed vault', async () => {
+  const p = await openApp(); await section(p, 'skills');
+  setv(p, 'skill-name', 'Synthetic skill'); setv(p, 'skill-evidence', 'Test evidence'); submit(p, 'skill-form');
+  const stage = await until(() => p.doc.querySelector('[data-skill-stage]'));
+  assert.equal(stage.value, 'idea');
+  const before = p.w.localStorage.getItem('ssc-vault');
+  stage.value = 'testing'; stage.dispatchEvent(new p.w.Event('change', { bubbles: true }));
+  await until(() => p.w.localStorage.getItem('ssc-vault') !== before);
+  assert.equal(p.doc.querySelector('[data-stage-label]').textContent, 'Testing');
+  p.w.SSCVault.lock();
+  const saved = await p.w.SSCVault.unlock('omnivorous:' + PASS);
+  assert.equal(saved.skills[0].stage, 'testing'); assert.equal(saved.skills[0].evidence, 'Test evidence');
+  assert.equal(p.w.localStorage.getItem('ssc-vault').includes('Synthetic skill'), false);
 });
 test('loading vault.json while creating fills the platforms and the unfinished work', async () => {
   const p = await openApp(); assert.equal(p.doc.querySelectorAll('#pview .pf').length, 2); await section(p, 'progress'); assert.match(text(p), /NomNom/);
@@ -162,7 +187,7 @@ test('an empty In progress says so', async () => {
 test('the lock screen and the app follow the language switch', async () => {
   const p = await openGate(); p.w.SSCApp.setLang('bg'); await until(() => /Създай личния/.test(text(p)));
   setv(p, 'p-name', 'omnivorous'); setv(p, 'p-pass', PASS); setv(p, 'p-pass2', PASS); submit(p, 'p-form'); await until(() => $(p, 'pmenu'));
-  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини', 'Бележки', 'Недовършено', 'Творчество', 'Карти', 'Vault']);
+  assert.deepEqual([...p.doc.querySelectorAll('#pmenu button')].map((b) => b.textContent), ['Платформи', 'Новини и отчети', 'Бележки', 'Недовършено', 'Работилница за умения', 'Творчество', 'Карти', 'Vault']);
 });
 test('personal data never appears on the public tabs, even while the vault is open', async () => {
   const p = await openApp(); await section(p, 'progress'); assert.match(text(p), /NomNom/);

@@ -142,6 +142,9 @@ footer { margin-top: 96px; padding: 34px 0 54px; border-top: 1px solid var(--lin
 .gate label, .pform label, .pf label { display: grid; gap: 4px; font: .78rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
 .gate input, .pform input, .pform textarea, .pf input, .pf select { width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line2); background: rgb(255 255 255 / .07); color: var(--text); font: inherit; font-size: .95rem; text-transform: none; letter-spacing: normal; }
 .pform textarea { min-height: 90px; resize: vertical; }
+.pform select, .skill-card select { width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line2); background: var(--panel); color: var(--text); font: inherit; }
+.skill-card { display: grid; align-content: start; gap: 8px; overflow-wrap: anywhere; }
+.skill-card label { color: var(--dim); }
 .gate input:focus-visible, .pform input:focus-visible, .pform textarea:focus-visible, .pf input:focus-visible, .pf select:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
 .prow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .prow .btn { cursor: pointer; font-family: inherit; }

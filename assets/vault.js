@@ -13,10 +13,10 @@
   function b64(buf) { var b = new Uint8Array(buf), s = '', i; for (i = 0; i < b.length; i++) s += String.fromCharCode(b[i]); return btoa(s); }
   function unb64(str) { var s = atob(str), b = new Uint8Array(s.length), i; for (i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; }
 
-  function blank() { return { v: 1, platforms: [], news: [], notes: [], projects: [], openItems: [] }; }
+  function blank() { return { v: 1, platforms: [], news: [], notes: [], projects: [], openItems: [], skills: [] }; }
   function normalise(o) {
     var s = blank(); o = o && typeof o === 'object' ? o : {};
-    ['platforms', 'news', 'notes', 'projects', 'openItems'].forEach(function (k) { if (Array.isArray(o[k])) s[k] = o[k]; });
+    Object.keys(s).forEach(function (k) { if (Array.isArray(s[k]) && Array.isArray(o[k])) s[k] = o[k]; });
     return s;
   }
 

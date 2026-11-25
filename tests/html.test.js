@@ -104,7 +104,12 @@ test('the page loads exactly fifteen local scripts in the right order, no inline
   const srcs = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')); assert.deepEqual(srcs, ['assets/data.js', 'assets/examples.js', 'assets/examples-ai.js', 'assets/example.js', 'assets/vault.js', 'assets/personal.js', 'assets/demo.js', 'assets/gate.js', 'assets/review.js', 'assets/diagrams.js', 'assets/cores.js', 'assets/ai.js', 'assets/mindmap.js', 'assets/maps.js', 'assets/app.js', 'assets/rain.js']);
   for (const s of srcs) assert.ok(exists(s), s); assert.equal(doc.querySelectorAll('script:not([src])').length, 0); assert.ok(!/\son[a-z]+\s*=/i.test(read('index.html')));
 });
-test('the page makes no third-party requests (fonts are self-hosted)', () => { assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], ['https://github.com/OmniSlack/martin-urumov-portfolio']); });
+test('the page only links outward after user interaction (fonts are self-hosted)', () => {
+  const links = [...doc.querySelectorAll('a[href^="https:"]')].map(a => a.getAttribute('href'));
+  assert.deepEqual(links, ['https://github.com/OmniSlack/martin-urumov-portfolio', 'https://chatgpt.com/space/page_1411022b6a048191a0bc93d674c992ec']);
+  assert.deepEqual(read('index.html').match(/https?:\/\/[^"'\s)]+/g) || [], links);
+  assert.equal(doc.querySelector('footer #notification-control').getAttribute('rel'), 'noopener noreferrer');
+});
 test('both stylesheets exist and every font file they name exists', () => {
   assert.ok(exists('assets/style.css')); assert.ok(exists('assets/fonts.css')); const files = read('assets/fonts.css').match(/url\(fonts\/[^)]+\)/g) || [];
   assert.ok(files.length >= 12); for (const f of files) assert.ok(exists('assets/' + f.slice(4, -1)), f);

@@ -17,7 +17,7 @@ test('a new vault needs a passphrase of at least 8 characters', async () => {
 });
 test('create opens the vault and normalises the starter data', async () => {
   const V = page().w.SSCVault; const s = await V.create(PASS, { notes: [{ id: 'a' }], junk: 1, platforms: 'nope' });
-  assert.equal(V.isOpen(), true); assert.deepEqual(Object.keys(s).sort(), ['news', 'notes', 'openItems', 'platforms', 'projects', 'v']);
+  assert.equal(V.isOpen(), true); assert.deepEqual(Object.keys(s).sort(), ['news', 'notes', 'openItems', 'platforms', 'projects', 'skills', 'v']);
   assert.equal(s.notes.length, 1); assert.deepEqual(Array.from(s.platforms), []);
 });
 test('create without starter data gives an empty vault', async () => {
