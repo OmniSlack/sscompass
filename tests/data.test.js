@@ -11,9 +11,8 @@ const FOLDERS = ['agent-execution-control', 'ai-proposal-evaluator', 'agent-acti
 const KINDS = ['control', 'evaluation', 'simulation', 'research'];
 
 test('owner name exists in Bulgarian and English', () => { assert.equal(D.owner.bg, 'Мартин Урумов'); assert.equal(D.owner.en, 'Martin Urumov'); });
-test('CV is referenced, exists and is a PDF', () => {
-  assert.equal(D.cv.url, 'cv/Martin_Urumov_CV.pdf'); const b = fs.readFileSync(path.join(ROOT, D.cv.url));
-  assert.equal(b.slice(0, 5).toString(), '%PDF-'); assert.ok(b.length > 10000); assert.ok(bilingual(D.cv.note));
+test('no CV is published: the data names no CV file', () => {
+  assert.equal(D.cv, undefined); assert.ok(!fs.existsSync(path.join(ROOT, 'cv')));
 });
 test('the portfolio repository link points at the owner GitHub', () => { assert.equal(D.repo, 'https://github.com/OmniSlack/martin-urumov-portfolio'); });
 test('exactly the fifteen project folders of the portfolio repository are listed, in order', () => {

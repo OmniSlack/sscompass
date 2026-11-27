@@ -6,7 +6,7 @@ const path = require('path');
 const vm = require('vm');
 const { read, exists, ROOT } = require('./helpers');
 
-for (const f of ['index.html', 'assets/style.css', 'assets/app.js', 'assets/data.js', 'cv/Martin_Urumov_CV.pdf', 'package.json', 'LICENSE', 'README.md']) {
+for (const f of ['index.html', 'assets/style.css', 'assets/app.js', 'assets/data.js', 'package.json', 'LICENSE', 'README.md']) {
   test(`file exists: ${f}`, () => assert.ok(exists(f)));
 }
 for (const f of ['assets/app.js', 'assets/data.js']) {
@@ -29,9 +29,8 @@ test('index.html stays small (under 64 KB)', () => assert.ok(read('index.html').
 test('no shipped asset is larger than 100 KB except the CV', () => {
   for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) assert.ok(fs.statSync(path.join(ROOT, 'assets', f)).size < 100000, f);
 });
-test('the CV is a real PDF under 1 MB', () => {
-  const b = fs.readFileSync(path.join(ROOT, 'cv/Martin_Urumov_CV.pdf'));
-  assert.equal(b.slice(0, 5).toString(), '%PDF-'); assert.ok(b.length < 1e6);
+test('no CV PDF is published on the public site', () => {
+  assert.ok(!fs.existsSync(path.join(ROOT, 'cv')));
 });
 test('package.json is valid and keeps the site dependency-free', () => {
   const j = JSON.parse(read('package.json')); assert.ok(!j.dependencies); assert.ok(j.devDependencies.jsdom);

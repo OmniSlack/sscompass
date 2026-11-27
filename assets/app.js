@@ -7,7 +7,6 @@
   function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function safeUrl(u) { return /^https?:\/\/.+/i.test(u || '') ? u : ''; }
   function safeLink(u) { return /^(https?:\/\/.+|decks\/[\w\-.\/]+(#[\w\/-]+)?)$/i.test(u || '') ? u : ''; }
-  function safeFile(u) { return /^(https?:\/\/|[\w\-\/.]+\.pdf$)/i.test(u || '') ? u : ''; }
 
   /* ---------- език / language ---------- */
   var lang = 'bg';
@@ -101,7 +100,7 @@
       return '<span class="pill off"><span class="n">' + esc(s.name) + '</span></span>';
     }).join('');
   }
-  $('cv-link').setAttribute('href', safeFile(D.cv.url) || '#');  $('repo-link').setAttribute('href', safeUrl(D.repo) || '#');
+  $('repo-link').setAttribute('href', safeUrl(D.repo) || '#');
 
   /* ---------- езикът се прилага навсякъде / apply language everywhere ---------- */
   function applyLang(l) {
@@ -117,7 +116,6 @@
     document.title = tx(UI.title);
     var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', tx(UI.desc));
     Array.prototype.forEach.call($('lang').children, function (b) { b.setAttribute('aria-pressed', b.dataset.lang === l); });
-    $('cv-note').textContent = tx(D.cv.note);
     renderFilters(); renderProjects(); renderDecks(); renderSocials();
     if (dlg.hasAttribute('open')) renderDialog();
     if (window.SSCPersonal) window.SSCPersonal.render(l);

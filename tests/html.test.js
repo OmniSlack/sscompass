@@ -39,7 +39,7 @@ test('one h1 says what the site is about, not the owner name', () => { assert.eq
 test('the home page has a four-step flow diagram and the About block is its last section', () => { assert.equal(doc.querySelectorAll('#panel-home .hflow li').length, 4); const kids = [...doc.getElementById('panel-home').children]; assert.equal(kids[kids.length - 1].id, 'home-about'); assert.equal(kids[kids.length - 1].tagName, 'DETAILS'); assert.ok(!kids[kids.length - 1].open); assert.ok(!doc.querySelector('#panel-home #decks-home, #panel-home #home-map, #panel-home .stats'), 'decks, site map and big numbers are not on Home'); assert.ok(!doc.getElementById('panel-creative') && !doc.getElementById('tab-creative'), 'Creative is no longer a public tab'); assert.ok(doc.querySelector('#panel-method #home-map')); });
 test('the hero uses no jargon numbers: no gates, no big statistics', () => { const t = doc.getElementById('panel-home').textContent; assert.ok(!/gate|гейт/i.test(t)); });
 test('the hero has three calls to action: work, CV and the repository', () => {
-  assert.ok(doc.getElementById('cta-work')); assert.ok(!doc.getElementById('cv-hero')); assert.equal(doc.getElementById('cv-link').getAttribute('href'), 'cv/Martin_Urumov_CV.pdf');
+  assert.ok(doc.getElementById('cta-work')); assert.ok(!doc.getElementById('cv-hero')); assert.ok(!doc.getElementById('cv-link'));
   const r = doc.getElementById('repo-link'); assert.equal(r.getAttribute('href'), 'https://github.com/OmniSlack/martin-urumov-portfolio'); assert.match(r.rel, /noopener/); assert.equal(r.target, '_blank');
 });
 test('the AI-assistance disclosure is on the front page', () => { assert.match(doc.querySelector('.honest').textContent, /AI/); });
@@ -89,7 +89,7 @@ test('the method tab states limits and that the framework is a working model', (
   const t = doc.getElementById('panel-method').textContent; assert.match(t, /работен модел/); assert.match(t, /прототипи/);
 });
 test('the about tab shows the CV button, the languages and the contact grid container', () => {
-  assert.ok(doc.getElementById('cv-link')); assert.ok(doc.getElementById('socials')); assert.match(doc.getElementById('panel-about').textContent, /Български: роден/);
+  assert.ok(!doc.getElementById('cv-link')); assert.ok(doc.getElementById('socials')); assert.match(doc.getElementById('panel-about').textContent, /Български: роден/);
 });
 test('the owner name appears in both languages in the about tab and the footer', () => {
   assert.ok(!doc.querySelector('.owner-both'), 'no oversized name block'); assert.match(doc.querySelector('footer').textContent, /Мартин Урумов.*Martin Urumov/);
